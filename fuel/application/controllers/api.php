@@ -14,8 +14,9 @@ class Api extends CI_Controller{
 	    	$this->api->logEvent('login',"username=$username");
 			$login = $this->members->checkLogin($username, $password);
 			if (isset($login)){
-				unset($login->id);
-				$this->_respond('OK','Login Successful',$login);
+				$type = $this->members->getMemberType($login->id);
+				$data = array('salt'=>$login->salt, 'type'=>$type);
+				$this->_respond('OK','Login Successful',$data);
 			} else {
 				$this->_respond("ERR","Username or Password Invalid", $_REQUEST);
 			}
@@ -77,5 +78,33 @@ class Api extends CI_Controller{
 		} else {
 			$this->_respond("ERR","Invalid Session Request", $_REQUEST);
 		}
+	}
+	function getMemberDetails($id){
+		if ($this->_checkSessionKey()){
+		} else {
+			$this->_respond("ERR","Invalid Session Request", $_REQUEST);
+		}		
+	}
+	function getAthleteDetails(){
+		if ($this->_checkSessionKey()){
+			$this->load->model('athletes_model','athletes');
+			$id = $_POST['id'];
+			$athlete = $this->athletes->loadProfile($id);
+			$this->_respond("OK","Athlete Found",$athlete);
+		} else {
+			$this->_respond("ERR","Invalid Session Request", $_REQUEST);
+		}		
+	}
+	function saveAthleteDetails(){
+		if ($this->_checkSessionKey()){
+		} else {
+			$this->_respond("ERR","Invalid Session Request", $_REQUEST);
+		}		
+	}
+	function saveMemberDetails(){
+		if ($this->_checkSessionKey()){
+		} else {
+			$this->_respond("ERR","Invalid Session Request", $_REQUEST);
+		}		
 	}
 }

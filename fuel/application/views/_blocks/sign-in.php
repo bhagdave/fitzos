@@ -1,6 +1,6 @@
 	<section class="sign-in">
 		<form action="../signin/start" method="post">
-		<h3>Sign up here</h3>
+		<h3>Sign up</h3>
 		<label class="radio inline">
   			<input type="radio" name="choice" id="athlete" value="athlete" checked>
   			Athlete
@@ -19,7 +19,7 @@
   				<input type="radio" name="TC" id="TC" value="Accept">
   				<small>I accept these <br clear> <a href="terms">terms and conditions</a></small>
 			</label>
-			<button class="btn btn-success btn-mini">Submit</button>
+			<button class="btn btn-success btn-mini">Sign me up</button>
 		</fieldset>
 		</form>
 	</section>

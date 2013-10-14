@@ -30,22 +30,24 @@ class Signin extends CI_Controller{
 	}
 	function login(){
 		$this->load->model("members_model","members");
-		$username = $_REQUEST['username'];
-		$password = md5($_REQUEST['password']);
-		$login    = $this->members->checkLogin($username, $password);
-		if (isset($login)){
-			// get the member type and go the right way...
-			$type = $this->members->getMemberType($login->id);
-			$this->session->set_userdata(array('user'=>$login->salt,'type'=>$type, 'id'=>$login->id));
-			if ($type == 'athlete' || $type == 'both'){
-				redirect('athlete/index');					
+		if (isset($_REQUEST['username']) && isset($_REQUEST['password'])){
+			$username = $_REQUEST['username'];
+			$password = md5($_REQUEST['password']);
+			$login    = $this->members->checkLogin($username, $password);
+			if (isset($login)){
+				// get the member type and go the right way...
+				$type = $this->members->getMemberType($login->id);
+				$this->session->set_userdata(array('user'=>$login->salt,'type'=>$type, 'id'=>$login->id));
+				if ($type == 'athlete' || $type == 'both'){
+					redirect('athlete/index');					
+				} else {
+					redirect('trainer/index');					
+				}
+				$this->fuel->pages->render("signin/athlete");
 			} else {
-				redirect('trainer/index');					
-			}
-			$this->fuel->pages->render("signin/athlete");
-		} else {
-			$vars = array('message'=>"Username/Password Invalid", 'request'=>$_REQUEST);
-			$this->fuel->pages->render('signin/loginError',$vars);
+				$vars = array('message'=>"Username/Password Invalid", 'request'=>$_REQUEST);
+				$this->fuel->pages->render('signin/loginError',$vars);
+			}			
 		}
 	}	
 	function activate($salt){
