@@ -16,6 +16,9 @@
 			<div class="span4 signin">
 				<?php $this->load->view('_blocks/sign-in');?>
 			</div>
+			<div class="span4 login">
+				<?php $this->load->view('_blocks/login');?>
+			</div>
 		</div>
 	</div>
 </div>
