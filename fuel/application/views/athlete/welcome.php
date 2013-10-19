@@ -42,7 +42,7 @@
 <div class="row">
 	<div class="span5"></div>
 	<div class="span2">
-		<a href="#" class="btn btn-success btn-block">Sports</a>
+		<a href="/athlete/sports" class="btn btn-success btn-block">Sports</a>
 	</div>
 	<div class="span5"></div>
 </div>

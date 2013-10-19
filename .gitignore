@@ -1,7 +1,8 @@
 #################
 ## Eclipse
 #################
-
+/fuel/application/cache
+.svn
 *.pydevproject
 .project
 .metadata
