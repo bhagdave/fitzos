@@ -1,5 +1,4 @@
 <?php 
-var_dump($sports);
 ?>
 <div class="row">
 	<div class="span4">
@@ -17,13 +16,16 @@ var_dump($sports);
 		<form action="" method="post">
 			<input type="hidden" name="member_id" value="<?=$athlete->member_id ?>" />
 			<fieldset>
-				<select name="sport_id">
+			<div class="ui-widget">
+				<select id="sportsbox" name="sport_id">
+    				<option value="">Select one...</option>
 					<?php
 						foreach($sports as $sport){
 							echo("<option value='" . $sport['id'] . "'>".$sport['name']."</option>");
 						} 
 					?>
 				</select>
+			</div>
 			</fieldset>
 		</form>
 	</div>
