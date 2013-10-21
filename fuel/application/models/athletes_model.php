@@ -34,9 +34,6 @@ class Athletes_model extends Fitzos_model {
 			return null;
 		}
 	}
-	function getSports($id){
-		return null;
-	}
 }
 class Athlete_model extends Base_module_record {
 

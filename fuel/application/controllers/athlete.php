@@ -100,27 +100,37 @@ class Athlete extends CI_Controller{
 	}
 	function sports(){
 		$this->load->model('athletes_model','athletes');
-		if (isset($_POST['id'])){	
-		} else {
-			if ($this->session->userdata('id')){
-				// get the athlete from the database
-				$id      = $this->session->userdata('id');
-				$athlete = $this->athletes->loadProfile($id);
-				// let us get all of the sports man....
-				$this->load->model('sports_model','sports');
-				// Lets us get the sports attached to the member
-				$athlete_sports = $this->athletes->getSports($id);
-				$sports = $this->sports->list_items();
-				if (isset($athlete)){
-					$vars = array('athlete'=>$athlete, 'sports'=>$sports);
-					$vars['message'] = $this->session->flashdata('message');
-					$this->fuel->pages->render('athlete/sports',$vars);	
-				} else {
-					redirect('signin/login');
-				}			
+		$this->load->model('members_model','members');
+		$this->load->model('sports_model','sports');
+		$vars = array();
+		if (isset($_POST['member_id'])){
+			// new sport lets take it...
+			$data = $_POST;
+			$id = $this->members->addSport($data);
+			if ($id > 0){
+				$vars['message'] = "Sport added to your profile!";				
+			} else {
+				$vars['message'] = "Unable to add sport to your profile!";				
+			}				
+		}
+		if ($this->session->userdata('id')){
+			// get the athlete from the database
+			$id      = $this->session->userdata('id');
+			$athlete = $this->athletes->loadProfile($id);
+			// let us get all of the sports man....
+			// Lets us get the sports attached to the member
+			$athlete_sports = $this->members->getSports($id);
+			$sports = $this->sports->list_items();
+			if (isset($athlete)){
+				$vars['athlete']=$athlete;
+				$vars['sports']=$sports; 
+				$vars['members_sports']=$athlete_sports;
+				$this->fuel->pages->render('athlete/sports',$vars);	
 			} else {
 				redirect('signin/login');
-			}
+			}			
+		} else {
+			redirect('signin/login');
 		}
 	}	
 }

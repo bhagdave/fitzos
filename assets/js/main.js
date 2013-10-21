@@ -140,3 +140,6 @@ $(function() {
       $( "#sportsbox" ).toggle();
     });
   });
+$(function() {
+    $( ".datepicker" ).datepicker();
+});

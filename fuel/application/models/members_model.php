@@ -84,6 +84,29 @@ class Members_model extends Fitzos_model {
 		$this->db->update('member',$data);
 		return ($this->db->affected_rows() > 0);	
 	}
+	function getSports($id){
+		$member = $this->getCache('membersports_' . $id);
+		if (isset($member)){
+			return $member;
+		} else {
+			$this->db->select('sport.name as sport');
+			$this->db->where('member_id', $id);
+			$this->db->join('sport','sport.id = member_sports.member_id');
+			$result = $this->db->get('member_sports');
+			$data   = $result->result();
+			if (isset($data[0])){
+				$this->setCache('membersports_'. $id,$data[0]);
+				return $data[0];
+			} else {
+				return null;
+			}
+		}
+	}
+	function addSport($data){
+		$this->db->insert('member_sports',$data);
+		return $this->db->last_insert_id();
+	}
+	
 }
  
 class Member_model extends Base_module_record {

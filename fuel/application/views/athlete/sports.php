@@ -9,14 +9,18 @@
 	<div class="span4">
 		<h2>Your Existing Sports</h2>
 	<?php
-		
+		if (isset($members_sports)){
+			foreach($members_sports as $sport){
+				echo("<h4>$sport->sport</h4>");
+			}
+		}
 	?>
 	</div>
 	<div class="span4">
 	</div>
 	<div class="span4">
 		<h2>Add a Sport</h2>
-		<form action="" method="post">
+		<form action="athlete/sports" method="post">
 			<input type="hidden" name="member_id" value="<?=$athlete->member_id ?>" />
 			<fieldset>
 			<div class="ui-widget">
@@ -28,8 +32,12 @@
 						} 
 					?>
 				</select>
+				<input type="text" class="datepicker" name="from_date" />
+				<input type="text" class="datepicker" name="to_date" />	
+				<button class="btn btn-success">Submit</button>	
 			</div>
 			</fieldset>
 		</form>
+		<a href="#"  class="btn js-addASport">Add a new sport!</a>
 	</div>
 </div>
