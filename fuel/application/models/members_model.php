@@ -104,7 +104,7 @@ class Members_model extends Fitzos_model {
 	}
 	function addSport($data){
 		$this->db->insert('member_sports',$data);
-		return $this->db->last_insert_id();
+		return $this->db->insert_id();
 	}
 	
 }

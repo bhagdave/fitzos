@@ -11,7 +11,7 @@
 	<?php
 		if (isset($members_sports)){
 			foreach($members_sports as $sport){
-				echo("<h4>$sport->sport</h4>");
+				echo("<h4>$sport</h4>");
 			}
 		}
 	?>
@@ -20,7 +20,7 @@
 	</div>
 	<div class="span4">
 		<h2>Add a Sport</h2>
-		<form action="athlete/sports" method="post">
+		<form action="/athlete/sports" method="post">
 			<input type="hidden" name="member_id" value="<?=$athlete->member_id ?>" />
 			<fieldset>
 			<div class="ui-widget">
