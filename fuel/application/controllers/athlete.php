@@ -108,6 +108,8 @@ class Athlete extends CI_Controller{
 				$athlete = $this->athletes->loadProfile($id);
 				// let us get all of the sports man....
 				$this->load->model('sports_model','sports');
+				// Lets us get the sports attached to the member
+				$athlete_sports = $this->athletes->getSports($id);
 				$sports = $this->sports->list_items();
 				if (isset($athlete)){
 					$vars = array('athlete'=>$athlete, 'sports'=>$sports);

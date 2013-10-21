@@ -8,6 +8,9 @@
 <div class="row-fluid">
 	<div class="span4">
 		<h2>Your Existing Sports</h2>
+	<?php
+		
+	?>
 	</div>
 	<div class="span4">
 	</div>
