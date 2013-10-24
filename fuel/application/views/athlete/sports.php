@@ -1,4 +1,5 @@
 <?php 
+$existingSports = array();
 ?>
 <div class="row">
 	<div class="span4">
@@ -11,7 +12,14 @@
 	<?php
 		if (isset($members_sports)){
 			foreach($members_sports as $sport){
-				echo("<h4>$sport</h4>");
+				echo("<h4>$sport->sport</h4>");
+				if (isset($sport->from_date)){
+					echo("From $sport->from_date");
+				}
+				if (isset($sport->to_date)){
+					echo(" Until $sport->to_date");
+				}
+				$existingSports[] = $sport->sport;
 			}
 		}
 	?>
@@ -28,7 +36,9 @@
     				<option value="">Select one...</option>
 					<?php
 						foreach($sports as $sport){
-							echo("<option value='" . $sport['id'] . "'>".$sport['name']."</option>");
+							if (!in_array($sport['name'],$existingSports)){
+								echo("<option value='" . $sport['id'] . "'>".$sport['name']."</option>");
+							}
 						} 
 					?>
 				</select>

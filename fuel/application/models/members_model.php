@@ -84,27 +84,45 @@ class Members_model extends Fitzos_model {
 		$this->db->update('member',$data);
 		return ($this->db->affected_rows() > 0);	
 	}
-	function getSports($id){
-		$member = $this->getCache('membersports_' . $id);
+	function getSports($id, $useCache = true){
+		if ($useCache){
+			$member = $this->getCache('membersports_' . $id);
+		}
 		if (isset($member)){
 			return $member;
 		} else {
-			$this->db->select('sport.name as sport');
+			$this->db->select('sport.name as sport,from_date,to_date');
 			$this->db->where('member_id', $id);
-			$this->db->join('sport','sport.id = member_sports.member_id');
+			$this->db->join('sport','sport.id = member_sports.sport_id');
 			$result = $this->db->get('member_sports');
 			$data   = $result->result();
 			if (isset($data[0])){
-				$this->setCache('membersports_'. $id,$data[0]);
-				return $data[0];
+				$this->setCache('membersports_'. $id,$data);
+				return $data;
 			} else {
 				return null;
 			}
 		}
 	}
 	function addSport($data){
-		$this->db->insert('member_sports',$data);
-		return $this->db->insert_id();
+		// check if it already exists first
+		$this->db->where('member_id',$data['member_id']);
+		$this->db->where('sport_id',$data['sport_id']);
+		if ($this->db->count_all_results('member_sports')== 0){
+			// lets frig those dates baby..
+			if (strtotime($data['from_date'])){
+				$data['from_date'] = date('Y-m-d',strtotime($data['from_date']));
+			} else {
+				unset($data['from_date']);
+			}
+			if (strtotime($data['to_date'])){
+				$data['to_date'] = date('Y-m-d',strtotime($data['to_date']));
+			} else {
+				unset($data['to_date']);
+			}
+			$this->db->insert('member_sports',$data);
+			return $this->db->insert_id();
+		}
 	}
 	
 }
