@@ -12,7 +12,7 @@ $existingSports = array();
 	<?php
 		if (isset($members_sports)){
 			foreach($members_sports as $sport){
-				echo("<h4>$sport->sport</h4>");
+				echo("<a href='/athlete/stats/{$sport->sport}'><h4>$sport->sport</h4></a>");
 				if (isset($sport->from_date)){
 					echo("From $sport->from_date");
 				}
@@ -42,8 +42,8 @@ $existingSports = array();
 						} 
 					?>
 				</select>
-				<input type="text" class="datepicker" name="from_date" />
-				<input type="text" class="datepicker" name="to_date" />	
+				<input placeholder="From Date" type="text" class="datepicker" name="from_date" />
+				<input placeholder="To date" type="text" class="datepicker" name="to_date" />	
 				<button class="btn btn-success">Submit</button>	
 			</div>
 			</fieldset>
