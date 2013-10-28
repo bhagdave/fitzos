@@ -12,7 +12,7 @@ $existingSports = array();
 	<?php
 		if (isset($members_sports)){
 			foreach($members_sports as $sport){
-				echo("<a href='/athlete/stats/{$sport->sport}'><h4>$sport->sport</h4></a>");
+				echo("<a href='/athlete/stats/{$sport->id}'><h4>$sport->sport</h4></a>");
 				if (isset($sport->from_date)){
 					echo("From $sport->from_date");
 				}

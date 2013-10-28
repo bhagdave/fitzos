@@ -91,7 +91,7 @@ class Members_model extends Fitzos_model {
 		if (isset($member)){
 			return $member;
 		} else {
-			$this->db->select('sport.name as sport,from_date,to_date');
+			$this->db->select('sport.id as id,sport.name as sport,from_date,to_date');
 			$this->db->where('member_id', $id);
 			$this->db->join('sport','sport.id = member_sports.sport_id');
 			$result = $this->db->get('member_sports');
