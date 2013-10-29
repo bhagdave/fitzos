@@ -144,15 +144,17 @@ class Athlete extends CI_Controller{
 			$athlete = $this->athletes->loadProfile($id);
 			// get positions for the sport
 			$positions = $this->sports->getPositionsForSport($sport);
-			// get possible stats for the sport.
+			// get possible stats for the sport and the sport of course
 			$stats = $this->sports->getStatsForSport($sport);
+			$sportData = $this->sports->find_by_key($sport,'array');
 			// get athlete stats for the sport.
-			$athlete_stats = $this->athletes->getStatsForAthleteSport($id,$sport);
+			$athleteStats = $this->athletes->getStatsForAthleteSport($id,$sport);
 			if (isset($athlete)){
 				$vars['athlete']=$athlete;
 				$vars['positions'] = $positions;
 				$vars['stats'] = $stats;
-				$vars['athlete_stats'] = $athlete_stats;
+				$vars['athlete_stats'] = $athleteStats;
+				$vars['sport'] = $sportData;
 				$this->fuel->pages->render('athlete/stats',$vars);	
 			} else {
 				redirect('signin/login');
@@ -161,5 +163,6 @@ class Athlete extends CI_Controller{
 			redirect('signin/login');
 		}
 	}
+
 }
 ?>

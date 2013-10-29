@@ -135,11 +135,13 @@ $('#active').change(function(){
     });
   })( jQuery );
 $(function() {
+    $( ".datepicker" ).datepicker();
     $( "#sportsbox" ).combobox();
     $( "#toggle" ).click(function() {
       $( "#sportsbox" ).toggle();
     });
+    $('.js-positionSelect').change(function(){
+    	val = $(this).val();
+    	$( ".js-stats" ).load( "sports/getStatsForPosition/" + val );   
+    });
   });
-$(function() {
-    $( ".datepicker" ).datepicker();
-});
