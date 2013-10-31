@@ -163,6 +163,26 @@ class Athlete extends CI_Controller{
 			redirect('signin/login');
 		}
 	}
-
+	function addStats(){
+		$data = $_POST;
+		$this->load->model('athletes_model','athletes');
+		$vars = array();
+		if (isset($data['member_id'])){
+			// post to the database
+			$id = $this->athletes->saveStats($data);
+			if ($id > 0){
+				$vars['message'] = 'Updated ok.';
+			} else {
+				$vars['message'] = 'Unable to save stats';
+			}
+		} else {
+			redirect('signin/login');
+		}
+		if ($this->session->userdata('id')){
+			redirect('athlete/stats/' . $data['sport_id']);
+		} else {
+			redirect('signin/login');
+		}
+	}
 }
 ?>

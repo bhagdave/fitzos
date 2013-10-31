@@ -42,6 +42,10 @@ class Athletes_model extends Fitzos_model {
 		$result = $this->db->get('statistics');
 		return $result->result();
 	}
+	function saveStats($data){
+		$this->db->insert("statistics",$data);
+		return $this->db->insert_id();
+	}
 }
 class Athlete_model extends Base_module_record {
 
