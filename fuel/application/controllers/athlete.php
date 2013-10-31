@@ -196,10 +196,8 @@ class Athlete extends CI_Controller{
 			// let us get all of the sports man....
 			// Lets us get the sports attached to the member
 			$athlete_sports = $this->members->getSports($id, false);
-			$sports = $this->sports->list_items();
 			if (isset($athlete)){
 				$vars['athlete']=$athlete;
-				$vars['sports']=$sports; 
 				$vars['members_sports']=$athlete_sports;
 				$this->fuel->pages->render('athlete/teams',$vars);	
 			} else {
