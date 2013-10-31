@@ -48,6 +48,9 @@ class Signin extends CI_Controller{
 				$vars = array('message'=>"Username/Password Invalid", 'request'=>$_REQUEST);
 				$this->fuel->pages->render('signin/loginError',$vars);
 			}			
+		} else {
+			$vars = array('message'=>"", 'request'=>$_REQUEST);
+			$this->fuel->pages->render('signin/login',$vars);
 		}
 	}	
 	function activate($salt){

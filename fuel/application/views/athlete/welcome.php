@@ -28,20 +28,6 @@
 <div class="row">
 	<div class="span5"></div>
 	<div class="span2">
-		<a href="#" class="btn btn-success btn-block">Messages</a>
-	</div>
-	<div class="span5"></div>	
-</div>
-<div class="row">
-	<div class="span5"></div>
-	<div class="span2">
-		<a href="#" class="btn btn-success btn-block">News</a>
-	</div>
-	<div class="span5"></div>
-</div>
-<div class="row">
-	<div class="span5"></div>
-	<div class="span2">
 		<a href="/athlete/sports" class="btn btn-success btn-block">Sports</a>
 	</div>
 	<div class="span5"></div>
@@ -49,35 +35,7 @@
 <div class="row">
 	<div class="span5"></div>
 	<div class="span2">
-		<a href="#" class="btn btn-success btn-block">Leagues</a>
-	</div>
-	<div class="span5"></div>
-</div>
-<div class="row">
-	<div class="span5"></div>
-	<div class="span2">
-		<a href="#" class="btn btn-success btn-block">Achievements</a>
-	</div>
-	<div class="span3"></div>
-</div>
-<div class="row">
-	<div class="span5"></div>
-	<div class="span2">
-		<a href="#" class="btn btn-success btn-block">Badges</a>
-	</div>
-	<div class="span3"></div>
-</div>
-<div class="row">
-	<div class="span5"></div>
-	<div class="span2">
-		<a href="#" class="btn btn-success btn-block">Calendar</a>
-	</div>
-	<div class="span3"></div>
-</div>
-<div class="row">
-	<div class="span5"></div>
-	<div class="span2">
-		<a href="#" class="btn btn-success btn-block">Events</a>
+		<a href="/athlete/teams" class="btn btn-success btn-block">Teams</a>
 	</div>
 	<div class="span3"></div>
 </div>

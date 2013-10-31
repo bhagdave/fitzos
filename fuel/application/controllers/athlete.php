@@ -184,5 +184,30 @@ class Athlete extends CI_Controller{
 			redirect('signin/login');
 		}
 	}
+	function teams(){
+		$this->load->model('athletes_model','athletes');
+		$this->load->model('members_model','members');
+		$this->load->model('teams_model','teams');
+		$vars = array();
+		if ($this->session->userdata('id')){
+			// get the athlete from the database
+			$id      = $this->session->userdata('id');
+			$athlete = $this->athletes->loadProfile($id);
+			// let us get all of the sports man....
+			// Lets us get the sports attached to the member
+			$athlete_sports = $this->members->getSports($id, false);
+			$sports = $this->sports->list_items();
+			if (isset($athlete)){
+				$vars['athlete']=$athlete;
+				$vars['sports']=$sports; 
+				$vars['members_sports']=$athlete_sports;
+				$this->fuel->pages->render('athlete/teams',$vars);	
+			} else {
+				redirect('signin/login');
+			}			
+		} else {
+			redirect('signin/login');
+		}
+	}
 }
 ?>
