@@ -167,7 +167,7 @@ class Athlete extends CI_Controller{
 		$data = $_POST;
 		$this->load->model('athletes_model','athletes');
 		$vars = array();
-		if (isset($data['member_id'])){
+		if (isset($data['source_id'])){
 			// post to the database
 			$id = $this->athletes->saveStats($data);
 			if ($id > 0){
