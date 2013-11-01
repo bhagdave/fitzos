@@ -1,5 +1,5 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
- 
+require_once(FUEL_PATH.'models/base_module_model.php');
 class Teams_model extends Base_module_model {
  
     function __construct()
@@ -22,6 +22,10 @@ class Teams_model extends Base_module_model {
     	$this->db->join('team','team_id = team.id');
     	$result = $this->db->get('team_membership');
     	return $result->result();
+    }
+    function createTeam($data){
+    	$this->db->insert('team',$data);
+    	return $this->db->insert_id();
     }
 }
  

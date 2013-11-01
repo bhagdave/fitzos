@@ -15,7 +15,7 @@ $existingTeam = array();
 			if (isset($owned) && count($owned) > 0){
 				foreach($owned as $team){
 					$existingTeam[] = $team->name;
-					echo('<a href="teams/manage/' . $team->id .'"><p>' . $team->name. '</p></a>');
+					echo('<a href="/teams/manage/' . $team->id .'"><p>' . $team->name. '</p></a>');
 				}
 			} else {
 				echo("<h5>You do not currently own any teams!</h5>");
@@ -69,6 +69,7 @@ $existingTeam = array();
 <div class="row-fluid">
 	<div class="span2">&nbsp;</div>
 	<div class="span8">
+		<a href="/teams/create/<?=$athlete->member_id ?>"><h2>Create new team</h2></a>
 	</div>
 	<div class="span2">&nbsp;</div>
 </div>
