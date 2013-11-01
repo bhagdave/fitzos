@@ -48,9 +48,7 @@ $existingTeam = array();
     				<option value="">Select a team...</option>
 					<?php
 						foreach($public_teams as $team){
-							if (!in_array($team['name'],$existingTeams)){
-								echo("<option value='" . $team['id'] . "'>".$team['name']."</option>");
-							}
+							echo("<option value='" . $team->id . "'>".$team->name."</option>");
 						} 
 					?>
 				</select>
