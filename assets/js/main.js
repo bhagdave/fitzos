@@ -137,8 +137,10 @@ $('#active').change(function(){
 $(function() {
     $( ".datepicker" ).datepicker();
     $( "#sportsbox" ).combobox();
+    $( "#teamssbox" ).combobox();
     $( "#toggle" ).click(function() {
       $( "#sportsbox" ).toggle();
+      $( "#teamsbox" ).toggle();
     });
     $('.js-positionSelect').change(function(){
     	val = $(this).val();
