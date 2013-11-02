@@ -213,5 +213,8 @@ class Athlete extends CI_Controller{
 			redirect('signin/login');
 		}
 	}
+	function joinTeam(){
+		// TODO: Add member to team.
+	}
 }
 ?>

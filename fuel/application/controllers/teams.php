@@ -28,8 +28,14 @@ class Teams extends CI_Controller{
 		$vars = array('member'=>$member, 'sports'=>$sports);
 		$this->fuel->pages->render('team/create',$vars);
 	}	
-	
+	function view($team){
+	// TODO:View a management team	
+	}
+	function leave($team){
+	// TODO:Leave a member from the team.	
+	}
 	function manage($team){
+	// TODO:Managing a team but only for team
 		echo("Managing");
 	}
 }
