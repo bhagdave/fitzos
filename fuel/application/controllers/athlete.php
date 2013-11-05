@@ -202,7 +202,7 @@ class Athlete extends CI_Controller{
 			if (isset($athlete)){
 				$vars['athlete'] = $athlete;
 				$vars['members_sports'] = $athlete_sports;
-				$vars['public_teams'] = $teams;
+				$vars['public_teams']   = $teams;
 				$vars['owned'] = $owned;
 				$vars['member'] = $member;
 				$this->fuel->pages->render('athlete/teams',$vars);	

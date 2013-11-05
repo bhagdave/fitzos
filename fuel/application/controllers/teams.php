@@ -36,6 +36,22 @@ class Teams extends CI_Controller{
 	}
 	function manage($team){
 	// TODO:Managing a team but only for team
-		echo("Managing");
+		$this->load->model('teams_model','teams');
+		$this->load->model('sports_model','sports');
+		$this->load->model('members_model','members');
+		if ($this->session->userdata('id')){
+			$id   = $this->session->userdata('id');
+			$vars = array('member'=>$member, 'sports'=>$sports);
+			$this->fuel->pages->render('team/manage',$vars);
+		} else {
+			redirect('signin/login');
+			die();
+		}
+	}
+	function wall($team){
+		//TODO: Build wall
+	}
+	function addWallPost(){
+		//TODO: Add wall post
 	}
 }
