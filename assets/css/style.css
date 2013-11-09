@@ -34,9 +34,8 @@ ul li{
 .signin{
 	float:right;
 	padding:20px;
-	color:red;
-}
-  .custom-combobox {
+	color:blue;
+}  .custom-combobox {
     position: relative;
     display: inline-block;
   }
