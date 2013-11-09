@@ -51,6 +51,13 @@ class Teams_model extends Base_module_model {
 	}
 	function getTeamMembers($team){
 		$this->db->where('team_id',$team);
+		$this->db->where('status','yes');
+		$this->db->join('member','member.id = member_id');
+		$this->db->get('team_membership');
+	}
+	function getMembersAwaiting($team){
+		$this->db->where('team_id',$team);
+		$this->db->where('status','waiting');
 		$this->db->join('member','member.id = member_id');
 		$this->db->get('team_membership');
 	}

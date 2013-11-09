@@ -62,7 +62,8 @@ class Teams extends CI_Controller{
 			$team   = $this->teams->getTeam($team_id);
 			$events = $this->teams->getTeamEvents($team_id);
 			$members= $this->teams->getTeamMembers($team_id);
-			$vars   = array('member'=>$member, 'wall'=>$wall, 'team'=>$team, 'members'=>$members);
+			$waiting= $this->teams->getMembersAwaiting($team_id);
+			$vars   = array('member'=>$member, 'wall'=>$wall, 'team'=>$team, 'members'=>$members, 'waiting'=>$waiting);
 			$this->fuel->pages->render('team/manage',$vars);
 		} else {
 			redirect('signin/login');
