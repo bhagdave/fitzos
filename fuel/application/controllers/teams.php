@@ -50,23 +50,27 @@ class Teams extends CI_Controller{
 	function leave($team){
 	// TODO:Leave a member from the team.	
 	}
-	function manage($team_id){
-		$this->load->model('teams_model','teams');
-		$this->load->model('sports_model','sports');
-		$this->load->model('members_model','members');
-		if ($this->session->userdata('id')){
-			$id     = $this->session->userdata('id');
-			$member = $this->members->getMember($id);
-			$wall   = $this->teams->getTeamWall($team_id);
-			$team   = $this->teams->getTeam($team_id);
-			$events = $this->teams->getTeamEvents($team_id);
-			$members= $this->teams->getTeamMembers($team_id);
-			$waiting= $this->teams->getMembersAwaiting($team_id);
-			$vars   = array('member'=>$member, 'wall'=>$wall, 'team'=>$team, 'members'=>$members, 'waiting'=>$waiting);
-			$this->fuel->pages->render('team/manage',$vars);
+	function manage($team_id = 0){
+		if ($team_id > 0){
+			$this->load->model('teams_model','teams');
+			$this->load->model('sports_model','sports');
+			$this->load->model('members_model','members');
+			if ($this->session->userdata('id')){
+				$id     = $this->session->userdata('id');
+				$member = $this->members->getMember($id);
+				$wall   = $this->teams->getTeamWall($team_id);
+				$team   = $this->teams->getTeam($team_id);
+				$events = $this->teams->getTeamEvents($team_id);
+				$members= $this->teams->getTeamMembers($team_id);
+				$waiting= $this->teams->getMembersAwaiting($team_id);
+				$vars   = array('member'=>$member, 'wall'=>$wall, 'team'=>$team, 'members'=>$members, 'waiting'=>$waiting);
+				$this->fuel->pages->render('team/manage',$vars);
+			} else {
+				redirect('signin/login');
+				die();
+			}
 		} else {
-			redirect('signin/login');
-			die();
+			redirect('404');
 		}
 	}
 	function wall($team){
@@ -74,12 +78,17 @@ class Teams extends CI_Controller{
 	}
 	function addWallPost(){
 		$this->load->model('teams_model','teams');
-		if ($this->session->userdata('id')){
-			$this->teams->addWallPost($_POST);
-			$this->manage($_POST['team_id']);				
-		} else {
-			redirect('signin/login');
-			die();
-		}		
+		if (isset($_REQUEST)){
+			if ($this->session->userdata('id')){
+				$id   = $this->teams->addWallPost($_REQUEST);
+			 	$wall = $this->teams->getTeamWall($_REQUEST['team_id']);
+			 	$vars = array('wall'=>$wall,'layout'=>'none');
+				$this->fuel->pages->render('_blocks/teamWall',$vars);
+			} else {
+				redirect('signin/login');
+				die();
+			}					
+		}
 	}
+	
 }

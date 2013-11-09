@@ -146,4 +146,20 @@ $(function() {
     	val = $(this).val();
     	$( ".js-stats" ).load( "sports/getStatsForPosition/" + val );   
     });
+    $( ".js-wallPostAdd" ).submit(function( event ) {
+    	event.preventDefault();
+    	data = $('.js-wallPostAdd').serialize();
+    	$.ajax({
+    		url: "/teams/addWallPost",
+    		type:'POST',
+    		data:data})
+    		.done(function( data ) {
+    			$('.teamWall').html(data);
+    		}) 
+    		.fail(function() {
+    			alert( "error" );
+    		});    	
+    	return false;
+    });
+    
   });

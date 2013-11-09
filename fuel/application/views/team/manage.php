@@ -4,6 +4,9 @@
 	</div>
 </div>
 <div class="row-fluid">
+	<h2><?=$team->name ?></h2>
+</div>
+<div class="row-fluid">
 	<div class="span4"><h2>Members</h2></div>
 	<div class="span4">
 		<h2>Member Requests</h2>
@@ -23,24 +26,12 @@
 	</div>
 	<div class="span4">
 		<h2>Team Wall</h2>
-		<form action="teams/addWallPost" method="post">
+		<form class="js-wallPostAdd">
 			<input type="hidden" name="team_id" value="<?=$team->id ?>" />
-			<textarea cols="40" rows="2" name="message" placeholder="Your message">
-			</textarea>
-			<button class="btn-small btn-success">Add post</button>
+			<textarea cols="40" rows="2" name="message" placeholder="Your message"></textarea>
+			<button class="btn-small btn-success js-wallPostAddBtn">Add post</button>
 		</form>
-		<?php
-			if (isset($wall)){
-				foreach($wall as $post){
-					echo("<div class='wallPost'>");
-					echo($post->message);
-					if (!empty($post->image)){
-						echo("<img src='" .$post->image."'>");
-					}	
-					echo("</div>");
-				}
-			} 
-		?>
+		<?php $this->load->view('team/teamWall');?>
 	</div>
 </div>
 <div class="row-fluid">
