@@ -61,6 +61,10 @@ class Teams_model extends Base_module_model {
 		$this->db->join('member','member.id = member_id');
 		$this->db->get('team_membership');
 	}
+	function addWallPost($data){
+		$this->db->insert('team_wall',$data);
+		return $this->db->insert_id();
+	}
 }
  
 class Team_model extends Base_module_record {

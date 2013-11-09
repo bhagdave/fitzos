@@ -24,7 +24,7 @@
 		<h2>Team Wall</h2>
 		<form action="teams/addWallPost" method="post">
 			<input type="hidden" name="member_id" value="<?=$member->id ?>" />
-			<textarea cols="40" rows="5" name="message" placeholder="Your message">
+			<textarea cols="40" rows="2" name="message" placeholder="Your message">
 			</textarea>
 			<button class="btn-small">Add post</button>
 		</form>

@@ -51,7 +51,6 @@ class Teams extends CI_Controller{
 	// TODO:Leave a member from the team.	
 	}
 	function manage($team_id){
-	// TODO:Managing a team but only for team
 		$this->load->model('teams_model','teams');
 		$this->load->model('sports_model','sports');
 		$this->load->model('members_model','members');
@@ -74,6 +73,13 @@ class Teams extends CI_Controller{
 		//TODO: Build wall
 	}
 	function addWallPost(){
-		//TODO: Add wall post
+		$this->load->model('teams_model','teams');
+		if ($this->session->userdata('id')){
+			$this->teams->addWallPost($_POST);
+			$this->manage($_POST['team_id']);				
+		} else {
+			redirect('signin/login');
+			die();
+		}		
 	}
 }
