@@ -29,7 +29,22 @@ class Teams extends CI_Controller{
 		$this->fuel->pages->render('team/create',$vars);
 	}	
 	function view($team){
-	// TODO:View a management team	
+		$this->load->model('teams_model','teams');
+		$this->load->model('sports_model','sports');
+		$this->load->model('members_model','members');
+		if ($this->session->userdata('id')){
+			$id     = $this->session->userdata('id');
+			$member = $this->members->getMember($id);
+			$wall   = $this->teams->getTeamWall($team);
+			$team   = $this->teams->getTeam($team);
+			$events = $this->teams->getTeamEvents($team);
+			$members= $this->teams->getTeamMembers($team);
+			$vars   = array('member'=>$member, 'wall'=>$wall, 'team'=>$team, 'members'=>$members);
+			$this->fuel->pages->render('team/view',$vars);
+		} else {
+			redirect('signin/login');
+			die();
+		}
 	}
 	function leave($team){
 	// TODO:Leave a member from the team.	
@@ -40,8 +55,13 @@ class Teams extends CI_Controller{
 		$this->load->model('sports_model','sports');
 		$this->load->model('members_model','members');
 		if ($this->session->userdata('id')){
-			$id   = $this->session->userdata('id');
-			$vars = array('member'=>$member, 'sports'=>$sports);
+			$id     = $this->session->userdata('id');
+			$member = $this->members->getMember($id);
+			$wall   = $this->teams->getTeamWall($team);
+			$team   = $this->teams->getTeam($team);
+			$events = $this->teams->getTeamEvents($team);
+			$members= $this->teams->getTeamMembers($team);
+			$vars   = array('member'=>$member, 'wall'=>$wall, 'team'=>$team, 'members'=>$members);
 			$this->fuel->pages->render('team/manage',$vars);
 		} else {
 			redirect('signin/login');
