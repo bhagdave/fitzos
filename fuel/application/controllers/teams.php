@@ -11,6 +11,7 @@ class Teams extends CI_Controller{
 		$this->load->model('members_model','members');
 		if (isset($_POST['owner'])){
 			// posted do shit....
+			var_dump($_POST);
 			$team_id = $this->teams->createTeam($_POST);
 			// send them to the team management
 			$this->manage($team_id);
@@ -49,7 +50,7 @@ class Teams extends CI_Controller{
 	function leave($team){
 	// TODO:Leave a member from the team.	
 	}
-	function manage($team){
+	function manage($team_id){
 	// TODO:Managing a team but only for team
 		$this->load->model('teams_model','teams');
 		$this->load->model('sports_model','sports');
@@ -57,10 +58,10 @@ class Teams extends CI_Controller{
 		if ($this->session->userdata('id')){
 			$id     = $this->session->userdata('id');
 			$member = $this->members->getMember($id);
-			$wall   = $this->teams->getTeamWall($team);
-			$team   = $this->teams->getTeam($team);
-			$events = $this->teams->getTeamEvents($team);
-			$members= $this->teams->getTeamMembers($team);
+			$wall   = $this->teams->getTeamWall($team_id);
+			$team   = $this->teams->getTeam($team_id);
+			$events = $this->teams->getTeamEvents($team_id);
+			$members= $this->teams->getTeamMembers($team_id);
 			$vars   = array('member'=>$member, 'wall'=>$wall, 'team'=>$team, 'members'=>$members);
 			$this->fuel->pages->render('team/manage',$vars);
 		} else {

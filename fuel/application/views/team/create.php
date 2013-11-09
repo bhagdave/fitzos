@@ -2,7 +2,7 @@
 	<div class="span2">&nbsp;</div>
 	<div class="span8">
 		<h2>Create new team</h2>
-		<form action="/team/create" method="post">
+		<form action="/teams/create/<?=$member->id ?>" method="post">
 			<input type="hidden" name="owner" value="<?=$member->id ?>" />
 			<fieldset>
 				<input type="text" name="name" value="" placeholder="Name" />

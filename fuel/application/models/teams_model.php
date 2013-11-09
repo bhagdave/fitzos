@@ -28,7 +28,7 @@ class Teams_model extends Base_module_model {
     	return $this->db->insert_id();
     }
 	function getTeamWall($id){
-		$this->db->where('team_id',$team);
+		$this->db->where('team_id',$id);
 		$this->db->order_by('date');
 		$this->db->where('deleted','no');
 		$result = $this->db->get('team_wall');
