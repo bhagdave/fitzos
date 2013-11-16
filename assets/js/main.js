@@ -159,7 +159,27 @@ $(function() {
     		.fail(function() {
     			alert( "error" );
     		});    	
-    	return false;
     });
-    
-  });
+});
+function acceptMember(team,member){
+	event.preventDefault();
+	$.ajax({
+		url: "/teams/acceptMember/" + team + "/" + member,
+		type:'POST'})
+		.done(function( data ) {
+		}) 
+		.fail(function() {
+			alert( "error" );
+	});    	
+}
+function declineMember(team,member){
+	event.preventDefault();
+	$.ajax({
+		url: "/teams/declineMember/" + team + "/" + member,
+		type:'POST'})
+		.done(function( data ) {
+		}) 
+		.fail(function() {
+			alert( "error" );
+	});    	
+}

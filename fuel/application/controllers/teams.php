@@ -90,5 +90,20 @@ class Teams extends CI_Controller{
 			}					
 		}
 	}
-	
+	function declineMember($team,$member){
+		$this->load->model('teams_model','teams');
+		$this->load->model('notifications_model','notify');
+		$this->teams->declineMember($team,$member);
+		// add notification
+		$this->notify->sendDecline($team,$member);
+	}	
+	function acceptMember($team,$member){
+		$this->load->model('teams_model','teams');
+		$this->load->model('notifications_model','notify');
+		$this->teams->acceptMember($team,$member);
+		//add notification
+		$this->notify->sendAcceptance($team,$member);
+		// add wall post
+		$this->teams->addNewMemberWallPost($team,$member);
+	}	
 }

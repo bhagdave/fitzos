@@ -7,7 +7,21 @@
 	<h2><?=$team->name ?></h2>
 </div>
 <div class="row-fluid">
-	<div class="span4"><h2>Members</h2></div>
+	<div class="span4"><h2>Members</h2>
+		<?php
+			if (isset($members)){
+				echo("<ul>");
+				foreach($members as $member){
+					echo("<li>");
+					echo("$member->first_name $member->last_name");
+					echo("</li>");
+				}
+				echo("</ul>");
+			} else {
+				echo("<h4>No members</h4>");
+			}
+		?>
+	</div>
 	<div class="span4">
 		<h2>Member Requests</h2>
 		<?php
@@ -15,7 +29,7 @@
 				echo("<ul>");
 				foreach($waiting as $member){
 					echo("<li>");
-					echo("$member->name <button class='btn-small'>Accept</button><button class='btn-small'>Decline</button>");
+					echo("$member->first_name $member->last_name<button class='btn-small' onclick='acceptMember(".$team->id.",".$member->id.")'>Accept</button><button class='btn-small' onclick='declineMember(".$team->id.",".$member->id.")'>Decline</button>");
 					echo("</li>");
 				}
 				echo("</ul>");
