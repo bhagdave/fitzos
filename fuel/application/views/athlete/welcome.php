@@ -39,4 +39,11 @@
 	</div>
 	<div class="span3"></div>
 </div>
+<div class="row">
+	<div class="span5"></div>
+	<div class="span2">
+		<a href="/athlete/notifications" class="btn btn-success btn-block">Notifications</a>
+	</div>
+	<div class="span3"></div>
+</div>
 		

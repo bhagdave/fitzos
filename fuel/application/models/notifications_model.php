@@ -55,6 +55,14 @@ class Notifications_model extends Base_module_model {
 	    	return $notification;
    		}
     }
+	function getMemberNotifications($member){
+		$this->db->where("to_table","member");
+		$this->db->where("to_key",$member);
+		$this->db->where("read",0);
+		$this->db->order_by('date_added','desc');
+		$result = $this->db->get("notifications");
+		return $result->result();
+	}
 }
  
 class Notification_model extends Base_module_record {

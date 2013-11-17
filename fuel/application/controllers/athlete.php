@@ -216,5 +216,19 @@ class Athlete extends CI_Controller{
 	function joinTeam(){
 		// TODO: Add member to team.
 	}
+	function notifications(){
+		$this->load->model('athletes_model','athletes');
+		$this->load->model('notifications_model','notify');
+		if ($this->session->userdata('id')){
+			// get the athlete from the database
+			$id   = $this->session->userdata('id');
+			$notifications = $this->notify->getMemberNotifications($id);
+			$vars = array('notes'=>$notifications);
+			$this->fuel->pages->render('athlete/notifications',$vars);	
+		} else {
+			redirect('signin/login');
+		}
+		
+	}
 }
 ?>
