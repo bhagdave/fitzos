@@ -74,11 +74,15 @@ class Teams_model extends Base_module_model {
 		return $result->result();
 	}
 	function addWallPost($data){
-		if (!isset($data['date'])){
-			$data['date'] = date('Y-m-d');
+		if (is_array($data)){
+			if (!isset($data['date'])){
+				$data['date'] = date('Y-m-d');
+			}
+			$this->db->insert('team_wall',$data);
+			return $this->db->insert_id();
+		} else {
+			return null;
 		}
-		$this->db->insert('team_wall',$data);
-		return $this->db->insert_id();
 	}
 	function acceptMember($team,$member){
 		$this->db->where("member_id",$member);
@@ -100,6 +104,22 @@ class Teams_model extends Base_module_model {
 		$data['team_id'] = $team;
 		$data['message'] = "Added new member $member->first_name $member->last_name to team!";
 		$this->addWallPost($data);
+	}
+	function isOwner($team = null,$user = null){
+		if (isset($team) && isset($user)){
+			$this->db->where('id',$team);
+			$this->db->where('owner',$user);
+			$result = $this->db->get('team');
+			return $result->num_rows() > 0;
+		} else {
+			return false;
+		}
+	}
+	function deletePost($team,$id){
+		$this->db->where('team_id',$team);
+		$this->db->where('id',$id);
+		$this->db->set('deleted','yes');
+		$this->db->update('team_wall');
 	}
 }
  

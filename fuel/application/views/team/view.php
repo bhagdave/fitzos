@@ -5,20 +5,9 @@
 </div>
 <div class="row-fluid">
 	<div class="span4">
-		<h2>Team Members</h2>
-		<?php 
-			if (isset($members)){
-				echo("<ul>");
-				foreach($members as $member){
-					echo("<li>");
-					echo($member->first_name);
-					echo("</li>");
-				}
-				echo("</ul>");
-			} else {
-				echo("<h4>No current members</h4>");
-			}
-		?>
+		<div class="js-Members">
+		<?php $this->load->view('team/teamMembers');?>
+		</div>
 	</div>
 	<div class="span4">
 		<h2>Team Wall</h2>

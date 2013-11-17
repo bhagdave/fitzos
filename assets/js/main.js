@@ -161,12 +161,25 @@ $(function() {
     		});    	
     });
 });
+function getMembers(team){
+	$.ajax({
+		url: "/teams/getTeamMembers/" + team ,
+		type:'POST'})
+		.done(function( data ) {
+			$(".js-Members").html(data);
+		}) 
+		.fail(function() {
+			alert( "error" );
+	});    		
+}
 function acceptMember(team,member){
 	event.preventDefault();
 	$.ajax({
 		url: "/teams/acceptMember/" + team + "/" + member,
 		type:'POST'})
 		.done(function( data ) {
+			$(".js-MemberRequests").html(data);
+			getMembers();
 		}) 
 		.fail(function() {
 			alert( "error" );
@@ -178,8 +191,33 @@ function declineMember(team,member){
 		url: "/teams/declineMember/" + team + "/" + member,
 		type:'POST'})
 		.done(function( data ) {
+			$(".js-MemberRequests").html(data);
 		}) 
 		.fail(function() {
 			alert( "error" );
 	});    	
+}
+function deletePost(team,id){
+	event.preventDefault();
+	$.ajax({
+		url: "/teams/deleteWallPost/" + team + "/" + id,
+		type:'POST'})
+		.done(function( data ) {
+			$(".js-teamWall").html(data);
+		}) 
+		.fail(function() {
+			alert( "error" );
+	});    		
+}
+function getTeamWall($team){
+	event.preventDefault();
+	$.ajax({
+		url: "/teams/getWall/" + team ,
+		type:'POST'})
+		.done(function( data ) {
+			$(".js-teamWall").html(data);
+		}) 
+		.fail(function() {
+			alert( "error" );
+	});    		
 }

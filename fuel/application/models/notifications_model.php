@@ -22,7 +22,7 @@ class Notifications_model extends Base_module_model {
     		$data['date_added'] = date('Y-m-d');
     		$data['read'] = 'no';
     		$this->db->insert('notifications',$data);
-    		return $this->db->last_insert();
+    		return $this->db->insert_id();
     	}
     }
     function sendDecline($team,$member){
