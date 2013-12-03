@@ -17,6 +17,7 @@ h2,p,h1,h3,h4,h5,small,label{
 }
 body{
 	background-image:url(../images/cartographer.png);
+	color:white;
 }
 ul li{
 	color:red
