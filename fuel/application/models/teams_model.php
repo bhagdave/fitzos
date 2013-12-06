@@ -84,6 +84,11 @@ class Teams_model extends Base_module_model {
 			return null;
 		}
 	}
+	function setMemberRequest($team,$member){
+		$insert = array('member_id'=>$member,'team_id'=>$team, 'status'=>'waiting', 'requested_date'=>date('Y-m-d'));
+		$this->db->insert('team_membership',$insert);
+		return $this->db->insert_id();	
+	}
 	function acceptMember($team,$member){
 		$this->db->where("member_id",$member);
 		$this->db->where("team_id",$team);

@@ -214,7 +214,15 @@ class Athlete extends CI_Controller{
 		}
 	}
 	function joinTeam(){
-		// TODO: Add member to team.
+		if ($this->session->userdata('id')){
+			$member = $_REQUEST['member_id'];
+			$team   = $_REQUEST['team_id'];
+			$this->load->model('teams_model','teams');
+			$id = $this->teams->setMemberRequest($team,$member);
+			
+		} else {
+			redirect('signin/login');
+		}
 	}
 	function notifications(){
 		$this->load->model('athletes_model','athletes');
