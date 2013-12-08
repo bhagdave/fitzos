@@ -1,7 +1,15 @@
 
 /* -- Start Css */
-h2,p,h1,h3,h4,h5,small,label{
-	color:red;
+h2{
+	color:white;
+	font-family: Georgia,Serif;
+	font-size: 24px;
+}
+
+p,h1,h3,h4,h5,small,label{
+	color:white;
+	font-family: tahoma, san-serif;
+	font-size: 13px;
 }
 .signin {
 	display:block;
@@ -15,21 +23,31 @@ h2,p,h1,h3,h4,h5,small,label{
 .right-top{
 	display:block;
 }
+
+header{
+	margin-top: 15px;
+}
+
 body{
 	background-image:url(../images/cartographer.png);
 	color:white;
 }
+
 ul li{
 	color:red
 }
+
 .signin{
 	float:right;
 	padding:20px;
 	color:blue;
-}  .custom-combobox {
+}  
+
+.custom-combobox {
     position: relative;
     display: inline-block;
   }
+
   .custom-combobox-toggle {
     position: absolute;
     top: 0;
