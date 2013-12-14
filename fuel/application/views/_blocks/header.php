@@ -7,6 +7,7 @@
 
 <link href="http://<?=$_SERVER['SERVER_NAME'] ?>/assets/css/bootstrap-responsive.css" rel="stylesheet">
 <link href="http://<?=$_SERVER['SERVER_NAME'] ?>/assets/css/bootstrap.css" rel="stylesheet">
+<script src="http://<?=$_SERVER['SERVER_NAME'] ?>/assets/js/jquery.form.min.js"></script>
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 <link href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet">
