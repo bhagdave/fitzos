@@ -135,6 +135,9 @@ $('#active').change(function(){
     });
   })( jQuery );
 $(function() {
+	$('#js-JoinTeam').ajaxForm({
+		target: '#js-TeamMessages'
+	});
     $( ".datepicker" ).datepicker();
     $( "#sportsbox" ).combobox();
     $( "#teamssbox" ).combobox();

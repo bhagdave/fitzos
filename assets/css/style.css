@@ -1,11 +1,41 @@
 
 /* -- Start Css */
-h2,p,h1,h3,h4,h5,small,label{
-	color:red;
+h2{
+	color:white;
+	font-family: Georgia,Serif;
+	font-size: 24px;
 }
-.signin {
-	display:block;
+
+p,h1,h3,h4,h5,small,label{
+	color:white;
+	font-family: tahoma, san-serif;
+	font-size: 13px;
 }
+
+
+.splash {
+	z-index:1;
+	position: fixed;
+}
+
+.info {
+	height:416px;
+	float:left;
+	bgcolor:#999999;
+
+}
+
+.cal {
+	height:208px;
+	bgcolor:#0199cc;
+	float:right;
+}
+
+.photo {
+	height:208px;
+	bgcolor:#cccccc;
+	float:right;
+
 .top-right{
 	display:block;
 }
@@ -15,21 +45,40 @@ h2,p,h1,h3,h4,h5,small,label{
 .right-top{
 	display:block;
 }
+
+header{
+	margin-top: 15px;
+	margin-left: 15px;
+}
+
 body{
 	background-image:url(../images/cartographer.png);
-	color:white;
 }
+
 ul li{
 	color:red
 }
+
+.footer {
+	margin-left:15px;
+}
+
 .signin{
+	float:right;
+}
+
+.sign-in{
 	float:right;
 	padding:20px;
 	color:blue;
-}  .custom-combobox {
+	z-index:2;
+}  
+
+.custom-combobox {
     position: relative;
     display: inline-block;
   }
+
   .custom-combobox-toggle {
     position: absolute;
     top: 0;

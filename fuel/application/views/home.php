@@ -13,11 +13,26 @@
 <div class="row-fluid">
 	<div class="span12">
 		<div class="row-fluid">
-			<div class="span4 signin">
+			<div class=“span12 splash”>
+				<img src="../../../assets/images/splash_lead1.jpg" alt=""/>
+			</div>
+			
+			<div class="span4 sign-in">
 				<?php $this->load->view('_blocks/sign-in');?>
 			</div>
-			<div class="span4 login">
-				<?php $this->load->view('_blocks/login');?>
+			
+		</div>
+	</div>
+	<div class="span12">
+		<div class="row-fluid">
+			<div class=“span8 info”>
+				<h1>Information and Material</h1>
+			</div>
+			<div class=“span4 cal”>
+				<p>Link to modified Calendar</p>
+			</div>
+			<div class=“span4 photo”>
+				<p>link to photo page</p>
 			</div>
 		</div>
 	</div>
