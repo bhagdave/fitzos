@@ -21,18 +21,19 @@ p,h1,h3,h4,h5,small,label{
 .info {
 	height:416px;
 	float:left;
+	bgcolor:#999999;
 
 }
 
 .cal {
 	height:208px;
-	color:#0199cc;
+	bgcolor:#0199cc;
 	float:right;
 }
 
 .photo {
 	height:208px;
-	color:#cccccc;
+	bgcolor:#cccccc;
 	float:right;
 
 .top-right{
