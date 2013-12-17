@@ -24,7 +24,12 @@
 <?php
 	$ci = &get_instance(); 
 	$session = $ci->load->library("session");
-	if (!isset($session->userdata('id'))){
+	$userId  = $session->userdata('id');
+	if (isset($userId)){
+		$memberModel  = $ci->load->model("members_model");
+		$member = $memberModel->getMember($userId);
+		echo("<div class='welcome'>Welcome " . $member->first_name . ' ' . $member->last_name.'</div>');
+	} else {
 	?>
 		<div class="signin">
 			<a href="http://<?=$_SERVER['SERVER_NAME'] ?>/signin/login">Sign in</a>
