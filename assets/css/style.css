@@ -52,7 +52,6 @@ header{
 
 body{
 	background-image:url(../images/cartographer.png);
-	color:white;
 }
 
 ul li{
@@ -67,9 +66,7 @@ ul li{
 	float:right;
 	padding:20px;
 	color:blue;
-	position:absolute;
 	z-index:2;
-	display: inline-block;
 }  
 
 .custom-combobox {
