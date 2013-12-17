@@ -40,7 +40,7 @@ $existingTeam = array();
 		<?php 
 		if (isset($public_teams) && count($public_teams) > 0){
 		?>
-		<form action="/athlete/joinTeam" method="post">
+		<form action="/athlete/joinTeam" method="post" id="js-JoinTeam">
 			<input type="hidden" name="member_id" value="<?=$athlete->member_id ?>" />
 			<fieldset>
 			<div class="ui-widget">
@@ -63,6 +63,7 @@ $existingTeam = array();
 		}
 		?>
 	</div>
+	<div id="js-TeamMessages"></div>
 </div>
 <div class="row-fluid">
 	<div class="span2">&nbsp;</div>
