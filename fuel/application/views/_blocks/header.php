@@ -24,7 +24,7 @@
 <?php
 	$ci = &get_instance(); 
 	$session = $ci->load->library("session");
-	if ($session->userdata('id')){
+	if (!isset($session->userdata('id'))){
 	?>
 		<div class="signin">
 			<a href="http://<?=$_SERVER['SERVER_NAME'] ?>/signin/login">Sign in</a>
