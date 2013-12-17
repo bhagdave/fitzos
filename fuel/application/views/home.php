@@ -17,14 +17,10 @@
 				<img src="../../../assets/images/splash_lead1.jpg" alt=""/>
 			</div>
 			
-			<div class="span4 signin">
+			<div class="span4 sign-in">
 				<?php $this->load->view('_blocks/sign-in');?>
 			</div>
-			<!--
-			<div class="span4 login">
-				<?php $this->load->view('_blocks/login');?>
-			</div>
-			-—>
+			
 		</div>
 	</div>
 </div>
