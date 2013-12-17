@@ -193,7 +193,7 @@ class Athlete extends CI_Controller{
 			// get the athlete from the database
 			$id      = $this->session->userdata('id');
 			$athlete = $this->athletes->loadProfile($id);
-			$teams   = $this->teams->getPublicTeams();
+			$teams   = $this->teams->getPublicTeams($id);
 			$owned   = $this->teams->getOwnedTeams($id);
 			$member  = $this->teams->getTeamsIn($id);
 			// let us get all of the sports man....

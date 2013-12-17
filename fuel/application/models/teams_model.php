@@ -6,8 +6,9 @@ class Teams_model extends Base_module_model {
     {
         parent::__construct('team');
     }
-    function getPublicTeams(){
+    function getPublicTeams($id){
     	$this->db->where('public','yes');
+    	$this->db->where_not_in('owner',$id);
     	$result = $this->db->get('team');
     	return $result->result();
     }
