@@ -21,8 +21,16 @@
 			<a href="http://<?=$_SERVER['SERVER_NAME'] ?>">
 				<img src="http://<?=$_SERVER['SERVER_NAME'] ?>/assets/images/logo.png" alt="FitZos.com" name="Fitzos.com" width="178" height="99" id="FitZos" style="display:block;" class="logo"/>
 			</a>
-			<div class="signin">
-				<a href="http://<?=$_SERVER['SERVER_NAME'] ?>/signin/login">Sign in</a>		
-			</div>		
+<?php
+	$ci = &get_instance(); 
+	$session = $ci->load->library("session");
+	if ($session->userdata('id')){
+	?>
+		<div class="signin">
+			<a href="http://<?=$_SERVER['SERVER_NAME'] ?>/signin/login">Sign in</a>
+		</div>
+	<?php 
+	}
+?>
 		</header>
 
