@@ -18,6 +18,22 @@ p,h1,h3,h4,h5,small,label{
 	position: fixed;
 }
 
+.info {
+	height:416px;
+	float:left;
+
+}
+
+.cal {
+	height:208px;
+	color:#0199cc;
+	float:right;
+}
+
+.photo {
+	height:208px;
+	color:#cccccc;
+	float:right;
 
 .top-right{
 	display:block;
@@ -53,6 +69,7 @@ ul li{
 	color:blue;
 	position:absolute;
 	z-index:2;
+	display: inline-block;
 }  
 
 .custom-combobox {
