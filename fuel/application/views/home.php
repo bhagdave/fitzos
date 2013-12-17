@@ -21,6 +21,10 @@
 				<?php $this->load->view('_blocks/sign-in');?>
 			</div>
 			
+		</div>
+	</div>
+	<div class="span12">
+		<div class="row-fluid">
 			<div class=“span8 info”>
 				<h1>Information and Material</h1>
 			</div>
