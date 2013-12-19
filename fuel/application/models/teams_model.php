@@ -86,9 +86,19 @@ class Teams_model extends Base_module_model {
 		}
 	}
 	function setMemberRequest($team,$member){
-		$insert = array('member_id'=>$member,'team_id'=>$team, 'status'=>'waiting', 'requested_date'=>date('Y-m-d'));
-		$this->db->insert('team_membership',$insert);
-		return $this->db->insert_id();	
+		// check if they are already a member
+		$this->db->select('id');
+		$this->db->where('member_id',$member);
+		$this->db->where('team_id',$team);
+		$num = $this->db->count_all_results('team_membership');
+		if ($num > 0){
+			return array('id'=>0,'message'=>'Membership already requested');
+		} else {
+			$insert = array('member_id'=>$member,'team_id'=>$team, 'status'=>'waiting', 'requested_date'=>date('Y-m-d'));
+			$this->db->insert('team_membership',$insert);
+			$id = $this->db->insert_id();
+			return array('id'=>$id,'message'=>'Message Requested');
+		}
 	}
 	function acceptMember($team,$member){
 		$this->db->where("member_id",$member);
