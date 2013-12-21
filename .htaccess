@@ -2,6 +2,7 @@ Options +FollowSymLinks
 
 <IfModule mod_rewrite.c>
 	RewriteEngine On
+	RewriteBase /
 
 	<Files .*>
 		Order Deny,Allow
