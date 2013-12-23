@@ -219,7 +219,7 @@ class Athlete extends CI_Controller{
 			$team   = $_REQUEST['team_id'];
 			$this->load->model('teams_model','teams');
 			$id = $this->teams->setMemberRequest($team,$member);
-			if ($id->id > 0){
+			if ($id['id'] > 0){
 				echo("Your team membership has been requested!");
 			} else {
 				echo("Team membership has already been requested!");
