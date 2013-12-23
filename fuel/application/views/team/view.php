@@ -22,10 +22,6 @@
 <div class="row-fluid">
 	<div class="span4">
 		<h2>Team Membership</h2>
-		<form action="teams/leave" method="post">
-			<input type="hidden" name="member_id" value="<?=$member->id ?>" />
-			<input type="hidden" name="team_id" value="<?=$team->id ?>" />
-			<button class="btn-small">Leave Team</button>
-		</form>
+		<?php echo("<a href='/teams/leave/{$team->id}/{$member->id}'><button>Leave</button></a>"); ?>	
 	</div>
 </div>
