@@ -46,7 +46,7 @@ class Teams extends CI_Controller{
 			die();
 		}
 	}
-	function leave($team){
+	function leave($team,$member){
 	// TODO:Leave a member from the team.	
 		$this->load->model('teams_model','teams');
 		$this->load->model('members_model','members');
