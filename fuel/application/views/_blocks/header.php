@@ -28,7 +28,15 @@
 	if (isset($userId)){
 		$memberModel  = $ci->load->model("members_model");
 		$member = $memberModel->getMember($userId);
-		echo("<div class='welcome'>Welcome " . $member->first_name . ' ' . $member->last_name.'</div>');
+		if (isset($member)){
+			echo("<div class='welcome'>Welcome " . $member->first_name . ' ' . $member->last_name.'</div>');
+		} else {
+?>
+		<div class="signin">
+			<a href="http://<?=$_SERVER['SERVER_NAME'] ?>/signin/login">Sign in</a>
+		</div>
+	<?php 
+		}
 	} else {
 	?>
 		<div class="signin">
