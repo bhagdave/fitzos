@@ -13,7 +13,7 @@
 		</header>
 <body>
 	<p>Some stuff here about how wonderful it is to have joined Fitzos...</p>
-	<p>Please click on this <a href="http://beta.fitzos.com/signin/activate/{$member->salt}"></a>link to activate your account....</p>
+	<p>Please click on this <a href="http://www.reach-your-peak.com/signin/activate/{$member->salt}"></a>link to activate your account....</p>
 	<div id="footer">
 		<p>Copyright &copy; PROformance 2013 </p>
 	</div>

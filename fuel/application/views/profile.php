@@ -2,7 +2,7 @@
 	<div class="container">
 		<header>
 			<a href="#">
-			<img src="assets/images/logo.png" alt="FitZos.com" name="Fitzos.com" width="178" height="99" id="FitZos" style="display:block;" class="logo"/>
+			<img src="assets/images/logo.png" alt="reach-your-peak.com" name="reach-your-peak.com" width="178" height="99" id="FitZos" style="display:block;" class="logo"/>
 			</a>
 		</header>
 		
