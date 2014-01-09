@@ -97,7 +97,8 @@ class Teams extends CI_Controller{
 		if ($this->session->userdata('id')){
 	 		$wall  = $this->teams->getTeamWall($team);
 	 		$owner = $this->teams->isOwner($team,$this->session->userdata('id'));
-		 	$vars  = array('wall'=>$wall,'owner'=>$owner,'layout'=>'none');
+			$data  = $this->teams->getTeam($team);
+	 		$vars  = array('wall'=>$wall,'owner'=>$owner,'layout'=>'none','team'=>$data);
 			$this->fuel->pages->render('team/teamWall',$vars);			
 		} else {
 			redirect('signin/login');

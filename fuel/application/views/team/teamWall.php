@@ -1,5 +1,5 @@
 		<?php
-			if (isset($wall)){
+			if (isset($wall) && count($wall) > 0){
 				foreach($wall as $post){
 					echo("<div class='wallPost'>");
 					echo($post->message);
@@ -11,5 +11,7 @@
 					}	
 					echo("</div>");
 				}
-			} 
+			} else {
+				echo("No wall posts!");
+			}
 		?>
