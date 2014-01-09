@@ -26,12 +26,21 @@ $existingTeam = array();
 			if (isset($member) && count($member) > 0){
 				foreach($member as $team){
 					$existingTeam[] = $team->name;
-					echo($team->name);
+					echo("<a href='/teams/view/{$team->id}'>".$team->name. "</a>");
 					echo("<a href='/teams/leave/{$team->id}/{$athlete->member_id}'><button>Leave</button></a>");
-					echo("<a href='/teams/view/{$team->id}'><button>View</button></a>");
 				}
+				if (isset($owned) && count($owned) > 0){
+					foreach($owned as $team){
+						$existingTeam[] = $team->name;
+						echo('<a href="/teams/manage/' . $team->id .'"><p>' . $team->name. '</p></a>');
+					}
+				} 
 			} else {
-				echo("<h5>You are not currently in any teams!</h5>");
+				if (isset($owned) && count($owned) > 0){
+					//
+				} else {
+					echo("<h5>You are not currently in any teams!</h5>");
+				}
 			}
 		?>
 		</div>
