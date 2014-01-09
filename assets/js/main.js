@@ -157,7 +157,7 @@ $(function() {
     		type:'POST',
     		data:data})
     		.done(function( data ) {
-    			$('.teamWall').html(data);
+    			$('.js-teamWall').html(data);
     		}) 
     		.fail(function() {
     			alert( "error" );

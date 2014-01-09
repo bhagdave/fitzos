@@ -11,12 +11,14 @@
 	</div>
 	<div class="span4">
 		<h2>Team Wall</h2>
-		<form action="teams/addWallPost" method="post">
-			<input type="hidden" name="member_id" value="<?=$member->id ?>" />
+		<form class="js-wallPostAdd">
+			<input type="hidden" name="team_id" value="<?=$team->id ?>" />
 			<textarea cols="40" rows="2" name="message" placeholder="Your message"></textarea>
-			<button class="btn-small">Add post</button>
+			<button class="btn-small btn-success js-wallPostAddBtn">Add post</button>
 		</form>
-		<?php $this->load->view('team/teamWall');?>
+		<div class="js-teamWall">
+			<?php $this->load->view('team/teamWall');?>
+		</div>
 	</div>
 </div>
 <div class="row-fluid">

@@ -114,7 +114,7 @@ class Teams extends CI_Controller{
 				$id   = $this->teams->addWallPost($_REQUEST);
 			 	$wall = $this->teams->getTeamWall($_REQUEST['team_id']);
 			 	$vars = array('wall'=>$wall,'owner'=>$owner,'layout'=>'none');
-				$this->fuel->pages->render('_blocks/teamWall',$vars);
+				$this->fuel->pages->render('team/teamWall',$vars);
 			} else {
 				redirect('signin/login');
 				die();
