@@ -1,9 +1,9 @@
 #################
 ## Eclipse
 #################
-/fuel/application/config/database.php
-/fuel/application/cache/
-/fuel/application/logs/*.php
+fuel/application/config/database.php
+fuel/application/cache/
+fuel/application/logs/*.php
 .svn
 *.pydevproject
 .project
