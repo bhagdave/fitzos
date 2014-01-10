@@ -108,8 +108,15 @@ class Teams_model extends Base_module_model {
 			$member = $this->getMember($member);
 			$data = array();
 			$data['team_id'] = $team;
-			$data['message'] = "$member->first_name $member->last_name has left the team!";
+			$msg = "$member->first_name $member->last_name has left the team!";
+			$data['message'] = $msg;
 			$this->addWallPost($data);
+			unset($data['message']);
+			$data['content'] = $msg;
+			$data['published'] = 'yes';
+			$data['public'] = 'PRIVATE';
+			$data['name'] = 'Member Leaving';
+			$this->addTeamEvent($data);
 		}
 	}
 	function acceptMember($team,$member){
@@ -148,6 +155,17 @@ class Teams_model extends Base_module_model {
 		$this->db->where('id',$id);
 		$this->db->set('deleted','yes');
 		$this->db->update('team_wall');
+	}
+	function addTeamEvent($data){
+		if (is_array($data)){
+			if (!isset($data['date'])){
+				$data['date'] = date('Y-m-d');
+			}
+			$this->db->insert('event',$data);
+			return $this->db->insert_id();
+		} else {
+			return null;
+		}
 	}
 }
  
