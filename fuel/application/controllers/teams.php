@@ -51,12 +51,13 @@ class Teams extends CI_Controller{
 		$this->load->model('teams_model','teams');
 		$this->load->model('members_model','members');
 		if ($this->session->userdata('id')){
+			$this->teams->leaveTeam($team, $member);
 			$id     = $this->session->userdata('id');
 			$wall   = $this->teams->getTeamWall($team);
-			$team   = $this->teams->getTeam($team);
+			$data   = $this->teams->getTeam($team);
 			$events = $this->teams->getTeamEvents($team);
 			$members= $this->teams->getTeamMembers($team);
-			$vars   = array('member'=>$member, 'wall'=>$wall, 'team'=>$team, 'members'=>$members);
+			$vars   = array('member'=>$member, 'wall'=>$wall, 'team'=>$data, 'members'=>$members,'events'=>$events);
 			$this->fuel->pages->render('team/view',$vars);
 		} else {
 			redirect('signin/login');

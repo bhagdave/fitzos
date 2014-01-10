@@ -105,6 +105,7 @@ class Teams_model extends Base_module_model {
 		$this->db->where('team_id',$team);
 		$this->db->update('team_membership',array('status'=>'left'));
 		/* TODO: Add wall post for leaving */
+		
 	}
 	function acceptMember($team,$member){
 		$this->db->where("member_id",$member);
