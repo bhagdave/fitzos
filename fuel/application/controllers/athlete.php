@@ -219,6 +219,9 @@ class Athlete extends CI_Controller{
 			$team   = $_REQUEST['team_id'];
 			$this->load->model('teams_model','teams');
 			$id = $this->teams->setMemberRequest($team,$member);
+			$this->load->library('Fitzos_email',null,'Femail');
+			$this->Femail->sendMemberJoiningEmail($team,$member);
+
 			if ($id['id'] > 0){
 				echo("Your team membership has been requested!");
 			} else {
