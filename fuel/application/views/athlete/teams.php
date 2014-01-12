@@ -37,7 +37,10 @@ $existingTeam = array();
 				} 
 			} else {
 				if (isset($owned) && count($owned) > 0){
-					//
+					foreach($owned as $team){
+						$existingTeam[] = $team->name;
+						echo('<a href="/teams/manage/' . $team->id .'"><p>' . $team->name. '</p></a>');
+					}
 				} else {
 					echo("<h5>You are not currently in any teams!</h5>");
 				}
