@@ -30,6 +30,7 @@ class Teams_model extends Base_module_model {
     function getTeamsIn($id){
     	$this->db->select('team.id,team.name');
     	$this->db->where('member_id',$id);
+    	$this->db->where('status','yes');
     	$this->db->join('team','team_id = team.id');
     	$result = $this->db->get('team_membership');
     	return $result->result();
