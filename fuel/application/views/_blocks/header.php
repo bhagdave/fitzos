@@ -29,7 +29,7 @@
 		$memberModel  = $ci->load->model("members_model");
 		$member = $memberModel->getMember($userId);
 		if (isset($member)){
-			echo("<div class='welcome'>Welcome " . $member->first_name . ' ' . $member->last_name.'</div>');
+			echo("<div class='welcome'><a href='http://" .$_SERVER['SERVER_NAME']."/athlete/index'>Welcome " . $member->first_name . ' ' . $member->last_name.'</a></div>');
 		} else {
 ?>
 		<div class="signin">
