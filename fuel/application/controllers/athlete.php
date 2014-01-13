@@ -246,5 +246,19 @@ class Athlete extends CI_Controller{
 		}
 		
 	}
+	function view($id){
+		if ($this->session->userdata('id')){
+			$this->load->model('athletes_model','athletes');
+			$this->load->model('members_model','members');
+			$sports  = $this->members->getSports($id);
+			$athlete = $this->athletes->loadProfile($id);
+			$member  = $this->members->getMember($id);
+		} else {
+			redirect('signin/login');
+			die();
+		}
+		$vars = array('athlete'=>$athlete,'member'=>$member,'sports'=>$sports);
+		$this->fuel->pages->render('athlete/view',$vars);
+	}
 }
 ?>
