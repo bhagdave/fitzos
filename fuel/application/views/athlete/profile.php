@@ -86,6 +86,11 @@
 				</div>
 				<div class="control-group">
 					<label class="control-label">Profile image</label>
+					<?php 
+						if (isset($member->image)){
+							echo("<img src='/$member->image'>");
+						} 
+					?>
 					<div class="controls">	
 						<input type="file" name="file" id="file" value="<?=isset($member->image) ? $member->image : ''  ?>">
 					</div>
