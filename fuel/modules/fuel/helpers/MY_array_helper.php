@@ -8,8 +8,8 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
  */
@@ -23,7 +23,7 @@
  * @subpackage	Helpers
  * @category	Helpers
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/helpers/my_array_helper
+ * @link		http://docs.getfuelcms.com/helpers/my_array_helper
  */
 
 
@@ -149,7 +149,6 @@ function options_list($values, $value = 'id', $label = 'name', $value_as_key = F
 	return $return;
 }
 
-
 // --------------------------------------------------------------------
 
 /**
@@ -172,6 +171,24 @@ function parse_string_to_array($str)
 	}
 	return $params;
 	
+}
+
+/**
+ * Returns an array of arrays.
+ *
+ * @access	public
+ * @param	array an array to be divided
+ * @param	int number of groups to divide the array into
+ * @return	array
+ */	
+function array_group($array, $groups)
+{
+	if (empty($array))
+	{
+		return array();
+	}
+	$items_in_each_group = ceil(count($array)/$groups);
+	return array_chunk($array, $items_in_each_group);
 }
 
 /* End of file MY_array_helper.php */

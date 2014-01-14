@@ -8,8 +8,8 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
  */
@@ -23,7 +23,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_advanced_modules
+ * @link		http://docs.getfuelcms.com/libraries/fuel_advanced_modules
  */
 
 // --------------------------------------------------------------------
@@ -49,7 +49,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @param	array	config preferences
 	 * @return	void
 	 */	
-	function __construct($params = array())
+	public function __construct($params = array())
 	{
 		parent::__construct();
 		
@@ -71,7 +71,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @param	array	Array of initalization parameters  (optional)
 	 * @return	void
 	 */	
-	function initialize($params = array())
+	public function initialize($params = array())
 	{
 		parent::initialize($params);
 
@@ -82,9 +82,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 			$lang = (defined('FUEL_ADMIN')) ? $this->fuel->auth->user_lang() : NULL;
 			$this->load_language($this->name, $lang);
 		}
-		
 		$this->load_config();
-		$this->_config = $this->CI->config->item($this->name);
 	}
 	
 	// --------------------------------------------------------------------
@@ -96,7 +94,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @param	string	sub module name
 	 * @return	object
 	 */	
-	function __get($var)
+	public function __get($var)
 	{
 		// first check the attached
 		if (isset($this->_attached[$var]))
@@ -136,7 +134,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */	
-	function name()
+	public function name()
 	{
 		return $this->name;
 	}
@@ -149,7 +147,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */	
-	function friendly_name()
+	public function friendly_name()
 	{
 		if (empty($this->friendly_name))
 		{
@@ -169,7 +167,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */	
-	function folder()
+	public function folder()
 	{
 		if (empty($this->folder))
 		{
@@ -186,7 +184,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */	
-	function icon()
+	public function icon()
 	{
 		return 'ico_'.url_title(str_replace('/', '_', $this->uri_path()),'_', TRUE);
 	}
@@ -200,7 +198,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @param	boolean	Either return the full path to the module or the relative web_path (optional)
 	 * @return	string
 	 */	
-	function path($full = TRUE)
+	public function path($full = TRUE)
 	{
 		if ($full)
 		{
@@ -215,13 +213,56 @@ class Fuel_advanced_module extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Returns an array of any sub modules
+	 *
+	 * @access	public
+	 * @param	string The name of a particular sub module you want returned (optional)
+	 * @return	mixed Returns an array if no parameter is set, otherwise it will return an object
+	 */	
+	public function submodules($sub = NULL)
+	{
+		static $subs = NULL;
+
+		if (!isset($subs))
+		{
+			$subs = array();
+			$config = $this->fuel->modules->get_module_config($this->name());
+
+			if (!empty($config))
+			{	
+				$config = array_keys($config);
+				foreach($config as $c)
+				{
+					$mod = $this->fuel->modules->get($c, FALSE);
+					if (!empty($mod))
+					{
+						$subs[$c] = $mod;
+					}
+				}
+			}
+		}
+		
+		if (!empty($sub))
+		{
+			if (isset($subs[$sub]))
+			{
+				return $subs[$sub];
+			}
+			return FALSE;
+		}
+		return $subs;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
 	 * The models you can load for this advanced module
 	 *
 	 * @access	public
 	 * @param	boolean Removes the '_model' suffix
 	 * @return	array
 	 */	
-	function models($remove_suffix = FALSE)
+	public function models($remove_suffix = FALSE)
 	{
 		$this->CI->load->helper('file');
 		$model_files = get_filenames($this->path().'models/');
@@ -253,7 +294,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @param	string 	The name of a model. If no name is provided, it will assume a model's name the same as the advanced module's (optional)
 	 * @return	array
 	 */	
-	function &model($model = NULL)
+	public function &model($model = NULL)
 	{
 		$models = $this->models(TRUE);
 		if (empty($model))
@@ -274,7 +315,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @param	object	The object to attach. If blank, then it will look for a library class of 'Fuel_{$key} in the libraries folder (optional)
 	 * @return	void
 	 */	
-	function attach($key, $obj = NULL)
+	public function attach($key, $obj = NULL)
 	{
 		if (isset($obj))
 		{
@@ -372,8 +413,9 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @param	boolean	Determines whether or not to also look into the settings (optional)
 	 * @return	mixed
 	 */	
-	function config($item = NULL, $look_in_settings = TRUE)
+	public function config($item = NULL, $look_in_settings = TRUE)
 	{
+
 		if (!empty($item))
 		{
 			if ($look_in_settings AND $this->has_settings())
@@ -391,16 +433,12 @@ class Fuel_advanced_module extends Fuel_base_library {
 		{
 			if ($look_in_settings)
 			{
-				if (is_array($this->_settings))
-				{
+                if (is_array($this->settings()))  //change from _settings to settings() because _settings isn't populated yet and settings() populates it
+                    {
 					return array_merge($this->_config, $this->_settings);	
 				}
-				return $this->_config;
 			}
-			else
-			{
-				return $this->_config;
-			}
+			return $this->_config;
 		}
 	}
 
@@ -414,9 +452,10 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @param	mixed	The value of the config item
 	 * @return	void
 	 */	
-	function set_config($item, $val)
+	public function set_config($item, $val)
 	{
-		return $this->CI->config->set_item($item, $val, $this->name);
+		$this->_config[$item] = $val;
+		$this->CI->config->set_item($item, $val, $this->name);
 	}
 
 	// --------------------------------------------------------------------
@@ -427,7 +466,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */
-	function config_path()
+	public function config_path()
 	{
 		return $this->server_path().'config/'.strtolower($this->name).'.php';
 	}
@@ -440,7 +479,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */
-	function has_config()
+	public function has_config()
 	{
 		return (file_exists($this->config_path()));
 	}
@@ -454,7 +493,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @param	string	The key name for the config item (optional)
 	 * @return	mixed
 	 */	
-	function settings($item = NULL)
+	public function settings($item = NULL)
 	{
 		if (is_null($this->_settings))
 		{
@@ -483,7 +522,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	array
 	 */	
-	function has_settings()
+	public function has_settings()
 	{
 		return !empty($this->_config['settings']);
 	}
@@ -497,7 +536,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @param	string	The setting key. If left blank, then all the settings are returned (optional)
 	 * @return	array
 	 */	
-	function settings_fields($setting = NULL)
+	public function settings_fields($setting = NULL)
 	{
 		$settings = $this->config('settings');
 		if (!empty($setting))
@@ -526,7 +565,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @param	string	The URI path relative to the advanced module (optional)
 	 * @return	string
 	 */
-	function fuel_url($uri = '')
+	public function fuel_url($uri = '')
 	{
 		$uri = trim($uri, '/');
 		return fuel_url($this->uri_path().'/'.$uri);
@@ -540,7 +579,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */
-	function uri_path()
+	public function uri_path()
 	{
 		static $routes;
 		
@@ -569,7 +608,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @param	string	The URI path relative to the advanced module
 	 * @return	string
 	 */
-	function set_uri_path($uri_path)
+	public function set_uri_path($uri_path)
 	{
 		$this->uri_path = $uri_path;
 	}
@@ -583,7 +622,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @param	string The path to the file relative to the advanced modules directory (optional)
 	 * @return	string
 	 */
-	function server_path($path = '')
+	public function server_path($path = '')
 	{
 		return MODULES_PATH.$this->folder().'/'.$path;
 	}
@@ -596,7 +635,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */
-	function web_path()
+	public function web_path()
 	{
 		return WEB_ROOT.$this->folder();
 	}
@@ -610,7 +649,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @param	boolean Whether to return the name lowercased or not (optional)
 	 * @return	string
 	 */
-	function lib_class_name($lowercase = FALSE)
+	public function lib_class_name($lowercase = FALSE)
 	{
 		$class = 'Fuel_'.$this->name;
 		if ($lowercase)
@@ -628,7 +667,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */
-	function lib_class_path()
+	public function lib_class_path()
 	{
 		return $this->server_path().'libraries/'.$this->lib_class_name().'.php';
 	}
@@ -641,7 +680,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */
-	function has_lib_class()
+	public function has_lib_class()
 	{
 		$lib_class_path = $this->lib_class_path();
 		return (file_exists($lib_class_path));
@@ -657,7 +696,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @param	string The language file name. Default is the modules name. (optional)
 	 * @return	string
 	 */
-	function lang_path($lang = 'english', $file = NULL)
+	public function lang_path($lang = 'english', $file = NULL)
 	{
 		if (empty($file))
 		{
@@ -676,7 +715,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @param	string The language file name. Default is the modules name. (optional)
 	 * @return	boolean
 	 */
-	function has_lang($lang = 'english', $file = NULL)
+	public function has_lang($lang = 'english', $file = NULL)
 	{
 		return (file_exists($this->lang_path()));
 	}
@@ -689,7 +728,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	array
 	 */
-	function routes()
+	public function routes()
 	{
 		if ($this->has_routes())
 		{
@@ -706,7 +745,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */
-	function routes_path()
+	public function routes_path()
 	{
 		return $this->server_path().'config/'.strtolower($this->name).'_routes.php';
 	}
@@ -719,7 +758,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */
-	function has_routes()
+	public function has_routes()
 	{
 		return (file_exists($this->routes_path()));
 	}
@@ -732,7 +771,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */
-	function css_path()
+	public function css_path()
 	{
 		$this->web_path().'assets/'.strtolower($this->name).'.css';
 	}
@@ -745,7 +784,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */
-	function has_css()
+	public function has_css()
 	{
 		return (file_exists($this->css_path()));
 	}
@@ -758,7 +797,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	mixed (returns an array of navigation menu items or FALSE if none)
 	 */
-	function nav()
+	public function nav()
 	{
 		if ($this->has_config())
 		{
@@ -779,7 +818,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */
-	function docs()
+	public function docs()
 	{
 		return $this->CI->load->module_view($this->folder(), '_docs/index', array(), TRUE);
 	}
@@ -792,7 +831,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */
-	function docs_path()
+	public function docs_path()
 	{
 		return $this->server_path().'views/_docs/index.php';
 	}
@@ -805,7 +844,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */
-	function has_docs()
+	public function has_docs()
 	{
 		return (file_exists($this->docs_path()));
 	}
@@ -823,7 +862,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @param	int	Time to live in seconds for cache  (optional)
 	 * @return	void
 	 */
-	function save_cache($cache_id, $data, $group = NULL, $ttl = NULL)
+	public function save_cache($cache_id, $data, $group = NULL, $ttl = NULL)
 	{
 		$orig_cache_path = $this->_tmp_set_cache_path();
 		
@@ -845,7 +884,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @param	boolean	Skip checking if it is in the cache or not (optional)
 	 * @return	string
 	 */
-	function get_cache($cache_id, $cache_group = NULL, $skip_checking = FALSE)
+	public function get_cache($cache_id, $cache_group = NULL, $skip_checking = FALSE)
 	{
 		$orig_cache_path = $this->_tmp_set_cache_path();
 
@@ -864,7 +903,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	void
 	 */
-	function clear_cache()
+	public function clear_cache()
 	{
 		return $this->fuel->cache->clear_module($this->folder());
 	}
@@ -879,7 +918,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @param	string	Cache group ID (optional)
 	 * @return	boolean
 	 */
-	function is_cached($cache_id, $group = NULL)
+	public function is_cached($cache_id, $group = NULL)
 	{
 		$orig_cache_path = $this->_tmp_set_cache_path();
 		
@@ -898,7 +937,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */
-	function cache_path()
+	public function cache_path()
 	{
 		return $this->server_path().'views/cache/';
 	}
@@ -932,7 +971,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */
-	function has_cache()
+	public function has_cache()
 	{
 		return (file_exists($this->cache_path()) AND is_writable($this->cache_path()));
 	}
@@ -944,7 +983,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */
-	function tests()
+	public function tests()
 	{
 		$dir_path = $this->server_path().'tests/';
 		$tests = array();
@@ -965,7 +1004,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */
-	function has_tests()
+	public function has_tests()
 	{
 		$tests = $this->tests();
 		return (!empty($tests));
@@ -979,7 +1018,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */
-	function has_dashboard()
+	public function has_dashboard()
 	{
 		return (file_exists($this->server_path().'controllers/dashboard'.EXT));
 	}
@@ -992,7 +1031,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */
-	function has_tools()
+	public function has_tools()
 	{
 		return ($this->config('toolbar') !== FALSE);
 	}
@@ -1005,7 +1044,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	array
 	 */
-	function tools()
+	public function tools()
 	{
 		$toolbar = $this->config('toolbar');
 		if (empty($toolbar))
@@ -1031,7 +1070,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @param	string Name of config file. Default is the name of the advanced module (optional)
 	 * @return	void
 	 */
-	function load_config($config = NULL)
+	public function load_config($config = NULL)
 	{
 		if (empty($config))
 		{
@@ -1039,7 +1078,23 @@ class Fuel_advanced_module extends Fuel_base_library {
 		}
 		
 		// last parameter tells it to fail gracefully
+		// check application directory for overwrites
+		$this->CI->load->module_config('app', $config, FALSE, TRUE);
+		$app_config = $this->CI->config->item($this->name);
+
+		// now get the blog configuration
 		$this->CI->load->module_config($this->folder(), $config, FALSE, TRUE);
+		$module_config = $this->CI->config->item($this->name);
+
+		// if app config exists then merge
+		if (!empty($app_config))
+		{
+			$this->_config = array_merge($module_config, $app_config);
+		}
+		else
+		{
+			$this->_config = $module_config;
+		}
 	}
 
 	// --------------------------------------------------------------------
@@ -1051,7 +1106,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @param	string Name of config file. Default is the name of the advanced module (optional)
 	 * @return	void
 	 */
-	function load_helper($helper)
+	public function load_helper($helper)
 	{
 		$this->CI->load->module_helper($this->folder(), $helper);
 	}
@@ -1067,7 +1122,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @param	string Name you want to assign to the loaded library (optional)
 	 * @return	void
 	 */
-	function load_library($library, $init_params = array(), $name = NULL)
+	public function load_library($library, $init_params = array(), $name = NULL)
 	{
 		$this->CI->load->module_library($this->folder(), $library, $init_params, $name);
 		if (empty($name))
@@ -1088,7 +1143,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @param	boolean Whether to return the contents as a string or send it to the output for display
 	 * @return	mixed	string if $return equals TRUE and void if $return equals FALSE
 	 */
-	function load_view($view, $vars = array(), $return = FALSE)
+	public function load_view($view, $vars = array(), $return = FALSE)
 	{
 		if ($return)
 		{
@@ -1107,7 +1162,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @param	string Name you want to assign to the loaded model (optional)
 	 * @return	void
 	 */
-	function load_model($model, $name = NULL)
+	public function load_model($model, $name = NULL)
 	{
 		if (substr($model, strlen($model) - 6) != '_model')
 		{
@@ -1132,7 +1187,7 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @param	string Name of a language file folder. Default is "english" (optional)
 	 * @return	void
 	 */
-	function load_language($file = '', $lang = '')
+	public function load_language($file = '', $lang = '')
 	{
 		if (empty($file))
 		{
@@ -1149,11 +1204,10 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */
-	function install()
+	public function install()
 	{
 		return $this->fuel->installer->install($this->name());
 	}
-
 
 	// --------------------------------------------------------------------
 	
@@ -1163,9 +1217,59 @@ class Fuel_advanced_module extends Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */
-	function uninstall()
+	public function uninstall()
 	{
 		return $this->fuel->installer->uninstall($this->name());
+	}
+
+
+// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the information from the install configuration file
+	 *
+	 * @access	public
+	 * @param	string The key to the install config you want returned (optional)
+	 * @return	string
+	 */
+	public function install_info($key = NULL)
+	{
+		$install_config_path = $this->server_path().'install/install.php';
+		static $config;
+		if (!isset($config))
+		{
+			if (file_exists($install_config_path))
+			{
+				include($install_config_path);
+			}
+		}
+
+		if (!empty($config))
+		{
+			if (!empty($key))
+			{
+				return (isset($config[$key])) ? $config[$key] : FALSE;
+			}
+			return $config;
+		}
+
+		return FALSE;
+	}
+
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Overwrite this method to run your own custom builds for an advanced module.
+	 * This can be done by doing it via command line: > php index.php fuel/build/{module}. 
+	 * FUEL uses > php index.php fuel/build to build optimized CSS and JS files.
+	 *
+	 * @access	public
+	 * @return	mixed
+	 */
+	public function build()
+	{
+		return FALSE;
 	}
 }
 

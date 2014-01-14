@@ -32,8 +32,9 @@
 				
 				<h3>Introduction</h3>
 				<ul>
-					<li><a href="<?=user_guide_url('introduction/whats-new')?>">What's New In FUEL CMS 1.0</a></li>
-					<li><a href="<?=user_guide_url('introduction/demo-site')?>">The Demo Site</a></li>
+					<li><a href="<?=user_guide_url('introduction/what-is-fuel')?>">What is FUEL CMS?</a></li>
+					<li><a href="<?=user_guide_url('introduction/whats-new')?>">New In FUEL CMS 1.0</a></li>
+					<?php /* ?><li><a href="<?=user_guide_url('introduction/demo-site')?>">The Demo Site</a></li><?php */ ?>
 					<li><a href="<?=user_guide_url('introduction/interface')?>">The CMS Interface</a></li>
 				</ul>
 				
@@ -69,7 +70,7 @@
 					<li><a href="<?=user_guide_url('general/javascript')?>">Javascript</a></li>
 					<li><a href="<?=user_guide_url('general/caching')?>">Caching</a></li>
 					<li><a href="<?=user_guide_url('general/security')?>">Security</a></li>
-					<li><a href="<?=user_guide_url('general/localization')?>">Localization</a></li>
+					<li><a href="<?=user_guide_url('general/localization')?>">Language/Localization</a></li>
 					<li><a href="<?=user_guide_url('general/constants')?>">FUEL Constants</a></li>
 					<li><a href="<?=user_guide_url('general/configs-settings')?>">Configs &amp; Settings</a></li>
 					<li><a href="<?=user_guide_url('general/environments')?>">Environments</a></li>
@@ -106,6 +107,15 @@
 					<li><a href="<?=user_guide_url('libraries/fuel_users')?>">Fuel Users Class</a></li>
 				</ul>
 
+				<h3>Extended Base Classes</h3>
+				<ul>
+					<li><a href="<?=user_guide_url('libraries/my_db_mysql_driver')?>">MY_DB_mysql_driver Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/my_db_mysql_result')?>">MY_DB_mysql_result Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/my_hooks')?>">MY_Hooks Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/my_image_lib')?>">MY_Image_lib Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/my_model')?>">MY_Model Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/my_parser')?>">MY_Parser Class</a></li>
+				</ul>
 
 			</td>
 			<td class="td_sep">
@@ -113,6 +123,20 @@
 				<ul>
 					<li><a href="<?=user_guide_url('libraries/my_model')?>">MY_Model Class</a></li>
 					<li><a href="<?=user_guide_url('libraries/base_module_model')?>">Base_module_model Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/fuel_archives_model')?>">Fuel_archives_model Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/fuel_assets_model')?>">Fuel_assets_model Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/fuel_blocks_model')?>">Fuel_blocks_model Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/fuel_categories_model')?>">Fuel_categories_model Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/fuel_logs_model')?>">Fuel_logs_model Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/fuel_navigation_model')?>">Fuel_navigation_model Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/fuel_navigation_groups_model')?>">Fuel_navigation_groups_model Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/fuel_pagevariables_model')?>">Fuel_pagevariables_model Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/fuel_permissions_model')?>">Fuel_permissions_model Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/fuel_relationships_model')?>">Fuel_relationships_model Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/fuel_settings_model')?>">Fuel_settings_model Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/fuel_sitevariables_model')?>">Fuel_sitevariables_model Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/fuel_tags_model')?>">Fuel_tags_model Class</a></li>
+					<li><a href="<?=user_guide_url('libraries/fuel_users_model')?>">Fuel_users_model Class</a></li>
 				</ul>
 				
 				<h3>General Classes</h3>
@@ -134,15 +158,6 @@
 					<li><a href="<?=user_guide_url('libraries/simplepie')?>">Simplepie Class</a></li>
 				</ul>
 				
-				<h3>Extended Base Classes</h3>
-				<ul>
-					<li><a href="<?=user_guide_url('libraries/my_db_mysql_driver')?>">MY_DB_mysql_driver Class</a></li>
-					<li><a href="<?=user_guide_url('libraries/my_db_mysql_result')?>">MY_DB_mysql_result Class</a></li>
-					<li><a href="<?=user_guide_url('libraries/my_hooks')?>">MY_Hooks Class</a></li>
-					<li><a href="<?=user_guide_url('libraries/my_image_lib')?>">MY_Image_lib Class</a></li>
-					<li><a href="<?=user_guide_url('libraries/my_model')?>">MY_Model Class</a></li>
-					<li><a href="<?=user_guide_url('libraries/my_parser')?>">MY_Parser Class</a></li>
-				</ul>
 
 			</td>
 			<td class="td_sep">
@@ -191,10 +206,10 @@
 					<li><a href="<?=user_guide_url('modules')?>">Modules Overview</a></li>
 					<li><a href="<?=user_guide_url('modules/simple')?>">Simple Modules</a></li>
 					<li><a href="<?=user_guide_url('modules/advanced')?>">Advanced Modules</a></li>
-					<li><a href="<?=user_guide_url('modules/tutorial')?>">Creating Modules</a></li>
 					<li><a href="<?=user_guide_url('modules/hooks')?>">Module Hooks</a></li>
 					<li><a href="<?=user_guide_url('modules/tools')?>">Module Tools</a></li>
 					<li><a href="<?=user_guide_url('modules/generate')?>">Generate Module Files</a></li>
+					<li><a href="<?=user_guide_url('modules/tutorial')?>">Tutorial: Creating Simple Modules</a></li>
 				</ul>
 
 				<?php if (!empty($modules)) : ?>

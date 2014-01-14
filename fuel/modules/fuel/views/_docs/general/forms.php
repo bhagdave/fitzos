@@ -1,8 +1,9 @@
+<?=css('jquery.supercomboselect, markitup, jquery-ui-1.8.17.custom', 'fuel')?>
 <script>
 <?php $this->load->module_view(FUEL_FOLDER, '_blocks/fuel_header_jqx'); ?>
 </script>
 <?=js('jqx/jqx', 'fuel')?>
-<?=js('fuel/global', 'fuel')?>
+<?=js('fuel/fuel.min', 'fuel')?>
 <?php 
 $CI->load->library('form_builder');
 $CI->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
@@ -90,7 +91,7 @@ $fields['sections'] = array(
 $this->form_builder->set_fields($fields);
 
 // render the page
-$vars['form'] = $this->form_builder->render($fields);
+$vars['form'] = $this->form_builder->render();
 $this->load->view('page', $vars);
 </pre>
 
@@ -133,6 +134,7 @@ would need to be created on the frontend (e.g. jqx.config.fuelPath, jqx.config.i
 		field attributes of data-type="my_type" data-title="my_title". This parameter is handy for adding attributes you need to use with your javascript
 	</li>
 	<li><strong>row_class</strong>: sets a class on the containing table row or container div (depending on the rendering method)</li>
+	<li><strong>tabindex</strong>: sets the tabindex value of a field. If using a mutli select, datetime, time, or enum, the value needs to be an array</li>
 </ul>
 
 <h2 id="form_field_types">Form Field Types</h2>
@@ -142,10 +144,10 @@ and use the '<a href="#custom">custom</a>' field type to render it. In FUEL CMS 
 field types which means you don't need to make those associations for every form. It also allows you to 
 associate them with their own <a href="<?=user_guide_url('general/javascript#forms')?>">javavascript</a> files and functions to execute upon rendering. 
 In addition, you can overwrite or augment existing field types, by adding field type associations in the 
-<span class="file">fuel/application/config/form_builder.php</span>. For example, we use this method to 
+<span class="file">fuel/application/config/custom_fields.php</span>. For example, we use this method to 
 associate the the datetime field type with the jQuery UI datepicker.
 
-<p>Custom fields require a function or class method to render the field and an association to be made in the <span class="file">fuel/application/config/form_builder.php</span> file (<a href="#association_parameters">this file is explained below</a>). 
+<p>Custom fields require a function or class method to render the field and an association to be made in the <span class="file">fuel/application/config/custom_fields.php</span> file (<a href="#association_parameters">this file is explained below</a>). 
 Custom field types are not automatically load but can be done so by one of the following ways:
 </p>
 <pre class="brush:php">
@@ -362,6 +364,8 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>mode</strong>: Options are 'auto', 'radios' and 'select'. Auto will show radio buttons if there are 2 or less, and will use a single select field if there are more.</li>
 		<li><strong>wrapper_tag</strong>: The HTML tag to wrapper around the radio and label. Default is the 'span' tag.</li>
 		<li><strong>wrapper_class</strong>: The CSS class to add to the to wrapper HTML element. Default is 'multi_field'.</li>
+		<li><strong>spacer</strong>: The amount of space to put between each checkbox (if checkboxes are used). The default is 3 blank spaces.</li>
+		<li><strong>null</strong>: Set this to TRUE if you want want no radio buttons to be checked initially</li>
 	</ul>
 	
 	<h4>Example</h4>
@@ -384,7 +388,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<p>This field type creates either a series of checkboxes or a multiple select field.
 	The following additional parameters can be passed to this field type:</p>
 	<ul>
-		<li><strong>sorting</strong>: </li>
+		<li><strong>sorting</strong>: determines whether to allow for sorting of selected options. Default is FALSE.</li>
 		<li><strong>options</strong>: an array of select options</li>
 		<li><strong>model</strong>: The name of a model to use. The default method it will use is <dfn>options_list</dfn>. You can specify
 		an array where the key is the name of the module and the value is either string value for the name of the model, or an array value where the key is
@@ -395,7 +399,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>mode</strong>: Options are 'auto', 'checkbox' and 'multi'. Auto will show checkboxes if there are 5 or less, and will use a multi select field if there are more.</li>
 		<li><strong>wrapper_tag</strong>: The HTML tag to wrapper around the chexbox and label. Default is the 'span' tag.</li>
 		<li><strong>wrapper_class</strong>: The CSS class to add to the to wrapper HTML element. Default is 'multi_field'.</li>
-		
+		<li><strong>spacer</strong>: The amount of space to put between each checkbox (if checkboxes are used). The default is 3 blank spaces.</li>
 	</ul>
 	
 	<h4>Representations</h4>
@@ -406,12 +410,12 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	<h4>Example</h4>
 	<pre class="brush:php">
 	$options = array('a' => 'option A', 'b' => 'option B', 'c' => 'option C');
-	$fields['mult_example'] = array('type' => 'multi', 'options' => $options, 'value' => 'a');
+	$fields['multi_example'] = array('type' => 'multi', 'options' => $options, 'value' => 'a');
 	</pre>
 	<?php 
 	$options = array('a' => 'option A', 'b' => 'option B', 'c' => 'option C');
-	form_builder_example('mult_example1', array('type' => 'multi', 'options' => $options, 'value' => 'a', 'mode' => 'checkbox'));
-	form_builder_example('mult_example2', array('type' => 'multi', 'options' => $options, 'value' => 'a', 'mode' => 'multi')); 
+	form_builder_example('multi_example1', array('type' => 'multi', 'options' => $options, 'value' => 'a', 'mode' => 'checkbox'));
+	form_builder_example('multi_example2', array('type' => 'multi', 'options' => $options, 'value' => 'a', 'mode' => 'multi')); 
 	?>
 	
 </div>
@@ -429,6 +433,23 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>file_name</strong>: the new file name you want to assign</li>
 		<li><strong>encrypt_name</strong>: determines whether to encrypt the uploaded file name to give it a unique value. The default is FALSE</li>
 		<li><strong>multiple</strong>: determines whether to allow multiple files to be uploaded by the same field. The default is FALSE</li>
+		<li><strong>display_preview</strong>: determines whether to to display a preview of the asset</li>
+		<li><strong>replace_values</strong>: an array of key/value pairs that can be used to replace any placeholder values in the upload path</li>
+	</ul>
+
+	<h4>Image Specific</h4>
+	<ul>
+		<li><strong>is_image</strong>: will provide an image preview no matter if the image does not end with jpg, png, gif etc.</li>
+		<li><strong>img_container_styles</strong>: styles to associate with the image preview container (only applies to image assets)</li>
+		<li><strong>img_styles</strong>: styles applied to the actual image that is being previewed</li>
+		<li><strong>create_thumb</strong>: determines whether to create a thumbnail</li>
+		<li><strong>width</strong>: sets the width of the uploaded image</li>
+		<li><strong>height</strong>: sets the height of the uploaded image</li>
+		<li><strong>maintain_ratio</strong>: determines whether to maintain the images aspect ratio when resizing</li>
+		<li><strong>resize_and_crop</strong>: determines whether to crop the image to be forced into the dimensions</li>
+		<li><strong>resize_method</strong>: values can be "maintain_ratio" or "resize_and_crop". This value will trump any value set for the "maintain_ratio" and "resize_and_crop"</li>
+		<li><strong>master_dim</strong>: sets the dimension (height or width) to be the master dimension when resizing and maintaining aspect ratio</li>
+
 	</ul>
 	
 	<h4>Representations</h4>
@@ -501,7 +522,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 
 <h3 id="number" class="toggle">number</h3>
 <div class="toggle_block_off">
-	<p>This field type creates a number field which is supported by <a href="http://www.w3schools.com/html5/html5_form_input_types.asp" target="_blank">some modern browsers</a> checkbox field.
+	<p>This field type creates a number field which is supported by <a href="http://html5doctor.com/html5-forms-input-types/" target="_blank">some modern browsers</a> checkbox field.
 	The following additional parameter can be passed to this field type:</p>
 	<ul>
 		<li><strong>decimal</strong>: determines whether to allow decimals or not. The default is FALSE</li>
@@ -528,7 +549,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 
 <h3 id="email" class="toggle">email</h3>
 <div class="toggle_block_off">
-	<p>This field type creates an input field of type "email" which is <a href="http://www.w3schools.com/html5/html5_form_input_types.asp" target="_blank">supported by some modern browsers</a> and will automatically validate the email address.</p>
+	<p>This field type creates an input field of type "email" which is <a href="http://html5doctor.com/html5-forms-input-types/" target="_blank">supported by some modern browsers</a> and will automatically validate the email address.</p>
 
 	<h4>Example</h4>
 	<pre class="brush:php">
@@ -541,7 +562,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 
 <h3 id="range" class="toggle">range</h3>
 <div class="toggle_block_off">
-	<p>This field type creates an input field of type "range" which is supported by <a href="http://www.w3schools.com/html5/html5_form_input_types.asp" target="_blank">some modern browsers</a> and creates a slider.
+	<p>This field type creates an input field of type "range" which is supported by <a href="http://html5doctor.com/html5-forms-input-types/" target="_blank">some modern browsers</a> and creates a slider.
 	The following additional parameters can be passed to this field type:
 	</p>
 	<ul>
@@ -683,11 +704,13 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>template</strong>: a string value of the template as opposed to a view file to load in. </li>
 		<li><strong>add_extra</strong>: determines whether to display the "Add" button for repeatable templates</li>
 		<li><strong>depth</strong>: specifies the depth of the template (can only be 2 deep)</li>
-		<li><strong>dblclick</strong>: determines whether a double click is required to open up the set of fields. Options are "accordian" and "toggle"</li>
+		<li><strong>dblclick</strong>: determines whether a double click is required to open up the set of fields. Options are "accordion" and "toggle"</li>
 		<li><strong>init_display</strong>: determines whether to open just the first repeatable set of fields, none of them, or all of them (default). Options are <dfn>false</dfn>, <dfn>first</dfn>, and <dfn>none</dfn> or <dfn>closed</dfn> (they are the same)</li>
 		<li><strong>title_field</strong>: the field to be used {__title__} placeholder </li>
 		<li><strong>parse</strong>: determines whether to parse the view or template file before rendering</li>
 		<li><strong>display_sub_label</strong>: determines whether to display the labels for the fields in the the sub form created (if no view is specified and it is using a nested form_builder instance)</li>
+		<li><strong>condensed</strong>: if TRUE, this will update there repeatable field to use a condensed styling</li>
+		<li><strong>non_sortable</strong>: if TRUE, this will hide the sorting grabber for repeatable fields</li>
 	</ul>
 
 	<h4>Example</h4>
@@ -695,7 +718,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	$fields['template_example'] = array('display_label' => FALSE, 
 								'add_extra' => FALSE, 
 								'init_display' => 'none', 
-								'dblclick' => 'accordian', 
+								'dblclick' => 'accordion', 
 								'repeatable' => TRUE, 
 								'style' => 'width: 900px;', 
 								'type' => 'template', 
@@ -716,7 +739,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	$fields['template_example'] = array('display_label' => FALSE, 
 								'add_extra' => FALSE, 
 								'init_display' => 'all', 
-								'dblclick' => 'accordian', 
+								'dblclick' => 'accordion', 
 								'repeatable' => TRUE, 
 								'style' => 'width: 800px;', 
 								'type' => 'template', 
@@ -772,6 +795,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>subfolder</strong>: a subfolder to upload the images to (will create one if it doesn't exist)</li>
 		<li><strong>file_name</strong>: the new name to assign the uploaded file</li>
 		<li><strong>overwrite</strong>: determines whether to overwrite the uploaded file or create a new file</li>
+		<li><strong>unzip</strong>: determines whether to unzip zip files automatically or not</li>
 		<li><strong>accept</strong>: specifies which files are acceptable to upload. It will default to what is specified in your fuel configuration for "editable_asset_filetypes"</li>
 	</ul>
 	
@@ -812,6 +836,8 @@ $this->form_builder->register_custom_field($key, $custom_field);
 		<li><strong>input</strong>: provides an input field for the link. This field is not displayed by default</li>
 		<li><strong>target</strong>: sets the target of the link. Options are <dfn>_self</dfn> or <dfn>_blank</dfn>. This field is not displayed by default</li>
 		<li><strong>title</strong>: sets the title attribute of the link. This field is not displayed by default</li>
+		<li><strong>pdfs</strong>: determines whether to display PDFs along with the list of URLs. Default it is set to not show PDFs (note that special logic will need to be created in the layouts to use either <dfn>site_url</dfn> or <dfn>pdf_path</dfn> functions)</li>
+		<li><strong>filter</strong>: a regular expression value that can be used to filter the page list down to only the pages you need</li>
 	</ul>
 	
 	<h4>Representations</h4>
@@ -832,9 +858,15 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	The following additional parameters can be passed to this field type:</p>
 	<ul>
 		<li><strong>editor</strong>: determines which editor to display in the field. Options are <dfn>markitup</dfn>, <dfn>wysiwyg</dfn> and <dfn>FALSE</dfn> with the default being <dfn>markitup</dfn> and wysiwyg being <a href="http://www.ckeditor.com" target="_blank">CKEditor</a></li>
-		<li><strong>class</strong>: although all fields can have the <dfn>class attribute</dfn>, passing the values of <dfn>markitup</dfn>, <dfn>ckeditor</dfn> or <dfn>no_editor</dfn> will have the same effect as explicitly adding the <dfn>editor</dfn> attribute</li>
+		<li><strong>class</strong>: although all fields can have the <dfn>class attribute</dfn>, passing the values of <dfn>markitup</dfn>, <dfn>wysiwyg</dfn> or <dfn>no_editor</dfn> will have the same effect as explicitly adding the <dfn>editor</dfn> attribute</li>
 		<li><strong>preview</strong>: the view file to use for previewing the content (only for markItUp! editor)</li>
 		<li><strong>preview_options</strong>: preview popup window options (used as the third parameter of <a href="http://www.w3schools.com/jsref/met_win_open.asp" target="_blank">window.open</a> . The default is <dfn>width=1024,height=768</dfn></li>
+		<li><strong>img_folder</strong>: the image folder to pull from when inserting an image</li>
+		<li><strong>img_order</strong>: the image order displayed in the dropdown select. Options are <dfn>name</dfn> and <dfn>last_updated</dfn>. Default is <dfn>name</dfn></li>
+		<li><strong>link_pdfs</strong>: a boolean value that determines whether to display PDFs along with the list of URLs when inserting a link. Default is set to FALSE which will not show PDFs (note that special logic will need to be created in the layouts to use either <dfn>site_url</dfn> or <dfn>pdf_path</dfn> functions)</li>
+		<li><strong>editor_config</strong>: sets the editor's (markItUp! or CKEditor) configuration values for a particular field. Camel-cased attributes need to be converted to lowercase with hyphens (e.g. extraPlugins should be extra-plugins). These configuration values are attached to the textarea field so you can use
+			Javascript to set more complex object values as long they are set on the textarea field before markItUp! or CKEditor initialization (e.g. $('.mytextarea').data('toolbar', [['Bold','Italic','Strike']]).</li>
+		<li><strong>markdown</strong>: changes toolbar to use <a href="http://daringfireball.net/projects/markdown/" target="_blank">Markdown</a> formatting instead of HTML. Must have editor set to use markItUp!</li>
 	</ul>
 	
 	<h4>Example</h4>
@@ -869,7 +901,7 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	
 	<?php 
 	$fields = array();
-	$fields['inline_edit_example'] = array('type' => 'inline_edit', 'module' => 'test');
+	$fields['inline_edit_example'] = array('type' => 'inline_edit', 'options' => array('a' => 'a', 'b' => 'b', 'c' => 'c'), 'class' => 'add_edit projects');
 	form_builder_example($fields);
 	?>
 </div>
@@ -940,7 +972,6 @@ $this->form_builder->register_custom_field($key, $custom_field);
 	$fields['state'] = array('type' => 'state');
 	</pre>
 	
-	<?php form_builder_example('state_example', array('type' => 'state')); ?>
 	<?php form_builder_example('state_example', array('type' => 'state', 'format' => 'short')); ?>
 	<?php form_builder_example('state_example', array('type' => 'state', 'format' => 'long')); ?>	
 </div>
@@ -978,15 +1009,17 @@ $this->form_builder->register_custom_field($key, $custom_field);
 <h3 id="list_items" class="toggle">list_items</h3>
 <div class="toggle_block_off">
 	<p>This field type allows you to create bulletted list items by separating each line by a return. 
-	The data saved in the database will be an unordered HTML list.</p>
-	
+	The data saved in the database will be either an unordered or ordered HTML list. The following additional parameter can be passed to this field type:</p>
+	<ul>
+		<li><strong>list_type</strong>: the list type. Options are either "ol" or "ul". Default is "ul".</li>
+	</ul>
 	<h4>Example</h4>
 	<pre class="brush:php">
 	$value = "line1\nline2\nline3";
-	$fields['list_items'] = array('type' => 'list_items', 'value' => $value);
+	$fields['list_items'] = array('type' => 'list_items', 'value' => $value, 'list_type' => 'ol');
 	</pre>
 	
-	<?php form_builder_example('list_items_example', array('type' => 'list_items', 'value' => "line1\nline2\nline3")); ?>
+	<?php form_builder_example('list_items_example', array('type' => 'list_items', 'value' => "line1\nline2\nline3", 'list_type' => 'ol')); ?>
 	
 </div>
 

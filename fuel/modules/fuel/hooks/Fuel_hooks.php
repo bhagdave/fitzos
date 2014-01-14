@@ -9,8 +9,8 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
  */
@@ -24,19 +24,19 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide
+ * @link		http://docs.getfuelcms.com
  */
 
 class Fuel_hooks
 {
 	
-	function __construct()
+	public function __construct()
 	{
 	}
 		
 	// this hook allows us to route the the fuel controller if the method 
 	// on a controller doesn't exist... not just the controller itself'
-	function pre_controller()
+	public function pre_controller()
 	{
 		// if called from same Wordpress, the the global scope will not work
 		global $method, $class, $RTR;
@@ -53,38 +53,59 @@ class Fuel_hooks
 		}
 	}
 
-	// this hook allows us to setup a development password for the site
-	function dev_password()
+	// this hook performs redirects before trying to find the page (vs. passive redirects which will only happen if no page is found by FUEL)
+	public function redirects()
 	{
 		$CI =& get_instance();
-		if ($CI->fuel->config('dev_password') AND !$CI->fuel->auth->is_logged_in() AND (!preg_match('#^'.fuel_uri('login').'#', uri_path(FALSE))))
-		{
-			if (isset($_POST['fuel_dev_password']) AND $_POST['fuel_dev_password'] == md5($CI->fuel->config('dev_password')))
-			{
-				return;
-			}
+		$CI->fuel->redirects->enforce_host();
+		$CI->fuel->redirects->ssl();
+		$CI->fuel->redirects->non_ssl();
 
-			$CI->load->library('session');
-			if (!$CI->session->userdata('dev_password'))
+		if (!USE_FUEL_ROUTES)
+		{
+			$CI->fuel->redirects->execute(FALSE, FALSE);
+		}
+	}
+
+	// this hook allows us to setup a development password for the site
+	public function dev_password()
+	{
+		if (!USE_FUEL_ROUTES)
+		{
+			$CI =& get_instance();
+			if ($CI->fuel->config('dev_password') AND !$CI->fuel->auth->is_logged_in() AND (!preg_match('#^'.fuel_uri('login').'#', uri_path(FALSE))))
 			{
-				redirect('fuel/login/dev');
+				if (isset($_POST['fuel_dev_password']) AND $_POST['fuel_dev_password'] == md5($CI->fuel->config('dev_password')))
+				{
+					return;
+				}
+
+				$CI->load->library('session');
+				if (!$CI->session->userdata('dev_password'))
+				{
+					//redirect('fuel/login/dev');
+                    redirect(FUEL_ROUTE.'login/dev'); //to respect your MY_Fuel $config['fuel_path']
+				}
 			}
 		}
 	}
 	
 	// this hook allows us to display an offline page
-	function offline()
+	public function offline()
 	{
-		$CI =& get_instance();
-		if ($CI->fuel->config('offline') AND !$CI->fuel->auth->is_logged_in() AND (!preg_match('#^'.fuel_uri('login').'#', uri_path(FALSE))))
+		if (!USE_FUEL_ROUTES)
 		{
-			echo $CI->fuel->pages->render('offline', array(), array(), TRUE);
-			exit();
+			$CI =& get_instance();
+			if ($CI->fuel->config('offline') AND !$CI->fuel->auth->is_logged_in() AND (!preg_match('#^'.fuel_uri('login').'#', uri_path(FALSE))))
+			{
+				echo $CI->fuel->pages->render('offline', array(), array(), TRUE);
+				exit();
+			}
 		}
 	}
 
 	// this hook allows us to enable profiler
-	function post_controller()
+	public function post_controller()
 	{
 		$CI =& get_instance();
 		$CI->output->enable_profiler($CI->config->item('enable_profiler'));

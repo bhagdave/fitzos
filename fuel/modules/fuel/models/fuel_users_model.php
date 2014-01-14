@@ -1,20 +1,63 @@
-<?php if (!defined('BASEPATH')) exit('No direct script access allowed'); 
+<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+/**
+ * FUEL CMS
+ * http://www.getfuelcms.com
+ *
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
+ * @link		http://www.getfuelcms.com
+ */
+
+// ------------------------------------------------------------------------
+
+/**
+ * Extends Base_module_model
+ *
+ * <strong>Fuel_users_model</strong> is used for managing FUEL users in the CMS
+ * 
+ * @package		FUEL CMS
+ * @subpackage	Models
+ * @category	Models
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://docs.getfuelcms.com/models/fuel_users_model
+ */
 
 require_once('base_module_model.php');
 
 class Fuel_users_model extends Base_module_model {
 	
-	public $required = array('user_name', 'email', 'first_name', 'last_name');
-	public $filters = array('first_name', 'last_name', 'user_name');
-	public $unique_fields = array('user_name');
-	public $has_many = array('permissions' => array('model' => array(FUEL_FOLDER => 'fuel_permissions_model')));
+	public $required = array('user_name', 'email', 'first_name', 'last_name'); // User name, email, first name, and last name are required
+	public $filters = array('first_name', 'last_name', 'user_name'); // Additional fields that will be searched
+	public $unique_fields = array('user_name'); // User name is a unique field
+	public $has_many = array('permissions' => array('model' => array(FUEL_FOLDER => 'fuel_permissions_model'))); // Users have a "has_many" relationship with permissions
 	
-	function __construct()
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Constructor.
+	 *
+	 * @access	public
+	 * @return	void
+	 */	
+	public function __construct()
 	{
 		parent::__construct('fuel_users');
 	}
 
-	function valid_user($user, $pwd)
+	/**
+	 * Determines whether the passed user name and password are valid
+	 *
+	 * @access	public
+	 * @param	string	The user name
+	 * @param	string	The password
+	 * @return	boolean 
+	 */
+	public function valid_user($user, $pwd)
 	{
 		//$where = array('user_name' => $user, 'password' => $password, 'active' => 'yes');
 		$where = array('user_name' => $user, 'active' => 'yes');
@@ -29,7 +72,15 @@ class Fuel_users_model extends Base_module_model {
 		return FALSE;
 	}
 	
-	function valid_old_user($user, $pwd)
+	/**
+	 * Determines whether the passed user name and password are valid for FUEL 0.93
+	 *
+	 * @access	public
+	 * @param	string	The user name
+	 * @param	string	The password
+	 * @return	boolean 
+	 */
+	public function valid_old_user($user, $pwd)
 	{
 		$where = array('user_name' => $user, 'active' => 'yes');
 		$user = $this->find_one_array($where);
@@ -45,7 +96,20 @@ class Fuel_users_model extends Base_module_model {
 		return FALSE;
 	}
 	
-	function list_items($limit = NULL, $offset = NULL, $col = 'email', $order = 'desc')
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Lists the user items
+	 *
+	 * @access	public
+	 * @param	int The limit value for the list data (optional)
+	 * @param	int The offset value for the list data (optional)
+	 * @param	string The field name to order by (optional)
+	 * @param	string The sorting order (optional)
+	 * @param	boolean Determines whether the result is just an integer of the number of records or an array of data (optional)
+	 * @return	mixed If $just_count is true it will return an integer value. Otherwise it will return an array of data (optional)
+	 */	
+	public function list_items($limit = NULL, $offset = NULL, $col = 'email', $order = 'desc', $just_count = FALSE)
 	{
 		$CI =& get_instance();
 		$user = $CI->fuel->auth->user_data();
@@ -54,11 +118,20 @@ class Fuel_users_model extends Base_module_model {
 			$this->db->where(array('super_admin' => 'no'));
 		}
 		$this->db->select('id, email, user_name, first_name, last_name, super_admin, active');
-		$data = parent::list_items($limit, $offset, $col, $order);
+		$data = parent::list_items($limit, $offset, $col, $order, $just_count);
 		return $data;
 	}
 	
-	function user_info($user_id)
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns an array of the currently logged in user
+	 *
+	 * @access	public
+	 * @param	int The user ID of the person logged in
+	 * @return	array
+	 */	
+	 public function user_info($user_id)
 	{
 		$user = $this->find_one(array('id' => $user_id));
 		$user_data = $user->values();
@@ -68,7 +141,16 @@ class Fuel_users_model extends Base_module_model {
 		return $user_data;
 	}
 	
-	function reset_password($email)
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Resets the password with a random value
+	 *
+	 * @access	public
+	 * @param	string The email address of the user to reset 
+	 * @return	string The new password
+	 */	
+	public function reset_password($email)
 	{
 		// check first to see if they exist in the system
 		$CI =& get_instance();
@@ -78,6 +160,7 @@ class Fuel_users_model extends Base_module_model {
 		$this->add_validation('email', array(&$this, 'user_exists'), 'User does not exist', '{email}');
 		
 		$user = $this->find_one_array(array('email' => $email));
+
 		if (!empty($user))
 		{
 			$reset_key = random_string('alnum', 8);
@@ -90,26 +173,64 @@ class Fuel_users_model extends Base_module_model {
 				return $reset_key;
 			}
 		}
-		return false;
+		return FALSE;
 	}
 	
-	function user_exists($email)
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Determines whether a user exists
+	 *
+	 * @access	public
+	 * @param	string The email address of the user
+	 * @return	boolean 
+	 */	
+	public function user_exists($email)
 	{
 		return $this->record_exists(array('email' => $email));
 	}
 	
-	function salt()
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a random salt value to be used with a user
+	 *
+	 * @access	public
+	 * @return	string 
+	 */	
+	public function salt()
 	{
-		return md5(uniqid(rand(), TRUE));
+		return substr(md5(uniqid(rand(), TRUE)), 0, 32);
 	}
 	
-	function salted_password_hash($password, $salt)
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns a hash value based on the users password and salt value
+	 *
+	 * @access	public
+	 * @param	string The users password
+	 * @param	string The users salt value
+	 * @return	string 
+	 */	
+	public function salted_password_hash($password, $salt)
 	{
 		return sha1($password.$salt);
 	}
 	
-	/* overwrite */
-	function options_list($key = 'id', $val = 'name', $where = array(), $order = 'name')
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Overwritten options list method
+	 *
+	 * @access	public
+	 * @param	string The key value for the options list (optional)
+	 * @param	string The value (lable) value for the options list (optional)
+	 * @param	string A where condition to apply to options list data
+	 * @param	string The order to return the options list data
+	 * @return	array 
+	 */	
+	public function options_list($key = 'id', $val = 'name', $where = array(), $order = 'name')
 	{
 		$CI =& get_instance();
 		if ($key == 'id')
@@ -134,7 +255,17 @@ class Fuel_users_model extends Base_module_model {
 		return $return;
 	}
 	
-	function form_fields($values = array(), $related = array())
+	// --------------------------------------------------------------------
+	
+	/**
+	 * User form fields
+	 *
+	 * @access	public
+	 * @param	array Values of the form fields (optional)
+	 * @param	array An array of related fields. This has been deprecated in favor of using has_many and belongs to relationships (deprecated)
+	 * @return	array An array to be used with the Form_builder class
+	 */	
+	public function form_fields($values = array(), $related = array())
 	{
 		$CI =& get_instance();
 		$CI->load->helper('directory');
@@ -177,7 +308,6 @@ class Fuel_users_model extends Base_module_model {
 			$fields['language']['type'] = 'hidden';
 		}
 
-
 		$fields['user_name']['order'] = 1;
 		$fields['email']['order'] = 2;
 		$fields['first_name']['order'] = 3;
@@ -190,15 +320,20 @@ class Fuel_users_model extends Base_module_model {
 		$CI =& get_instance();
 		$perm_fields = array();
 		$user = $CI->fuel->auth->user_data();
-		
-		//if (($CI->fuel->auth->is_super_admin() AND ($user['id'] != $user_id)) AND (!empty($values['super_admin']) AND $values['super_admin'] != 'yes'))
-		if (($user['id'] != $user_id) OR (!$CI->fuel->auth->is_super_admin() AND $CI->fuel->auth->has_permission('permissions')))
+
+		// if you are a super admin or a user that has permissions to assign permissions and you are not editing yourself, then display the permissions
+		if ($CI->fuel->auth->has_permission('permissions') AND 
+			(($user['id'] != $user_id) AND // can't edit yourself's permissions
+			(!empty($values['super_admin']) AND $values['super_admin'] != 'yes') OR // super admin profiles don't show permissions
+			($CI->fuel->auth->has_permission('permissions') AND empty($values))) // for creating new users so as to show permissions if you are a super admin
+			)
 		{
 			$fields[lang('permissions_heading')] = array('type' => 'section', 'order' => 10);
 			$fields['permissions'] = array('type' => 'custom', 'func' => array($this, '_create_permission_fields'), 'order' => 11, 'user_id' => (isset($values['id']) ? $values['id'] : ''));
 			$fields['permissions']['mode'] = 'checkbox';
 			$fields['permissions']['display_label'] = FALSE;
 			$fields['permissions']['wrapper_tag'] = 'div';
+			$fields['exists_permissions'] = array('type' => 'hidden', 'value' => 1);
 		}
 		else
 		{
@@ -211,12 +346,19 @@ class Fuel_users_model extends Base_module_model {
 		return $fields;
 	}
 	
-	function _create_permission_fields($params = array())
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Permissions custom field callback which returns permission checkboxes
+	 *
+	 * @access	protected
+	 * @param	array The parameters passed to the permissions form field
+	 * @return	string 
+	 */	
+	public function _create_permission_fields($params = array())
 	{
 		$CI =& get_instance();
 		
-
-
 		// first get the permissions
 		$perms_list = array();
 		if ($CI->fuel->auth->is_super_admin() OR $CI->fuel->auth->has_permission('permissions'))
@@ -246,6 +388,12 @@ class Fuel_users_model extends Base_module_model {
 			{
 				$user_perms = $user_perms_obj->find_all_array_assoc('name');
 			}
+		}
+
+		// for duplicated users
+		elseif (!empty($_POST['permissions']))
+		{
+			$user_perms = $CI->fuel_permissions_model->find_within($_POST['permissions'], array(), NULL, NULL, NULL, 'name');
 		}
 
 		$perms = array();
@@ -309,8 +457,44 @@ class Fuel_users_model extends Base_module_model {
 		return $str;
 	}
 	
+	// --------------------------------------------------------------------
 	
-	function on_before_validate($values)
+	/**
+	 * Model hook executed right before the data is cleaned
+	 *
+	 * @access	public
+	 * @param	array The values to be saved right the clean method is run
+	 * @return	array Returns the values to be cleaned
+	 */	
+	public function on_before_clean($values)
+	{
+		if (!empty($values['password']) OR !empty($values['new_password'])) 
+		{
+			if (empty($values['salt']))
+			{
+				$values['salt'] = $this->salt();
+			}
+
+			// make sure the salt is only 32 characters long in case it was passed as a value
+			$values['salt'] = substr($values['salt'], 0, 32);
+
+			$pwd = (!empty($values['new_password'])) ? $values['new_password'] : $values['password'];
+			$values['password'] = $this->salted_password_hash($pwd, $values['salt']);
+		}
+		
+		return $values;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Model hook executed right before validation is run
+	 *
+	 * @access	public
+	 * @param	array The values to be saved right before validation
+	 * @return	array Returns the values to be validated right before saving
+	 */	
+	public function on_before_validate($values)
 	{
 		$this->add_validation('email', 'valid_email', lang('error_invalid_email'));
 		
@@ -338,7 +522,16 @@ class Fuel_users_model extends Base_module_model {
 		return $values;
 	}
 
-	function on_before_save($values)
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Model hook executed right before saving
+	 *
+	 * @access	public
+	 * @param	array The values to be saved right before saving
+	 * @return	array Returns the values to be saved
+	 */	
+	public function on_before_save($values)
 	{
 		$CI =& get_instance();
 		$valid_user = $CI->fuel->auth->valid_user();
@@ -349,23 +542,16 @@ class Fuel_users_model extends Base_module_model {
 		return $values;
 	}
 
-	function on_before_clean($values)
-	{
-		$has_pwd = FALSE;
-		if (!empty($values['password'])) 
-		{
-			if (empty($values['salt'])) $values['salt'] = $this->salt();
-			$values['password'] = $this->salted_password_hash($values['password'], $values['salt']);
-		}
-		if (!empty($values['new_password']))
-		{
-			if (empty($values['salt'])) $values['salt'] = $this->salt();
-			$values['password'] = $this->salted_password_hash($values['new_password'], $values['salt']);
-		}
-		return $values;
-	}
+	// --------------------------------------------------------------------
 	
-	function on_after_save($values)
+	/**
+	 * Model hook executed right after saving
+	 *
+	 * @access	public
+	 * @param	array The values that were just saved
+	 * @return	array Returns the values that were saved
+	 */	
+	public function on_after_save($values)
 	{
 		parent::on_after_save($values);
 		$CI =& get_instance();
@@ -387,54 +573,98 @@ class Fuel_users_model extends Base_module_model {
 			
 		}
 
+		if ( ! empty($this->normalized_save_data['new_password'])) {
+			$this->fuel->logs->write(lang('auth_log_cms_pass_reset', $values['user_name'], $this->input->ip_address()), 'debug');
+		}
+
 		$this->_send_email($values['id']);
+		return $values;
 	}
 
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Protected method that will send out a passowrd change email to a user
+	 *
+	 * @access	protected
+	 * @param	int The user ID
+	 * @return	void
+	 */	
 	protected function _send_email($id)
 	{
 		$CI =& get_instance();
 		if (!empty($id) AND !has_errors() AND isset($_POST['send_email']) AND (!empty($_POST['password']) OR !empty($_POST['new_password'])))
 		{
 			$password = (!empty($_POST['password'])) ? $CI->input->post('password') : $CI->input->post('new_password');
-			// send email to user
-			$CI->load->library('email');
 
-			$config['wordwrap'] = TRUE;
-			$CI->email->initialize($config);
-
-			$CI->email->from($CI->config->item('from_email', 'fuel'), $CI->config->item('site_name', 'fuel'));
-			$CI->email->to($CI->input->post('email')); 
-			$CI->email->subject(lang('new_user_email_subject'));
-			$msg = lang('new_user_email', $CI->input->post('user_name'), $password);
-
-			$CI->email->message($msg);
-	
-			if (!$CI->email->send())
+			$msg = lang('new_user_email', site_url('fuel/login'), $CI->input->post('user_name'), $password);
+			$params['to'] = $CI->input->post('email');
+			$params['subject'] = lang('new_user_email_subject');
+			$params['message'] = $msg;
+			$params['use_dev_mode'] = FALSE;
+			if (!$CI->fuel->notification->send($params))
 			{
-				add_error(lang('error_sending_email', $this->input->post('email')));
+				$CI->fuel->logs->write($CI->fuel->notification->last_error(), 'debug');
+				add_error(lang('error_sending_email', $CI->input->post('email')));
 			}
 		}
 	}
+
+	// --------------------------------------------------------------------
 	
-	function delete($where)
+	/**
+	 * Overwrites parent model so as you won't accidentally delete the super admin user
+	 *
+	 * @access	public
+	 * @param	mixed The where condition to be applied to the delete (e.g. array('user_name' => 'darth'))
+	 * @return	void
+	 */	
+	public function delete($where)
 	{
 		//prevent the deletion of the super admins
 		$where['super_admin'] = 'no';
 		return parent::delete($where);
 	}
 
-	function is_new_email($email)
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Validation callback to check if a new user's email already exists
+	 *
+	 * @access	public
+	 * @param	string The email address
+	 * @return	boolean
+	 */	
+	public function is_new_email($email)
 	{
 		return $this->is_new($email, 'email');
 	}
 	
-	function is_editable_email($email, $id)
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Validation callback to check if an existing user's email address doen't already exist in the system
+	 *
+	 * @access	public
+	 * @param	string The email address
+	 * @param	string The email address
+	 * @return	boolean
+	 */	
+	public function is_editable_email($email, $id)
 	{
 		return $this->is_editable($email, 'email', $id);
 	}
 	
-	// used to clear out parent base_module_model common query
-	function _common_query()
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Overwritten: used to clear out parent base_module_model common query
+	 *
+	 * @access	public
+	 * @param mixed parameter to pass to common query (optional)
+	 * @return	void
+	 */	
+	public function _common_query($params = NULL)
 	{
 		
 	}

@@ -8,8 +8,8 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
  */
@@ -25,7 +25,7 @@
  * @subpackage	Helpers
  * @category	Helpers
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/helpers/url_helper
+ * @link		http://docs.getfuelcms.com/helpers/my_url_helper
  */
 
 // --------------------------------------------------------------------
@@ -37,9 +37,10 @@
  * @access	public
  * @param	string	the URI string
  * @param	boolean	sets or removes "https" from the URL. Must be set to TRUE or FALSE for it to explicitly work
+ * @param	boolean	sets the language parameter on the URL based on the "language_mode" setting in the FUEL configuration
  * @return	string
  */
-function site_url($uri = '', $https = NULL)
+function site_url($uri = '', $https = NULL, $language = NULL)
 {
 	if (is_http_path($uri)) return $uri;
 	if ($uri == '#' OR (strncmp('mailto', $uri, 6) === 0) OR (strncmp('javascript:', $uri, 11) === 0))
@@ -48,8 +49,17 @@ function site_url($uri = '', $https = NULL)
 	}
 	else
 	{
+
 		$CI =& get_instance();
+		
+		// append any language stuff to the URL if configured
+		if (isset($CI->fuel))
+		{
+			$uri  = $CI->fuel->language->uri($uri, $language);	
+		}
+
 		$url = $CI->config->site_url($uri);
+
 		if ($https === TRUE)
 		{
 			$url = preg_replace('#^http:(.+)#', 'https:$1', $url);
@@ -70,13 +80,14 @@ function site_url($uri = '', $https = NULL)
  *
  * @access	public
  * @param	boolean	determines whether to include query string parameters
+ * @param	boolean	determines whether to change the language value
  * @return	string
  */
-function current_url($show_query_str = FALSE)
+function current_url($show_query_str = FALSE, $lang = NULL)
 {
     $CI =& get_instance();
 
-    $url = $CI->config->site_url($CI->uri->uri_string());
+    $url = site_url($CI->uri->uri_string(), NULL, $lang);
     if ($show_query_str AND !empty($_SERVER['QUERY_STRING']))
     {
     	$url = $url.'?'.$_SERVER['QUERY_STRING'];
@@ -92,12 +103,21 @@ function current_url($show_query_str = FALSE)
  * @access	public
  * @param	boolean	use the rerouted URI string?
  * @param	boolean	the start index to build the uri path
+ * @param	boolean	determines whether to strip any language segments
  * @return	string
  */
-function uri_path($rerouted = TRUE, $start_index = 0)
+function uri_path($rerouted = TRUE, $start_index = 0, $strip_lang = TRUE)
 {
 	$CI =& get_instance();
-	$segments = ($rerouted) ? $CI->uri->rsegment_array() : $CI->uri->segment_array();
+
+	if ($strip_lang AND isset($CI->fuel) AND $CI->fuel->language->has_multiple())
+	{
+		$segments = $CI->fuel->language->cleaned_uri_segments(NULL, $rerouted);
+	}
+	else
+	{
+		$segments = ($rerouted) ? $CI->uri->rsegment_array() : $CI->uri->segment_array();
+	}
 	if (!empty($segments) && $segments[count($segments)] == 'index')
 	{
 		array_pop($segments);
@@ -107,6 +127,8 @@ function uri_path($rerouted = TRUE, $start_index = 0)
 		$segments = array_slice($segments, $start_index);
 	}
 	$location = implode('/', $segments);
+
+
 	return $location;
 }
 
@@ -119,21 +141,29 @@ function uri_path($rerouted = TRUE, $start_index = 0)
  * @param	int	the segment number
  * @param	string	the default value if the segment doesn't exist
  * @param	boolean	whether to use the rerouted uri
+ * @param	boolean	determines whether to strip any language segments
  * @return	string
  */
-function uri_segment($n, $default = FALSE, $rerouted = TRUE)
+function uri_segment($n, $default = FALSE, $rerouted = TRUE, $strip_lang = TRUE)
 {
 	$CI =& get_instance();
-
-	if ($rerouted)
+	if ($strip_lang AND isset($CI->fuel) AND $CI->fuel->language->has_multiple())
 	{
-		return $CI->uri->segment($n, $default);
+		$segments = $CI->fuel->language->cleaned_uri_segments(NULL, !$rerouted);
+		$seg =  (isset($segments[$n])) ? $segments[$n] : $default;
 	}
 	else
 	{
-		return $CI->uri->rsegment($n, $default);
-
+		if ($rerouted)
+		{
+			$seg = $CI->uri->segment($n, $default);
+		}
+		else
+		{
+			$seg = $CI->uri->rsegment($n, $default);
+		}
 	}
+	return $seg;
 }
 
 // --------------------------------------------------------------------
@@ -204,9 +234,10 @@ function last_url($default = FALSE, $only_uri = FALSE)
  *
  * @access	public
  * @param	string	URL
+ * @param	array	An array of extensions to check to force it to target="_blank"
  * @return	boolean
  */
-function link_target($link)
+function link_target($link, $exts = array())
 {
 	$url_parts = parse_url($link);
 	
@@ -234,9 +265,16 @@ function link_target($link)
 			$domain = $host_parts[0];
 		}
 	}
+
+	// get the extension to check
+	if (is_string($exts))
+	{
+		$exts = array($exts);
+	}
+	$ext = end(explode('.', $link));
 	
 	// check if an http path and that it is from a different domain
-	if (is_http_path($link) AND $test_domain != $domain)
+	if (is_http_path($link) AND $test_domain != $domain OR (!empty($exts) AND in_array($ext, $exts)))
 	{
 		return ' target="_blank"';
 	}
@@ -258,5 +296,99 @@ function redirect_404($redirect = TRUE)
 	$CI->fuel->redirects->execute($redirect);
 }
 
+// ------------------------------------------------------------------------
+
+/**
+ * Header Redirect (Overwritten to account for adding language path in site_url function)
+ *
+ * Header redirect in two flavors
+ * For very fine grained control over headers, you could use the Output
+ * Library's set_header() function.
+ *
+ * @access	public
+ * @param	string	the URL
+ * @param	string	the method: location or redirect
+ * @param	string	the http response code
+ * @param	string	wether to force or not https
+ * @return	string
+ */
+function redirect($uri = '', $method = 'location', $http_response_code = 302, $use_https = NULL)
+{
+	if ( ! preg_match('#^https?://#i', $uri))
+	{
+		if (is_null($use_https))
+		{
+			$use_https = is_https();
+		} 
+		$uri = site_url($uri, $use_https, FALSE);
+	}
+
+	switch($method)
+	{
+		case 'refresh'	: header("Refresh:0;url=".$uri);
+			break;
+		default			: header("Location: ".$uri, TRUE, $http_response_code);
+			break;
+	}
+	exit;
+}
+
+// ------------------------------------------------------------------------
+
+/**
+ * Returns whether the current page is using SSL (https)
+ *
+ * @access	public
+ * @param	string	the URL
+ * @param	string	the method: location or redirect
+ * @return	string
+ */
+// used function exists to future proof it https://github.com/IT-Can/CodeIgniter/commit/98bc5d985b7119ff71b9f50a1b226559f647797a
+if ( ! function_exists('is_https'))
+{
+	function is_https()
+	{
+		return ((!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) !== 'off'));
+	}
+}
+
+// ------------------------------------------------------------------------
+
+/**
+ * Returns a query string formatted
+ *
+ * @access	public
+ * @param	array	an array of query string parameters to only include
+ * @param	boolean	determines whether to include posted variables in the query string
+ * @param	boolean	determines whether to include the question mark
+ * @return	string
+ */
+function query_str($only = array(), $include_post = FALSE, $include_q = TRUE)
+{
+	$CI =& get_instance();
+	$query_str = '';
+	if ($include_post)
+	{
+		$get_array = $CI->input->get(NULL, TRUE);
+	}
+	else
+	{
+		$get_array = $CI->input->get_post(NULL, TRUE);
+	}
+	
+	if (!empty($get_array))
+	{
+		if (!empty($include))
+		{
+			$get_array = array_intersect($only, $get_array);
+		}
+		$query_str = http_build_query($get_array);
+		if (!empty($query_str) AND $include_q)
+		{
+			$query_str = '?'.$query_str;
+		}
+	}
+	return $query_str;
+}
 /* End of file MY_url_helper.php */
 /* Location: ./modules/fuel/helpers/MY_url_helper.php */

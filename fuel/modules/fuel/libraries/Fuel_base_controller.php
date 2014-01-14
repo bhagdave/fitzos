@@ -8,8 +8,8 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
  */
@@ -23,7 +23,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_base_controller
+ * @link		http://docs.getfuelcms.com/libraries/fuel_base_controller
  * @autodoc		FALSE
  */
 
@@ -48,7 +48,7 @@ class Fuel_base_controller extends CI_Controller {
 	 * @param	boolean	Determines whether to validate the user or not (optional)
 	 * @return	void
 	 */	
-	function __construct($validate = TRUE)
+	public function __construct($validate = TRUE)
 	{
 		parent::__construct();
 		
@@ -69,7 +69,7 @@ class Fuel_base_controller extends CI_Controller {
 	 * @param	string (optional)
 	 * @return	void
 	 */	
-	function reset_page_state($state_key = NULL)
+	public function reset_page_state($state_key = NULL)
 	{
 		if (empty($state_key))
 		{

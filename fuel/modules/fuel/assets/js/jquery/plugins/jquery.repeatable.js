@@ -15,6 +15,8 @@ dave@thedaylightstudio.com
 			removeButtonClass : 'remove',
 			removeButtonText : 'Remove',
 			repeatableSelector : '.repeatable',
+			repeatableParentSelector : '.repeatable_container',
+			removeSelector : '.remove_repeatable',
 			contentSelector : '.repeatable_content',
 			warnBeforeDelete : true,
 			warnBeforeDeleteMessage : 'Are you sure you want to delete this item?',
@@ -22,26 +24,27 @@ dave@thedaylightstudio.com
 			sortableSelector : '.grabber',
 			sortable : true,
 			initDisplay : false,
-			dblClickBehavior : 'toggle', // options are false, toggle or accordian
+			dblClickBehavior : 'toggle', // options are false, toggle or accordion
 			max : null,
 			min : null,
 			depth : 1,
 			allowCollapsingContent : true
 		}, o || {});
 
+		// used for issue when renaming checkboxes
+		var $checked = null;
+
 		var parseTemplate = function(elem, i){
-			
+
 			var $childTemplates = $(elem).find(options.repeatableSelector);
 			var depth = $(elem).parent().attr('data-depth');
 			var titleField = $(elem).parent().attr('data-title_field');
 			var title = $(elem).find('input[name$="[' + titleField + ']"]').val();
-
 			if (!depth) depth = 0;
 			var depthSuffix = (depth > 0) ? '_' + depth : '';
 			$('.num' + depthSuffix, elem).html((i + 1));
 			$('.index' + depthSuffix, elem).html(i);
 			$('.title' + depthSuffix, elem).html(title);
-			
 			// set the field depth class in case it's not already
 			$(elem).find('label,input,textarea,select').addClass('field_depth_0');
 
@@ -65,6 +68,7 @@ dave@thedaylightstudio.com
 				});
 			}
 
+
 			$('label,.field_depth_' + depth, elem).each(function(j){
 				var newName = $(this).attr('name');
 				if (newName && newName.length){
@@ -73,8 +77,17 @@ dave@thedaylightstudio.com
 					// required for jquery 
 					newName = newName.replace('[', '\[');
 					newName = newName.replace(']', '\]');
+					$(this).attr('name', newName);
+
+					// fix for losing checked value for radios
+					if ($checked){
+						setTimeout(function(){
+							$checked.each(function(){
+								$(this).attr('checked', 'checked');
+							});
+						}, 0);
+					}
 					
-					$(this).attr('name', newName)
 				}
 				
 				if ($(this).is('label')){
@@ -127,17 +140,24 @@ dave@thedaylightstudio.com
 		}
 		
 		var createRemoveButton = function(elem){
-			if ($(elem).children('.' + options.removeButtonClass).length == 0){
-				$(elem).append('<a href="#" class="' + options.removeButtonClass +'">' + options.removeButtonText +' </a>');
+			$elem = $(elem);
+			if (!$elem.find(options.removeButtonClass).length) {
+				var $remove = $elem.find(options.removeSelector + ':first');
+				if ($remove.length && $remove.find(options.removeButtonClass).length == 0){
+					$remove.empty().append('<a href="#" class="' + options.removeButtonClass +'">' + options.removeButtonText +' </a>');
+				} else {
+					$elem.append('<a href="#" class="' + options.removeButtonClass +'">' + options.removeButtonText +' </a>');
+				}
 			}
 			
 			//$(options.repeatableSelector).on('click', ' .' + options.removeButtonClass, function(e){
-			$(options.repeatableSelector +' .' + options.removeButtonClass).live('click',  function(e){
-				var $this = $(this).closest(options.repeatableSelector).parent();
+			$(document).on('click', options.repeatableSelector +' .' + options.removeButtonClass,  function(e){
+				//var $this = $(this).closest(options.repeatableSelector).parent();
+				var $this = $(this).closest(options.repeatableParentSelector);
 				var max = ($this.attr('data-max')) ? parseInt($this.attr('data-max')) : null;
 				var min = ($this.attr('data-min')) ? parseInt($this.attr('data-min')) : null;
 				if (options.warnBeforeDelete == false || confirm(options.warnBeforeDeleteMessage)){
-					$(this).parent().remove();
+					$(this).closest(options.repeatableSelector).remove();
 					
 					var $children = $this.children(options.repeatableSelector);
 					if ($children.length < max){
@@ -156,6 +176,8 @@ dave@thedaylightstudio.com
 		}
 		
 		var reOrder = function($elem){
+			$checked = $('input[type="radio"]', $elem).filter(':checked');
+
 			$elem.children(options.repeatableSelector).each(function(i){
 				$(this).attr('data-index', i);
 				parseTemplate(this, i);
@@ -189,16 +211,16 @@ dave@thedaylightstudio.com
 		
 		var createCollapsingContent = function($elem){
 			if (options.allowCollapsingContent){
-		
 				$($elem).find(options.sortableSelector).unbind('dblclick').dblclick(function(e){
 					$parent = $(this).closest(options.repeatableSelector).parent();
-
 					var dblclick = ($parent.attr('data-dblclick')) ? $parent.attr('data-dblclick') : null;
-					if (dblclick == 'accordian'){
+
+					var $elems = $(this).closest(options.repeatableSelector).find(options.contentSelector + ':first');
+					if (dblclick == 'accordion' || dblclick == 'accordian'){
 						$parent.find(options.contentSelector).hide();
-						$(this).closest(options.repeatableSelector).find(options.contentSelector + ':first').show();
+						 $elems.show();
 					} else {
-						$(this).closest(options.repeatableSelector).find(options.contentSelector + ':first').toggle();
+						 $elems.toggle();
 					}
 				})
 			}
@@ -215,7 +237,7 @@ dave@thedaylightstudio.com
 			
 		}
 		
-		$('.' + options.addButtonClass).die().live('click', function(e){
+		$(document).on('click', '.' + options.addButtonClass, function(e){
 			e.preventDefault();
 			e.stopImmediatePropagation();
 
@@ -239,10 +261,10 @@ dave@thedaylightstudio.com
 			
 			
 			$clonecopy.find(options.contentSelector + ':first').show();
-			if (dblclick == 'accordian'){
+			if (dblclick == 'accordian' || dblclick == 'accordion'){
 				$prev.find(options.contentSelector).hide();
 			}
-			
+
 			createCollapsingContent($clonecopy);
 			
 			var $children = $this.children(options.repeatableSelector);
@@ -253,7 +275,6 @@ dave@thedaylightstudio.com
 
 			var index = $children.length;
 			parseTemplate($clonecopy, index);
-
 			createRemoveButton($clonecopy);
 			$this.append($clonecopy);
 
@@ -267,7 +288,7 @@ dave@thedaylightstudio.com
 				$(this).hide();
 			}
 			checkMin($prev, min);
-			$(document).trigger({type: 'cloned', clonedNode: $clonecopy});
+			$this.trigger({type: 'cloned', clonedNode: $clonecopy});
 
 		});
 
@@ -289,7 +310,8 @@ dave@thedaylightstudio.com
 				
 			// add button
 			$parent = $this.parent();
-			
+			//$parent = $this.closest(options.repeatableParentSelector);
+
 			// add max limit attribute to reference later
 			if (options.max){
 				$this.attr('data-max', options.max); // set it if it's not already
@@ -303,17 +325,16 @@ dave@thedaylightstudio.com
 				$this.attr('data-dblclick', options.dblClickBehavior);
 			}
 
-			if (options.initDisplay){
+			if (options.initDisplay && !$this.is('.__applied__')){
 				$this.attr('data-init_display', options.init_display);
 				
 				// hide all but the first
 				if (options.initDisplay == 'first'){
-					$repeatables.find('.repeatable_content').not(':first').hide();
+					$repeatables.find(options.contentSelector).not(':first').hide();
 				} else if (options.initDisplay == 'none' || options.initDisplay == 'closed'){
-					$repeatables.find('.repeatable_content').hide();
+					$repeatables.find(options.contentSelector).hide();
 				}
 			}
-			
 			if ($parent.find(options.addButtonClass).length == 0 && !$this.hasClass('__applied__')){
 				$parent.append('<a href="#" class="' + options.addButtonClass + '">' + options.addButtonText +' </a>');
 			}

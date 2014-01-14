@@ -8,8 +8,8 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
 
@@ -22,7 +22,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/my_image_lib
+ * @link		http://docs.getfuelcms.com/libraries/my_image_lib
  */
 
 
@@ -82,12 +82,23 @@ class MY_Image_lib extends CI_Image_lib {
 		$props = $this->get_image_properties($this->source_folder.$this->source_image, TRUE);
 		$orig_width = $props['width'];
 		$orig_height = $props['height'];
-		
+
 		// if ($orig_width < $orig_height )
 		// {
 		// 	$this->master_dim = 'width';
 		// }
 		// 
+
+		if (empty($this->width))
+		{
+			$this->width = $orig_width;
+		}
+
+		if (empty($this->height))
+		{
+			$this->height = $orig_height;
+		}
+
 		if (empty($orig_width) OR empty($orig_height))
 		{
 			return FALSE;
@@ -174,7 +185,7 @@ class MY_Image_lib extends CI_Image_lib {
 	 * @param	boolean	indicates whether to remove empty array values from uri
 	 * @return	array
 	 */	
-	function convert($type = 'jpg', $delete_orig = FALSE)
+	public function convert($type = 'jpg', $delete_orig = FALSE)
 	{
 		$this->full_dst_path = $this->dest_folder . end($this->explode_name($this->dest_image)) . '.' . $type;
 

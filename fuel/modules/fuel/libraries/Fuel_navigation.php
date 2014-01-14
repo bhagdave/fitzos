@@ -8,8 +8,8 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
  */
@@ -23,7 +23,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_navigation
+ * @link		http://docs.getfuelcms.com/libraries/fuel_navigation
  */
 
 // --------------------------------------------------------------------
@@ -43,7 +43,7 @@ class Fuel_navigation extends Fuel_module {
 		<li><strong>items</strong> - the navigation items to use. By default, this is empty and will look for the nav.php file or the records in the Navigation module</li>
 		<li><strong>file</strong> - the name of the file containing the navigation information</li>
 		<li><strong>var</strong> - the variable name in the file to use</li>
-		<li><strong>parent</strong> - the parent id you would like to start rendering from</li>
+		<li><strong>parent</strong> - the parent id you would like to start rendering from. This is either the database ID or the nav array key of the menu item</li>
 		<li><strong>root</strong> - the equivalent to the root_value attribute in the Menu class. It states what the root value of the menu structure should be. Normally you don't need to worry about this</li>
 		<li><strong>group_id</strong> - the group ID in the database to use. The default is <dfn>1</dfn>. Only applies to navigation items saved in the admin</li>
 		<li><strong>exclude</strong> - nav items to exclude from the menu. Can be an array or a regular expression string</li>
@@ -65,6 +65,7 @@ class Fuel_navigation extends Fuel_module {
 		<li><strong>item_tag</strong>: the html list item element. Default is 'li'</li>
 		<li><strong>item_id_prefix</strong>: the prefix to the item id</li>
 		<li><strong>item_id_key</strong>: either id or location. Default is 'id'</li>
+		<li><strong>use_nav_key</strong>: determines whether to use the nav_key or the location for the active state. Default is "AUTO"</li>
 		<li><strong>pre_render_func</strong>: function to apply to menu labels before rendering</li>
 		<li><strong>delimiter</strong>: the html element between the links </li>
 		<li><strong>arrow_class</strong>: the class for the arrows used in breadcrumb type menus</li>
@@ -81,7 +82,7 @@ class Fuel_navigation extends Fuel_module {
 	 * @param	array	config preferences
 	 * @return	string
 	 */	
-	function render($params = array())
+	public function render($params = array())
 	{
 		$this->CI->load->library('menu');
 		$valid = array( 'items' => array(),
@@ -107,6 +108,7 @@ class Fuel_navigation extends Fuel_module {
 						'item_tag' => 'li',
 						'item_id_prefix' => '',
 						'item_id_key' => 'id',
+						'use_nav_key' => 'AUTO',
 						'pre_render_func' => '',
 						'delimiter' => FALSE,
 						'arrow_class' => 'arrow',
@@ -119,6 +121,7 @@ class Fuel_navigation extends Fuel_module {
 						'language' => NULL,
 						'include_default_language' => FALSE,
 						'language_default_group' => FALSE,
+						'cache' => FALSE,
 						);
 
 		if (!is_array($params))
@@ -133,6 +136,23 @@ class Fuel_navigation extends Fuel_module {
 			$p[$param] = (isset($params[$param])) ? $params[$param] : $default;
 		}
 
+		// get language value... possible to get menu items from different languages so commented out for now
+		// if ($this->fuel->language->has_multiple() AND empty($p['language']))
+		// {
+		// 	$p['language'] = (!empty($p['language'])) ? $p['language'] : $this->fuel->language->detect();
+		// }
+		if ($p['cache'] === TRUE)
+		{
+			// cache id and group
+			$cache_id = md5(json_encode($params));
+			$cache_group = $this->CI->fuel->config('page_cache_group');
+			$cache = $this->CI->fuel->cache->get($cache_id, $cache_group);
+			if (!empty($cache))
+			{
+				return $cache;
+			}
+		}
+		
 		if (empty($p['items']))
 		{
 			// get the menu data based on the FUEL mode or if the file parameter is specified use that
@@ -162,7 +182,7 @@ class Fuel_navigation extends Fuel_module {
 				}
 				// now load the models
 				$this->fuel->load_model('fuel_navigation');
-				
+
 				// grab all menu items by group
 				$menu_items = $this->model()->find_all_by_group($p['group_id'], $p['language'], 'nav_key');
 
@@ -246,10 +266,13 @@ class Fuel_navigation extends Fuel_module {
 					$check = $key;
 				}
 
-				if (is_string($p['exclude']) AND preg_match('#'.$p['exclude'].'#', $check))
+				if (is_string($p['exclude']))
 				{
 					$p['exclude'] = str_replace(':any', '.+', str_replace(':num', '[0-9]+', $p['exclude']));
-					unset($items[$key]);
+					if (preg_match('#'.$p['exclude'].'#', $check))
+					{
+						unset($items[$key]);
+					}
 				}
 				else if (is_array($p['exclude']))
 				{
@@ -261,11 +284,21 @@ class Fuel_navigation extends Fuel_module {
 
 			}
 		}
+
 		if ($p['return_normalized'] !== FALSE)
 		{
-			return $this->CI->menu->normalize_items($items);
+			$return = $this->CI->menu->normalize_items($items);
 		}
-		return $this->CI->menu->render($items, $p['active'], $p['parent']);
+		else
+		{
+			$return = $this->CI->menu->render($items, $p['active'], $p['parent']);
+		}
+
+		if ($p['cache'] === TRUE)
+		{
+			$this->CI->fuel->cache->save($cache_id, $return, $cache_group, $this->CI->fuel->config('page_cache_ttl'));
+		}
+		return $return;
 	}
 	
 	// --------------------------------------------------------------------
@@ -277,7 +310,7 @@ class Fuel_navigation extends Fuel_module {
 	 * @param	array	config preferences
 	 * @return	string
 	 */	
-	function basic($params)
+	public function basic($params)
 	{
 		$params['render_type'] = 'basic';
 		return $this->render($params);
@@ -292,7 +325,7 @@ class Fuel_navigation extends Fuel_module {
 	 * @param	array	config preferences
 	 * @return	string
 	 */	
-	function breadcrumb($params)
+	public function breadcrumb($params)
 	{
 		$params['render_type'] = 'breadcrumb';
 		return $this->render($params);
@@ -307,7 +340,7 @@ class Fuel_navigation extends Fuel_module {
 	 * @param	array	config preferences
 	 * @return	string
 	 */	
-	function collapsible($params)
+	public function collapsible($params)
 	{
 		$params['render_type'] = 'collapsible';
 		return $this->render($params);
@@ -322,7 +355,7 @@ class Fuel_navigation extends Fuel_module {
 	 * @param	array	config preferences
 	 * @return	string
 	 */	
-	function page_title($params)
+	public function page_title($params)
 	{
 		$params['render_type'] = 'page_title';
 		return $this->render($params);
@@ -337,7 +370,7 @@ class Fuel_navigation extends Fuel_module {
 	 * @param	array	config preferences
 	 * @return	string
 	 */	
-	function delimited($params)
+	public function delimited($params)
 	{
 		$params['render_type'] = 'delimited';
 		return $this->render($params);
@@ -352,7 +385,7 @@ class Fuel_navigation extends Fuel_module {
 	 * @param	array	config preferences
 	 * @return	string
 	 */	
-	function data($params)
+	public function data($params)
 	{
 		$params['render_type'] = 'array';
 		return $this->render($params);
@@ -367,7 +400,7 @@ class Fuel_navigation extends Fuel_module {
 	 * @param	array	config preferences (optional)
 	 * @return	boolean
 	 */	
-	function upload($params = array())
+	public function upload($params = array())
 	{
 		$this->CI->load->library('menu');
 		$this->CI->load->helper('file');
@@ -512,7 +545,7 @@ class Fuel_navigation extends Fuel_module {
 	 * @access	public
 	 * @return	array
 	 */	
-	function groups()
+	public function groups()
 	{
 		$this->_load_nav_group_model();
 		return $this->CI->fuel_navigation_groups_model->find_all();
@@ -527,7 +560,7 @@ class Fuel_navigation extends Fuel_module {
 	 * @param	mixed	Can be a groups name or ID value
 	 * @return	object
 	 */	
-	function group($group)
+	public function group($group)
 	{
 		$this->_load_nav_group_model();
 		if (is_numeric($group))
@@ -549,7 +582,7 @@ class Fuel_navigation extends Fuel_module {
 	 * @access	public
 	 * @return	boolean
 	 */	
-	function mode()
+	public function mode()
 	{
 		$fuel_mode = $this->fuel->config('fuel_mode');
 		if (is_array($fuel_mode))

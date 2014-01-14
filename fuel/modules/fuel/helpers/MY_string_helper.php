@@ -9,8 +9,8 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
  */
@@ -27,7 +27,7 @@
  * @subpackage	Helpers
  * @category	Helpers
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/helpers/string_helper
+ * @link		http://docs.getfuelcms.com/helpers/my_string_helper
  */
 
 // --------------------------------------------------------------------
@@ -293,17 +293,25 @@ function php_to_template_syntax($str)
  *
  * @param 	string 	string to evaluate
  * @param 	array 	variables to parse with string
- * @param 	string 	the cache ID
+ * @param 	boolean	whether to use the simple CI parsing or the Dwoo parsing
+ * @param 	string 	the cache ID (for Dwoo only)
  * @return	string
  */
-function parse_template_syntax($str, $vars = array(), $cache_id = NULL)
+function parse_template_syntax($str, $vars = array(), $simple = FALSE, $cache_id = NULL)
 {
 	$CI =& get_instance();
 	if (!isset($CI->parser))
 	{
 		$CI->load->library('parser');
 	}
-	return $CI->parser->parse_string($str, $vars, TRUE, $cache_id);
+	if ($simple)
+	{
+		return $CI->parser->parse_simple($str, $vars, TRUE);
+	}
+	else
+	{
+		return $CI->parser->parse_string($str, $vars, TRUE, $cache_id);	
+	}
 }
 
 /* End of file MY_string_helper.php */

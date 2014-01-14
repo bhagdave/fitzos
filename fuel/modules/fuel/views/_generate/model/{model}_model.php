@@ -29,9 +29,9 @@ class {model_name}_model extends Base_module_model {
 		parent::__construct('{table}'); // table name
 	}
 
-	function list_items($limit = NULL, $offset = NULL, $col = 'precedence', $order = 'desc')
+	function list_items($limit = NULL, $offset = NULL, $col = 'precedence', $order = 'desc', $just_count = FALSE)
 	{
-		$data = parent::list_items($limit, $offset, $col, $order);
+		$data = parent::list_items($limit, $offset, $col, $order, $just_count = FALSE);
 		return $data;
 	}
 
@@ -41,6 +41,12 @@ class {model_name}_model extends Base_module_model {
 		return $fields;
 	}
 	
+	function on_before_save($values)
+	{
+		parent::on_before_save($values);
+		return $values;
+	}
+
 	function on_after_save($values)
 	{
 		parent::on_after_save($values);
@@ -50,6 +56,9 @@ class {model_name}_model extends Base_module_model {
 	function _common_query()
 	{
 		parent::_common_query();
+
+		// remove if no precedence column is provided
+		$this->db->order_by('precedence asc');
 	}
 
 }

@@ -8,8 +8,8 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
  */
@@ -25,7 +25,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_admin
+ * @link		http://docs.getfuelcms.com/libraries/fuel_admin
  */
 
 // --------------------------------------------------------------------
@@ -74,7 +74,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @param	array	config preferences
 	 * @return	void
 	 */	
-	function __construct($params = array())
+	public function __construct($params = array())
 	{
 		parent::__construct($params);
 		
@@ -102,7 +102,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @param	array	Config preferences (optional)
 	 * @return	void
 	 */	
-	function initialize($params = array())
+	public function initialize($params = array())
 	{
 		parent::initialize($params);
 
@@ -116,7 +116,7 @@ class Fuel_admin extends Fuel_base_library {
 		$this->CI->load->module_helper(FUEL_FOLDER, 'fuel');
 		
 		// check if the admin is even accessible... this method looks at if the admin is enabled and at any remote host or IP restrictions
-		if (!$this->fuel->auth->can_access())
+		if (!$this->fuel->auth->can_access() AND $this->validate)
 		{
 			show_404();
 		}
@@ -129,8 +129,6 @@ class Fuel_admin extends Fuel_base_library {
 			$this->check_login();
 		}
 		
-		$this->CI->load->model(FUEL_FOLDER.'/fuel_logs_model');
-
 		// set variables
 		$load_vars = array(
 			'js' => array(), 
@@ -188,7 +186,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @param	array	The module to pull the view file from (optional)
 	 * @return	void
 	 */	
-	function render($view, $vars = array(), $mode = '', $module = NULL)
+	public function render($view, $vars = array(), $mode = '', $module = NULL)
 	{
 		// set the active state of the menu
 		$this->nav_selected();
@@ -282,7 +280,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @access	public
 	 * @return	void
 	 */	
-	function check_login()
+	public function check_login()
 	{
 		// set no cache headers to prevent back button problems in FF
 		$this->no_cache();
@@ -321,7 +319,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @param	boolean	Whether to display the error page or simply exit the script (optional)
 	 * @return	void
 	 */	
-	function validate_user($permission, $type = 'edit', $show_error = TRUE)
+	public function validate_user($permission, $type = 'edit', $show_error = TRUE)
 	{
 		if (!$this->fuel->auth->has_permission($permission, $type))
 		{
@@ -344,7 +342,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @access	public
 	 * @return	array	Will return FALSE if no errors
 	 */	
-	function get_model_errors()
+	public function get_model_errors()
 	{
 		if (isset($this->CI->model) AND is_a($this->CI->model, 'MY_Model'))
 		{
@@ -362,7 +360,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @param	string	The URI path of a page (optional)
 	 * @return	void
 	 */	
-	function set_last_page($page = NULL)
+	public function set_last_page($page = NULL)
 	{
 		if (!isset($page)) $page = uri_path(FALSE);
 		
@@ -383,7 +381,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @access	public
 	 * @return	void
 	 */	
-	function last_page()
+	public function last_page()
 	{
 		return $this->last_page;
 	}
@@ -399,7 +397,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @param	string	The type of page
 	 * @return	void
 	 */	
-	function add_recent_page($link, $name, $type)
+	public function add_recent_page($link, $name, $type)
 	{
 		$this->CI->load->helper('array');
 		$session_key = $this->fuel->auth->get_session_namespace();
@@ -411,9 +409,9 @@ class Fuel_admin extends Fuel_base_library {
 		$already_included = FALSE;
 		foreach($user_data['recent'] as $key => $pages)
 		{
-			if ($pages['link'] == $link AND $pages['name'] == $name AND $pages['type'] == $type)
+			if ($pages['l'] == $link AND $pages['n'] == $name AND $pages['t'] == $type)
 			{
-				$user_data['recent'][$key]['last_visited'] = time();
+				$user_data['recent'][$key]['ts'] = time();
 				$already_included = TRUE;
 			}
 		}
@@ -421,7 +419,7 @@ class Fuel_admin extends Fuel_base_library {
 		if (!$already_included)
 		{
 			if (strlen($name) > 100) $name = substr($name, 0, 100).'&hellip;';
-			$val = array('name' => $name, 'link' => $link, 'last_visited' => time(), 'type' => $type);
+			$val = array('n' => $name, 'l' => $link, 'ts' => time(), 't' => $type);
 			array_unshift($user_data['recent'], $val);
 		}
 
@@ -429,10 +427,9 @@ class Fuel_admin extends Fuel_base_library {
 		{
 			array_pop($user_data['recent']);
 		}
-		$user_data['recent'] = array_sorter($user_data['recent'], 'last_visited', 'desc', TRUE);
+		$user_data['recent'] = array_sorter($user_data['recent'], 'ts', 'desc', TRUE);
 		$this->CI->session->set_userdata($session_key, $user_data);
 	}
-	
 	
 	// --------------------------------------------------------------------
 	
@@ -442,7 +439,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @access	public
 	 * @return	array
 	 */	
-	function nav()
+	public function nav()
 	{
 		$nav = $this->fuel->config('nav');
 		
@@ -469,8 +466,14 @@ class Fuel_admin extends Fuel_base_library {
 							foreach ($fuel_modules as $fuel_module => $fuel_module_title)
 							{
 								if (array_key_exists($fuel_module, $config['module_overwrites'])
-											AND array_key_exists('hidden', $config['module_overwrites'][$fuel_module])
-											AND $config['module_overwrites'][$fuel_module]['hidden'])
+											AND 
+											((array_key_exists('hidden', $config['module_overwrites'][$fuel_module]) AND 
+												($config['module_overwrites'][$fuel_module]['hidden']))
+											OR 
+											(array_key_exists('disabled', $config['module_overwrites'][$fuel_module]) AND 
+												($config['module_overwrites'][$fuel_module]['disabled']))
+
+											))
 								{
 									unset($config['nav'][$section][$fuel_module]);
 								}
@@ -490,7 +493,7 @@ class Fuel_admin extends Fuel_base_library {
 			{
 				foreach($config['modules'] as $key => $module)
 				{
-					if (isset($module['hidden']) AND $module['hidden'] === TRUE)
+					if ((isset($module['hidden']) AND $module['hidden'] === TRUE) OR (isset($module['disabled']) AND $module['disabled'] === TRUE))
 					{
 						continue;
 					}
@@ -539,7 +542,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */	
-	function nav_selected()
+	public function nav_selected()
 	{
 		if (empty($this->CI->nav_selected))
 		{
@@ -573,7 +576,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @param	string	The name of the selected nav item
 	 * @return	void
 	 */	
-	function set_nav_selected($selected)
+	public function set_nav_selected($selected)
 	{
 		$this->CI->nav_selected = $selected;
 	}
@@ -587,7 +590,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @access	public
 	 * @return	array
 	 */	
-	function load_css()
+	public function load_css()
 	{
 		$modules = $this->fuel->config('modules_allowed');
 		
@@ -617,7 +620,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @param	string	The language folder to set 
 	 * @return	void
 	 */	
-	function set_language($language)
+	public function set_language($language)
 	{
 		$this->CI->config->set_item('language', $language);
 		$this->CI->fuel->auth->set_user_data('language', $language);
@@ -632,7 +635,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */	
-	function language()
+	public function language()
 	{
 		// set the language based on first the users profile and then what is in the config... (FYI... fuel_auth is loaded in the hooks)
 		$language = $this->fuel->auth->user_data('language');
@@ -651,7 +654,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @access	public
 	 * @return	array
 	 */	
-	function load_languages()
+	public function load_languages()
 	{
 		// set the language based on first the users profile and then what is in the config... (FYI... fuel_auth is loaded in the hooks)
 		$language = $this->language();
@@ -666,7 +669,7 @@ class Fuel_admin extends Fuel_base_library {
 		{
 			if (file_exists(MODULES_PATH.$module.'/language/'.$language.'/'.$module.'_lang'.EXT))
 			{
-				$this->CI->load->module_language($module, $module);
+				$this->CI->load->module_language($module, $module, $language);
 			}
 		}
 	}
@@ -681,7 +684,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @param	boolean	"Private" parameter so that the file will only be loaded once (optional)
 	 * @return	array
 	 */	
-	function load_js_localized($js_localized = array(), $load = TRUE)
+	public function load_js_localized($js_localized = array(), $load = TRUE)
 	{
 		static $localized;
 		if (empty($localized))
@@ -699,33 +702,44 @@ class Fuel_admin extends Fuel_base_library {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Loads the language files from the allowed modules
+	 * Sets the Fuel admin page title based on the module name if set or uri segments
 	 *
 	 * @access	public
 	 * @param	array 	An array of page segments to be parsed into a cookie crumb type page title
 	 * @param	boolean Whether to run the humanize inflector helper function for the page title
 	 * @return	string
 	 */	
-	function page_title($segs = array(), $humanize = TRUE)
+	public function page_title($segs = array(), $humanize = TRUE)
 	{
 		$segs = (array) $segs;
-		
+		$simple_module_configs = $this->fuel->modules->get_module_config('app');
+		$page_title = lang('fuel_page_title').' : ';
+
 		if (empty($segs))
 		{
 			$segs = $this->CI->uri->segment_array();
 			array_shift($segs);
 		}
-		$page_segs = array();
 		if (empty($segs)) $segs = array('dashboard');
-		foreach($segs as $seg)
+
+		if ($segs AND ! empty($simple_module_configs[ $segs[0] ]['module_name']))
 		{
-			if (!is_numeric($seg))
-			{
-				if ($humanize) $seg = humanize($seg);
-				$page_segs[] = $seg;
-			}
+			$page_title .= $simple_module_configs[ $segs[0] ]['module_name'];
 		}
-		$page_title = lang('fuel_page_title').' : '.implode(' : ', $page_segs);
+		else
+		{
+			$page_segs = array();
+			foreach($segs as $seg)
+			{
+				if (!is_numeric($seg))
+				{
+					if ($humanize) $seg = humanize($seg);
+					$page_segs[] = $seg;
+				}
+			}
+			$page_title .= implode(' : ', $page_segs);
+		}
+
 		return $page_title;
 	}
 	
@@ -737,7 +751,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @access	public
 	 * @return	void
 	 */	
-	function reset_page_state()
+	public function reset_page_state()
 	{
 		$state_key = $this->get_state_key();
 		if (!empty($state_key))
@@ -759,7 +773,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @param	array 	An array of page state variables
 	 * @return	void
 	 */	
-	function save_page_state($vars)
+	public function save_page_state($vars)
 	{
 		if ($this->fuel->config('saved_page_state_max') == 0)
 		{
@@ -794,7 +808,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @param	string 	The key to associate with page state (optional)
 	 * @return	array
 	 */	
-	function get_page_state($state_key = NULL)
+	public function get_page_state($state_key = NULL)
 	{
 		if ($this->fuel->config('saved_page_state_max') == 0)
 		{
@@ -822,7 +836,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */	
-	function get_state_key()
+	public function get_state_key()
 	{
 		if (!empty($this->CI->module))
 		{
@@ -834,6 +848,55 @@ class Fuel_admin extends Fuel_base_library {
 		}
 		
 	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the UI cookie values
+	 *
+	 * @access	public
+	 * @param	string 	The key value to return. If none provided, it will return all (optional)
+	 * @return	mixed
+	 */	
+	public function ui_cookie($key = NULL)
+	{
+		$cookie_val = json_decode(urldecode($this->CI->input->cookie('fuel_ui')), TRUE);
+		if (!empty($key))
+		{
+			if (isset($cookie_val[$key]))
+			{
+				return $cookie_val[$key];	
+			}
+			else
+			{
+				return FALSE;
+			}
+		}
+		return $cookie_val;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the UI cookie values
+	 *
+	 * @access	public
+	 * @param	string 	The key value to set. If none provided, it will set the entire cookie
+	 * @return	void
+	 */	
+	public function set_ui_cookie($key = NULL, $val = NULL)
+	{
+		if (!empty($key))
+		{
+			$cookie_val = $this->ui_cookie();
+			$cookie_val[$key] = $val;
+		}
+		else
+		{
+			$cookie_val = json_encode(urlencode($key));
+		}
+		$this->CI->input->set_cookie('fuel_ui', $cookie_val);
+	}
 	
 	// --------------------------------------------------------------------
 	
@@ -843,7 +906,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @access	public
 	 * @return	void
 	 */	
-	function no_cache()
+	public function no_cache()
 	{
 		header('Cache-Control: no-store, no-cache, must-revalidate');
 		header('Cache-Control: post-check=0, pre-check=0', FALSE);
@@ -858,7 +921,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */	
-	function is_inline()
+	public function is_inline()
 	{
 		return (bool) $this->is_inline;
 	}
@@ -872,7 +935,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @param	boolean
 	 * @return	void
 	 */	
-	function set_inline($inline)
+	public function set_inline($inline)
 	{
 		$this->is_inline = (bool) $inline;
 		
@@ -893,7 +956,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @param	string	The name of the layout
 	 * @return	void
 	 */	
-	function set_main_layout($layout)
+	public function set_main_layout($layout)
 	{
 		$this->main_layout = (string) $layout;
 	}
@@ -906,7 +969,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @access	public
 	 * @return	void
 	 */	
-	function main_layout()
+	public function main_layout()
 	{
 		return $this->main_layout;
 	}
@@ -920,7 +983,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @param	string	The panels name
 	 * @return	void
 	 */	
-	function panel_display($key)
+	public function panel_display($key)
 	{
 		if (isset($this->panels))
 		{
@@ -938,7 +1001,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @param	boolean	Whether to display the panel or not
 	 * @return	void
 	 */	
-	function set_panel_display($key, $value)
+	public function set_panel_display($key, $value)
 	{
 		$this->panels[$key] = (bool) $value;
 	}
@@ -952,7 +1015,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @param	string The panel name you want to determine exists in the admin
 	 * @return	boolean
 	 */	
-	function has_panel($key)
+	public function has_panel($key)
 	{
 		return $this->panels[$key];
 	}
@@ -965,7 +1028,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @access	public
 	 * @return	void
 	 */	
-	function init_display_modes()
+	public function init_display_modes()
 	{
 		// no_action
 		$panels = array('actions' => FALSE);
@@ -1022,7 +1085,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @param	array An array of panels to associate with the display mode
 	 * @return	void
 	 */	
-	function register_display_mode($name, $panels = array())
+	public function register_display_mode($name, $panels = array())
 	{
 		$this->_display_modes[$name] = $panels;
 	}
@@ -1036,7 +1099,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @param	string
 	 * @return	boolean
 	 */	
-	function display_mode()
+	public function display_mode()
 	{
 		return $this->display_mode;
 	}
@@ -1050,7 +1113,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @param	string
 	 * @return	void
 	 */	
-	function set_display_mode($mode)
+	public function set_display_mode($mode)
 	{
 		if (is_string($mode))
 		{
@@ -1081,7 +1144,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @param	string	The icon to dislpay to the left of the title bar breadcrumb (optional)
 	 * @return	void
 	 */	
-	function set_titlebar($title, $icon = '')
+	public function set_titlebar($title, $icon = '')
 	{
 		if (empty($icon))
 		{
@@ -1103,7 +1166,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @access	public
 	 * @return	void
 	 */	
-	function titlebar()
+	public function titlebar()
 	{
 		return $this->titlebar;
 	}
@@ -1117,7 +1180,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @param	string	The icon to dislpay to the left of the title bar breadcrumb (optional)
 	 * @return	void
 	 */	
-	function set_titlebar_icon($icon = '')
+	public function set_titlebar_icon($icon = '')
 	{
 		$this->titlebar_icon = $icon;
 	}
@@ -1130,7 +1193,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */	
-	function titlebar_icon()
+	public function titlebar_icon()
 	{
 		if (!empty($this->titlebar_icon))
 		{
@@ -1160,7 +1223,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @param	type	The type of message to display. Options are error, success and info. (optional)
 	 * @return	string
 	 */	
-	function notification($type = '')
+	public function notification($type = '')
 	{
 		if (empty($type)) $type = Fuel_admin::NOTIFICATION_SUCCESS;
 		return $this->_notifications[$type];
@@ -1176,7 +1239,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @param	type	The type of message to display. Options are error, success and info. (optional)
 	 * @return	string
 	 */	
-	function set_notification($msg, $type = '')
+	public function set_notification($msg, $type = '')
 	{
 		if (empty($type)) $type = Fuel_admin::NOTIFICATION_SUCCESS;
 		$this->_notifications[$type] = $msg;
@@ -1192,7 +1255,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @param	type	The type of message to display. Options are error, success and info. (optional)
 	 * @return	boolean
 	 */	
-	function has_notification($type = '')
+	public function has_notification($type = '')
 	{
 		if (empty($type)) $type = Fuel_admin::NOTIFICATION_SUCCESS;
 		return isset($this->_notifications[$type]);
@@ -1206,7 +1269,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @access	public
 	 * @return	array
 	 */	
-	function dashboards()
+	public function dashboards()
 	{
 		$dashboards = array();
 		$dashboards_config = $this->fuel->config('dashboards');
@@ -1248,7 +1311,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @access	string	The name of the module that has the dashboard you want to add
 	 * @return	void
 	 */	
-	function add_dashboard($dashboard)
+	public function add_dashboard($dashboard)
 	{
 		$dashboards = $this->fuel->config('dashboards');
 		if (is_array($dashboard))
@@ -1279,7 +1342,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @access	public
 	 * @return	array
 	 */	
-	function toolbar_tools()
+	public function toolbar_tools()
 	{
 		$tools = array();
 		$modules = $this->fuel->modules->advanced();
@@ -1290,7 +1353,7 @@ class Fuel_admin extends Fuel_base_library {
 		{
 			// check if there is a dashboard controller for each module
 			$t = $module->tools();
-			if ($t)
+			if ($t AND $this->CI->fuel->auth->has_permission($module->name()))
 			{
 				$tools = $tools + $t;
 			}
@@ -1306,7 +1369,7 @@ class Fuel_admin extends Fuel_base_library {
 	 * @access	public
 	 * @return	void
 	 */	
-	function toolbar()
+	public function toolbar()
 	{
 		$user_lang = $this->fuel->auth->user_lang();
 		$this->fuel->load_language('fuel_inline_edit', $user_lang);
@@ -1315,9 +1378,12 @@ class Fuel_admin extends Fuel_base_library {
 		$vars['page'] = $this->fuel->page->properties();
 		$vars['layouts'] = $this->fuel->layouts->options_list();
 		$vars['language'] = $this->fuel->language->detect();
+		$vars['language_mode'] = $this->fuel->language->mode();
+		$vars['language_default'] = $this->fuel->language->default_option();
 		$vars['tools'] = $this->toolbar_tools();
 		$vars['js_localized'] = json_lang('fuel/fuel_js', $user_lang);
-		$vars['is_fuelified'] = (is_fuelified() AND $this->CI->fuel->auth->has_permission('pages', 'edit'));
+		$vars['is_fuelified'] = is_fuelified();
+		$vars['can_edit_pages'] = $this->CI->fuel->auth->has_permission('pages', 'edit');
 
 		if ($this->fuel->pages->mode() == 'views')
 		{

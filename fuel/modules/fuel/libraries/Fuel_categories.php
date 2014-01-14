@@ -8,8 +8,8 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
  */
@@ -23,7 +23,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_categories
+ * @link		http://docs.getfuelcms.com/libraries/fuel_categories
  */
 
 // --------------------------------------------------------------------
@@ -40,7 +40,7 @@ class Fuel_categories extends Fuel_module {
 	 * @param	string	the slug value to query on
 	 * @return	array
 	 */	
-	function find_by_slug($slug)
+	public function find_by_slug($slug)
 	{
 		$model = $this->model();
 		$where['slug'] = $slug;
@@ -57,7 +57,7 @@ class Fuel_categories extends Fuel_module {
 	 * @param	string	the context to query on
 	 * @return	array
 	 */	
-	function find_by_context($context)
+	public function find_by_context($context)
 	{
 		$model = $this->model();
 		$where['context'] = $context;

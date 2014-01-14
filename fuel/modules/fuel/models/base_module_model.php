@@ -8,8 +8,8 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
 
@@ -34,7 +34,7 @@
  * @subpackage	Models
  * @category	Models
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/base_module_model
+ * @link		http://docs.getfuelcms.com/models/base_module_model
  */
 
 require_once(APPPATH.'core/MY_Model.php');
@@ -48,23 +48,27 @@ class Base_module_model extends MY_Model {
 	public $upload_data = array(); // data about all uploaded files
 	public $ignore_replacement = array(); // the fields you wish to remain in tack when replacing (.e.g. location, slugs)
 	public $display_unpublished_if_logged_in = FALSE; // determines whether to display unpublished content on the front end if you are logged in to the CMS
-	
+	public static $tables = array(); // cached array of table names that can be accessed statically
 	protected $_formatters = array(
-								'datetime'	=> array(
-													'formatted' => 'date_formatter',
-													'month', 
-													'day', 
-													'weekday', 
-													'year', 
-													'hour', 
-													'minute', 
-													'second'),
+								'datetime'			=> array(
+															'formatted' => 'date_formatter',
+															'month', 
+															'day', 
+															'weekday', 
+															'year', 
+															'hour', 
+															'minute', 
+															'second',
+															'pretty',
+															'ts' => 'strtotime'),
 								'date' 				=> array(
 															'formatted' => 'date_formatter',
 															'month', 
 															'day', 
 															'year', 
-															'hour'),
+															'hour',
+															'pretty',
+															'ts' => 'strtotime'),
 								'string'			=> array(
 															'formatted'		=> 'auto_typography',
 															'stripped' 		=> 'strip_tags', 
@@ -80,12 +84,14 @@ class Base_module_model extends MY_Model {
 															'specialchars'  => 'htmlspecialchars',
 															'humanize',
 															'underscore',
-															'camelize'
+															'camelize',
+															'upper'			=> 'strtoupper',
+															'lower'			=> 'strtlower',
 															),
 								'number'			=> array(
-															'dollar',
+															'currency',
 															),
-								'url|link'			=> array(
+								'url|link|website'	=> array(
 															'path' 			=> 'site_url',
 															'prep'			=> 'prep_url',
 															),
@@ -101,17 +107,17 @@ class Base_module_model extends MY_Model {
 															'filesize' 		=> array('asset_filesize', 'pdf', '', FALSE),
 															'exists'		=> array('asset_exists', 'pdf', ''),
 															)
-								); // default helpers which get merged into $helpers property array
+								); // default formatters which get merged into $formatters property array
 	
 	/**
 	 * Constructor
 	 *
 	 * @access	public
-	 * @param	string	the table name
-	 * @param	string	the module name to 
+	 * @param	string	The table name
+	 * @param	mixed	If an array, it will assume they are initialization properties. If a string, it will assume it's the name of the module the module exists in
 	 * @return	void
 	 */
-	function __construct($table = NULL, $params = NULL)
+	public function __construct($table = NULL, $params = NULL)
 	{
 		$CI = & get_instance();
 		
@@ -160,9 +166,8 @@ class Base_module_model extends MY_Model {
 		}
 		
 		// create master list of tables
-		$tables = array_merge($config_tables, $module_tables, $fuel_tables);
-		
-		$this->set_tables($tables);
+		self::$tables = array_merge(self::$tables, $config_tables, $module_tables, $fuel_tables);
+		$this->set_tables(self::$tables);
 		
 		// set the table to the configuration mapping if it is in array
 		if ($this->tables($table)) 
@@ -178,7 +183,6 @@ class Base_module_model extends MY_Model {
 		$this->load->helper('typography');
 		$this->load->helper('text');
 		$this->load->helper('markdown');
-		$this->load->helper('format');
 		$this->load->helper('format');
 
 		// set formatters
@@ -198,11 +202,11 @@ class Base_module_model extends MY_Model {
 	 * Adds a filter for searching
 	 *
 	 * @access	public
-	 * @param	string
-	 * @param	string
+	 * @param	string The name of the field to filter on
+	 * @param	string A key to associate with the filter(optional)
 	 * @return	void
 	 */	
-	function add_filter($filter, $key = NULL)
+	public function add_filter($filter, $key = NULL)
 	{
 		if (!empty($key))
 		{
@@ -220,10 +224,10 @@ class Base_module_model extends MY_Model {
 	 * Adds multiple filters for searching
 	 *
 	 * @access	public
-	 * @param	array
+	 * @param	array An array of fields to filter on
 	 * @return	void
 	 */	
-	function add_filters($filters)
+	public function add_filters($filters)
 	{
 		if (empty($this->filters))
 		{
@@ -234,20 +238,40 @@ class Base_module_model extends MY_Model {
 			$this->filters = array_merge($this->filters, $filters);
 		}
 	}
-	
+
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Lists the module items
+	 * Adds a filter join such as "and" or "or" to a particular field
 	 *
 	 * @access	public
-	 * @param	int
-	 * @param	int
-	 * @param	string
-	 * @param	string
+	 * @param	string The name of the field to filter on
+	 * @param	string "and" or "or" (optional)
 	 * @return	void
 	 */	
-	function list_items($limit = NULL, $offset = 0, $col = 'id', $order = 'asc', $just_count = FALSE)
+	public function add_filter_join($field, $join_type = 'or')
+	{
+		if (!empty($this->filter_join) AND is_string($this->filter_join))
+		{
+			$this->filter_join = array($this->filter_join);
+		}
+		$this->filter_join[$field] = $join_type;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Lists the module's items
+	 *
+	 * @access	public
+	 * @param	int The limit value for the list data (optional)
+	 * @param	int The offset value for the list data (optional)
+	 * @param	string The field name to order by (optional)
+	 * @param	string The sorting order (optional)
+	 * @param	boolean Determines whether the result is just an integer of the number of records or an array of data (optional)
+	 * @return	mixed If $just_count is true it will return an integer value. Otherwise it will return an array of data (optional)
+	 */	
+	public function list_items($limit = NULL, $offset = 0, $col = 'id', $order = 'asc', $just_count = FALSE)
 	{
 		$this->_list_items_query();
 		
@@ -274,9 +298,9 @@ class Base_module_model extends MY_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Creates the query logic for the list view. Separated out so that the count can use this method as well.
+	 * Creates the query logic for the list view using CI's active record. Separated out so that the count can use this method as well.
 	 *
-	 * @access	public
+	 * @access	protected
 	 * @return	void
 	 */	
 	protected function _list_items_query()
@@ -293,6 +317,11 @@ class Base_module_model extends MY_Model {
 				}
 				$key = $val;
 				$val = $this->filter_value;
+			}
+			else
+			{
+				// used for separating table names and fields since periods get translated to underscores
+				$key = str_replace(':', '.', $key);
 			}
 			
 			$joiner = $this->filter_join;
@@ -313,7 +342,7 @@ class Base_module_model extends MY_Model {
 			{
 				$joiner_arr = 'where_'.$joiner;
 				
-				if (strpos($key, '.') === FALSE) $key = $this->table_name.'.'.$key;
+				if (strpos($key, '.') === FALSE AND strpos($key, '(') === FALSE) $key = $this->table_name.'.'.$key;
 				
 				//$method = ($joiner == 'or') ? 'or_where' : 'where';
 				
@@ -326,20 +355,19 @@ class Base_module_model extends MY_Model {
 				
 				// from imknight https://github.com/daylightstudio/FUEL-CMS/pull/113#commits-pushed-57c156f
 				//else if (preg_match('#_from#', $key) OR preg_match('#_to#', $key))
-				else if (preg_match('#_from$#', $key) OR preg_match('#_fromequal$#', $key) OR preg_match('#_to$#', $key) OR preg_match('#_toequal$#', $key))
+				else if (preg_match('#_from$#', $key) OR preg_match('#_fromequal$#', $key) OR preg_match('#_to$#', $key) OR preg_match('#_toequal$#', $key) OR preg_match('#_equal$#', $key))
 				{
 					//$key = strtr($key, array('_from' => ' >', '_fromequal' => ' >=', '_to' => ' <', '_toequal' => ' <='));
-					$key = preg_replace(array('#_from$#', '#_fromequal$#', '#_to$#', '#_toequal$#'), array(' >', ' >=', ' <', ' <='), $key);
+					$key_with_comparison_operator = preg_replace(array('#_from$#', '#_fromequal$#', '#_to$#', '#_toequal$#', '#_equal$#'), array(' >', ' >=', ' <', ' <=', ' ='), $key);
 					//$this->db->where(array($key => $val));
 					//$where_or[] = $key.'='.$this->db->escape($val);
-					array_push($$joiner_arr, $key.'='.$val);
-					
+					array_push($$joiner_arr, $key_with_comparison_operator.$this->db->escape($val));
 				}
 				else
 				{
 					//$method = ($joiner == 'or') ? 'or_like' : 'like';
 					//$this->db->$method('LOWER('.$key.')', strtolower($val), 'both');
-					array_push($$joiner_arr, 'LOWER('.$key.') LIKE "%'.$val.'%"');
+					array_push($$joiner_arr, 'LOWER('.$key.') LIKE "%'.strtolower($val).'%"');
 				}
 			}
 		}
@@ -371,9 +399,9 @@ class Base_module_model extends MY_Model {
 	 * Lists the total number of module items
 	 *
 	 * @access	public
-	 * @return	int
+	 * @return	int The total number of items with filters applied
 	 */	
-	function list_items_total()
+	public function list_items_total()
 	{
 		$cnt = $this->list_items(NULL, NULL, NULL, NULL, TRUE);
 		if (is_array($cnt))
@@ -382,18 +410,127 @@ class Base_module_model extends MY_Model {
 		}
 		return $cnt;
 	}
+
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Returns a tree array structure that can be used by a public "tree" method on models inheriting from this class 
+	 *
+	 * @access	protected
+	 * @param	string The name of the model's property to use to generate the tree. Options are 'foreign_keys', 'has_many' or 'belongs_to'
+	 * @return	array An array that can be used by the Menu class to create a hierachical structure
+	 */	
+	protected function _tree($prop = NULL)
+	{
+		$CI =& get_instance();
+		$return = array();
+
+
+		if (!empty($this->foreign_keys) OR !empty($this->has_many) OR !empty($this->belongs_to))
+		{
+			if (empty($prop))
+			{
+				if (!empty($this->foreign_keys))
+				{
+					$p = $this->foreign_keys;
+				}
+				else if (!empty($this->has_many))
+				{
+					$p = $this->has_many;
+				}
+			}
+			else if (property_exists($this, $prop))
+			{
+				$p = $this->$prop;
+			}
+
+			$key_field = key($p);
+
+			// get related model info
+			$rel_module = current($p);
+			if (is_array($rel_module))
+			{
+				$rel_module =  current($rel_module);
+			}
+			$rel_module_obj =  $CI->fuel->modules->get($rel_module, FALSE);
+
+			if (!$rel_module_obj)
+			{
+				return array();
+			}
+			$rel_model = $rel_module_obj->model();
+			$rel_key_field = $rel_model->key_field();
+			$rel_display_field = $rel_module_obj->info('display_field');
+
+
+			$module = $this->table_name();
+			$module_obj =  $CI->fuel->modules->get($module, FALSE);
+			if (!$module_obj)
+			{
+				return array();
+			}
+			$model = $module_obj->model();
+			$display_field = $module_obj->info('display_field');
+			$rel_col = !empty($rel_module_obj->default_col) ? $rel_module_obj->default_col : $this->key_field();
+			$rel_order = !empty($rel_module_obj->default_order) ? $rel_module_obj->default_order : 'asc';
+
+			if ($prop == 'foreign_keys')
+			{
+				$groups = $rel_model->find_all_array(array(), $rel_model->key_field().' asc');
+				$children = $this->find_all_array(array(), $key_field.' asc');
+				$g_key_field = $key_field;
+			}
+			else if ($prop == 'has_many')
+			{
+				$CI->load->module_model(FUEL_FOLDER, 'fuel_relationships_model');
+				$groups = $rel_model->find_all_array(array(), $rel_col.' '.$rel_order);
+				$children = $CI->fuel_relationships_model->find_by_candidate($this->table_name(), $rel_model->table_name(), NULL, 'array');
+				$key_field = 'foreign_id';
+				$g_key_field = 'candidate_id';
+				$display_field = 'candidate_'.$display_field;
+			}
+			else if ($prop == 'belongs_to')
+			{
+				$CI->load->module_model(FUEL_FOLDER, 'fuel_relationships_model');
+				$groups = $rel_model->find_all_array(array(), $rel_col.' '.$rel_order);
+				$children = $CI->fuel_relationships_model->find_by_candidate($rel_model->table_name(), $this->table_name(), NULL, 'array');
+				$key_field = 'candidate_id';
+				$g_key_field = 'foreign_id';
+				$display_field = 'foreign_'.$display_field;
+			}
+
+			// now get this models records
+			foreach($children as $child)
+			{
+				$used_groups[$child[$key_field]] = $child[$key_field];
+				$attributes = ((isset($child['published']) AND $child['published'] == 'no') OR (isset($child['active']) AND $child['active'] == 'no')) ? array('class' => 'unpublished', 'title' => 'unpublished') : NULL;
+				$return['g'.$child[$g_key_field].'_c_'.$child[$key_field]] = array('parent_id' => $child[$key_field], 'label' => $child[$display_field], 'location' => fuel_url($module_obj->name().'/edit/'.$child[$key_field]), 'attributes' => $attributes);
+			}
+
+			foreach($groups as $group)
+			{
+				if (isset($used_groups[$group[$rel_key_field]]))
+				{
+					$attributes = ((isset($group['published']) AND $group['published'] == 'no') OR (isset($group['active']) AND $group['active'] == 'no')) ? array('class' => 'unpublished', 'title' => 'unpublished') : NULL;
+					$return[$group[$rel_key_field]] = array('id' => $group[$rel_key_field], 'parent_id' => 0, 'label' => $group[$rel_display_field], 'location' => fuel_url($rel_module_obj->name().'/edit/'.$group[$rel_key_field]), 'attributes' => $attributes);	
+				}
+				
+			}
+		}
+		return $return;
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**
 	 * Saves data to the archive
 	 *
 	 * @access	public
-	 * @param	string
-	 * @param	array
-	 * @return	void
+	 * @param	int The record ID associated with the archive
+	 * @param	array The array of data to be archived
+	 * @return	boolean Whether it was saved properly or not
 	 */	
-	function archive($ref_id, $data)
+	public function archive($ref_id, $data)
 	{
 		$CI =& get_instance();
 		$CI->load->module_model(FUEL_FOLDER, 'fuel_archives_model');
@@ -417,7 +554,8 @@ class Base_module_model extends MY_Model {
 		if (!empty($last_archive_data) AND $last_archive_data == $tmp_data) {
 			return true;
 		}
-		
+
+		// save to archive
 		$user = $CI->fuel->auth->user_data();
 		$save['ref_id'] = $ref_id;
 		$save['table_name'] = $this->table_name;
@@ -443,18 +581,18 @@ class Base_module_model extends MY_Model {
 	 * Retrieves the last archived value
 	 *
 	 * @access	public
-	 * @param	string
-	 * @param	array
-	 * @return	void
+	 * @param	int The record ID associated with the archive
+	 * @param	boolean Determines whether to return all of the archives fields or just the data field value (optional)
+	 * @return	array
 	 */	
-	function get_last_archive($ref_id, $all_data = FALSE)
+	public function get_last_archive($ref_id, $all_data = FALSE)
 	{
 		$CI =& get_instance();
 		$CI->load->module_model(FUEL_FOLDER, 'fuel_archives_model');
 		$archive = $this->fuel_archives_model->find_one_array(array('table_name' => $this->table_name, 'ref_id' => $ref_id), 'version_timestamp desc');
 		if (!empty($archive['data']))
 		{
-			$archive['data'] = json_decode($archive['data'], TRUE);
+			$archive['data'] = (is_serialized_str($archive['data'])) ? @unserialize($archive['data']) : json_decode($archive['data'], TRUE);
 			return ($all_data) ? $archive : $archive['data'];
 		}
 		return array();
@@ -466,12 +604,12 @@ class Base_module_model extends MY_Model {
 	 * Retrieves an archived value
 	 *
 	 * @access	public
-	 * @param	string
-	 * @param	int
-	 * @param	boolean
+	 * @param	int The record ID associated with the archive
+	 * @param	int The version of the archive to retrieve (optional)
+	 * @param	boolean Determines whether to return all of the archives fields or just the data field value (optional)
 	 * @return	array
 	 */	
-	function get_archive($ref_id, $version = NULL, $all_data = FALSE)
+	public function get_archive($ref_id, $version = NULL, $all_data = FALSE)
 	{
 		$CI =& get_instance();
 		$CI->load->module_model(FUEL_FOLDER, 'fuel_archives_model');
@@ -485,21 +623,24 @@ class Base_module_model extends MY_Model {
 		if (!empty($archive))
 		{
 			// check for serialization for backwards compatibility
-			$data = (is_serialized_str($archive['data'])) ? unserialize($archive['data']) : json_decode($archive['data'], TRUE);
-			foreach($data as $key => $val)
+			$data = (is_serialized_str($archive['data'])) ? @unserialize($archive['data']) : json_decode($archive['data'], TRUE);
+			if (!empty($data) AND is_array($data))
 			{
-				// reformat dates
-				if (is_date_format($val))
+				foreach($data as $key => $val)
 				{
-					$date_ts = strtotime($val);
-					$return['data'][$key] = english_date($val);
-					$return['data'][$key.'_hour'] = date('h', $date_ts);
-					$return['data'][$key.'_min'] = date('i', $date_ts);
-					$return['data'][$key.'_ampm'] = date('a', $date_ts);
-				}
-				else
-				{
-					$return['data'][$key] = $val;
+					// reformat dates
+					if (is_date_format($val))
+					{
+						$date_ts = strtotime($val);
+						$return['data'][$key] = english_date($val);
+						$return['data'][$key.'_hour'] = date('h', $date_ts);
+						$return['data'][$key.'_min'] = date('i', $date_ts);
+						$return['data'][$key.'_ampm'] = date('a', $date_ts);
+					}
+					else
+					{
+						$return['data'][$key] = $val;
+					}
 				}
 			}
 		}
@@ -512,11 +653,11 @@ class Base_module_model extends MY_Model {
 	 * Restores module item from an archived value
 	 *
 	 * @access	public
-	 * @param	string
-	 * @param	int
-	 * @return	boolean
+	 * @param	int The record ID associated with the archive
+	 * @param	int The version of the archive to retrieve (optional)
+	 * @return	boolean Whether it was saved properly or not
 	 */	
-	function restore($ref_id, $version = NULL)
+	public function restore($ref_id, $version = NULL)
 	{
 		$archive = $this->get_archive($ref_id, $version);
 		return $this->save($archive);
@@ -528,11 +669,12 @@ class Base_module_model extends MY_Model {
 	 * Get other listed module items excluding the currently displayed
 	 *
 	 * @access	public
-	 * @param	string
-	 * @param	int
-	 * @return	boolean
+	 * @param	string The field name used as the label
+	 * @param	int The current value... and actually deprecated (optional)
+	 * @param	string The value field (optional)
+	 * @return	array Key/value array
 	 */	
-	function get_others($display_field, $id, $val_field = NULL)
+	public function get_others($display_field, $id = NULL, $val_field = NULL)
 	{
 		$orderby = TRUE;
 		if (empty($val_field))
@@ -563,14 +705,13 @@ class Base_module_model extends MY_Model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Get other listed module items excluding the currently displayed
+	 * Returns a key/value array of a distinct set of languages associated with records that have a language field
 	 *
 	 * @access	public
-	 * @param	string
-	 * @param	int
-	 * @return	boolean
+	 * @param	string The name of the field used to determine which language. if empty, it will default to 'language' (optional)
+	 * @return	array
 	 */	
-	function get_languages($field = NULL)
+	public function get_languages($field = NULL)
 	{
 		if (empty($field))
 		{
@@ -598,12 +739,12 @@ class Base_module_model extends MY_Model {
 	 * Replaces an existing record with another record
 	 *
 	 * @access	public
-	 * @param	int
-	 * @param	int
-	 * @param	boolean
-	 * @return	boolean
+	 * @param	int The old record id of data that will be replaced
+	 * @param	int The new record id of data that will be used for the replacement
+	 * @param	boolean Determines whether to delete the old record (optional)
+	 * @return	boolean Whether it was saved properly or not
 	 */	
-	function replace($replace_id, $id, $delete = TRUE)
+	public function replace($replace_id, $id, $delete = TRUE)
 	{
 		$replace_values = $this->find_by_key($replace_id, 'array');
 		$new_values = $this->find_by_key($id, 'array');
@@ -643,17 +784,17 @@ class Base_module_model extends MY_Model {
 		return $saved;
 		
 	}
-	
+
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Returns data that will be downloaded automatically
+	 * Returns CSV data that will be downloaded automatically. Overwrite this method for more specific output
 	 *
 	 * @access	public
-	 * @param	array
+	 * @param	array An array that contains "col", "order", "offset", "limit", "searh_term" to help with the formatting of the output. By default only the "col" and "order" parameters are used (optional)
 	 * @return	string
 	 */	
-	function export_data($params = array())
+	public function export_data($params = array())
 	{
 		// normalize parameters
 		$valid_params = array('col', 'order');
@@ -676,10 +817,10 @@ class Base_module_model extends MY_Model {
 	 * Placeholder for return data that appears in the right side when editing a record (e.g. Related Navigation in pages module )
 	 *
 	 * @access	public
-	 * @param	array
-	 * @return	string
+	 * @param	array View variable data (optional)
+	 * @return	mixed Can be an array of items or a string value
 	 */	
-	function related_items($params = array())
+	public function related_items($params = array())
 	{
 		return array();
 	}
@@ -690,11 +831,11 @@ class Base_module_model extends MY_Model {
 	 * Add FUEL specific changes to the form_fields method
 	 *
 	 * @access	public
-	 * @param	string
-	 * @param	int
-	 * @return	boolean
+	 * @param	array Values of the form fields (optional)
+	 * @param	array An array of related fields. This has been deprecated in favor of using has_many and belongs to relationships (deprecated)
+	 * @return	array An array to be used with the Form_builder class
 	 */	
-	function form_fields($values = array(), $related = array())
+	public function form_fields($values = array(), $related = array())
 	{
 		$fields = parent::form_fields($values, $related);
 		$order = 1;
@@ -732,9 +873,9 @@ class Base_module_model extends MY_Model {
 	 *
 	 * @access	public
 	 * @param	boolean	whether to display unpublished content in the front end if logged in
-	 * @return	string
+	 * @return	void
 	 */	
-	function _common_query($display_unpublished_if_logged_in = NULL)
+	public function _common_query($display_unpublished_if_logged_in = NULL)
 	{
 		if (!isset($display_unpublished_if_logged_in))
 		{
@@ -753,12 +894,13 @@ class Base_module_model extends MY_Model {
 	/**
 	 * Used for displaying content that is published
 	 *
-	 * @access	public
-	 * @return	string
+	 * @access	protected
+	 * @return	void
 	 */	
-	function _publish_status()
+	protected function _publish_status()
 	{
-		$fields = $this->fields();
+		//$fields = $this->fields();
+		$fields = $fields = array_keys($this->table_info()); // used to prevent an additional query that the fields() method would create
 
 		if (in_array('published', $fields))
 		{
@@ -817,7 +959,7 @@ class Base_module_record extends Data_record {
 	 * @param	string
 	 * @return	array
 	 */	
-	function set_parsed_fields($fields)
+	public function set_parsed_fields($fields)
 	{
 		$this->_parsed_fields = $fields;
 	}
@@ -831,7 +973,7 @@ class Base_module_record extends Data_record {
 	 * @param	string
 	 * @return	array
 	 */	
-	function get_parsed_fields()
+	public function get_parsed_fields()
 	{
 		$parsed = NULL;
 		if (isset($this->_parsed_fields))
@@ -855,7 +997,7 @@ class Base_module_record extends Data_record {
 	 * @param	string
 	 * @return	string
 	 */	
-	function after_get($output, $var)
+	public function after_get($output, $var)
 	{
 		if (is_string($output))
 		{

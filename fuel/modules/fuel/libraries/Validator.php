@@ -8,8 +8,8 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
 
@@ -27,7 +27,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/validator
+ * @link		http://docs.getfuelcms.com/libraries/validator
  */
 
 class Validator {
@@ -388,7 +388,7 @@ class Validator {
  * @author		David McReynolds @ Daylight Studio
  * @autodoc		FALSE
  */
-Class Validator_Rule {
+class Validator_Rule {
 	public $func; // function to execute that will return TRUE/FALSE
 	public $msg; // message to be display on error
 	public $args; // arguments to pass to the function

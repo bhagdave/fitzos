@@ -5,7 +5,7 @@
  * A lightweight javascript MVC framework.
  *
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
  * @licence		http://www.opensource.org/licenses/mit-license.php
  */
 
@@ -346,7 +346,5 @@ jqx.scriptCallbacks = [];
 jqx.extender = {};
 
 if (jqx_config) jqx.config = jQuery.extend({}, jqx.config, jqx_config);
-
-jqx.addPreload(jqx.config.jqxPath + "plugins/util.js");
 
 jqx._includeCache = new jqx.Cache();

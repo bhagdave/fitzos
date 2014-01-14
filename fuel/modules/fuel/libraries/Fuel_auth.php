@@ -8,8 +8,8 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
  */
@@ -23,7 +23,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_auth
+ * @link		http://docs.getfuelcms.com/libraries/fuel_auth
  */
 
 // --------------------------------------------------------------------
@@ -43,7 +43,7 @@ class Fuel_auth extends Fuel_base_library {
 	 * @param	array	config preferences
 	 * @return	void
 	 */	
-	function __construct($params = array())
+	public function __construct($params = array())
 	{
 		parent::__construct($params);
 
@@ -62,7 +62,7 @@ class Fuel_auth extends Fuel_base_library {
 	 * @param	string	Password
 	 * @return	boolean
 	 */	
-	function login($user, $pwd)
+	public function login($user, $pwd)
 	{
 		$this->CI->load->module_model(FUEL_FOLDER, 'fuel_users_model');
 		$valid_user = $this->CI->fuel_users_model->valid_user($user, $pwd);
@@ -84,14 +84,8 @@ class Fuel_auth extends Fuel_base_library {
 			// update salt on login
 			if ($this->CI->fuel_users_model->update($updated_user_profile, $updated_where))
 			{
-				// set minimal session data
-				$session_data = array();
-				$session_data['id'] = $valid_user['id'];
-				$session_data['super_admin'] = $valid_user['super_admin'];
-				$session_data['user_name'] = $valid_user['user_name'];
-				$session_data['language'] = $valid_user['language'];
-
 				$this->set_valid_user($valid_user);
+				$this->CI->fuel->logs->write(lang('auth_log_login_success', $valid_user['user_name'], $this->CI->input->ip_address()), 'debug');
 				return TRUE;
 			}
 			else
@@ -113,13 +107,17 @@ class Fuel_auth extends Fuel_base_library {
 	 * @param	array	User data to save to the session
 	 * @return	void
 	 */	
-	function set_valid_user($valid_user)
+	public function set_valid_user($valid_user)
 	{
 		$this->CI->load->library('session');
 
-		// remove these from session for security reasons
-		unset($valid_user['password'], $valid_user['salt']);
-		$this->CI->session->set_userdata($this->get_session_namespace(), $valid_user);
+		// set minimal session data
+		$session_data = array();
+		$session_data['id'] = $valid_user['id'];
+		$session_data['super_admin'] = $valid_user['super_admin'];
+		$session_data['user_name'] = $valid_user['user_name'];
+		$session_data['language'] = $valid_user['language'];
+		$this->CI->session->set_userdata($this->get_session_namespace(), $session_data);
 	}
 
 	// --------------------------------------------------------------------
@@ -130,7 +128,7 @@ class Fuel_auth extends Fuel_base_library {
 	 * @access	public
 	 * @return	array
 	 */	
-	function valid_user()
+	public function valid_user()
 	{
 		if (!isset($this->CI->session))
 		{
@@ -149,7 +147,7 @@ class Fuel_auth extends Fuel_base_library {
 	 * @access	mixed	The session data to save
 	 * @return	void
 	 */	
-	function set_user_data($key, $value)
+	public function set_user_data($key, $value)
 	{
 		$session_key = $this->fuel->auth->get_session_namespace();
 		$user_data = $this->fuel->auth->user_data();
@@ -171,7 +169,7 @@ class Fuel_auth extends Fuel_base_library {
 	 * @param	string	The session key value you want access to (optional)
 	 * @return	mixed
 	 */	
-	function user_data($key = NULL)
+	public function user_data($key = NULL)
 	{
 		$valid_user = $this->valid_user();
 		
@@ -201,7 +199,7 @@ class Fuel_auth extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */	
-	function get_session_namespace()
+	public function get_session_namespace()
 	{
 		$key = 'fuel_'.md5(FCPATH); // unique to the site installation
 		if (isset($this->CI->session))
@@ -223,7 +221,7 @@ class Fuel_auth extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */	
-	function get_fuel_trigger_cookie_name()
+	public function get_fuel_trigger_cookie_name()
 	{
 		return $this->get_session_namespace();
 	}
@@ -236,7 +234,7 @@ class Fuel_auth extends Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */	
-	function can_access()
+	public function can_access()
 	{
 		$restrict_ip = $this->fuel->config('restrict_to_remote_ip');
 		return ($this->fuel->config('admin_enabled') AND 
@@ -253,8 +251,13 @@ class Fuel_auth extends Fuel_base_library {
 	 * @param	mixed a single IP address, an array of IP addresses or the starting IP address range
 	 * @return	boolean
 	 */
-	function check_valid_ip($ips)
+	public function check_valid_ip($ips)
 	{
+		if (empty($ips))
+		{
+			return FALSE;
+		}
+		
 		$check_address = $_SERVER['REMOTE_ADDR'];
 
 		// check if IP address is range
@@ -297,7 +300,7 @@ class Fuel_auth extends Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */	
-	function is_logged_in()
+	public function is_logged_in()
 	{
 		
 		$user = $this->valid_user();
@@ -314,7 +317,7 @@ class Fuel_auth extends Fuel_base_library {
 	 * @param	string	The type of permission (e.g. 'edit', 'delete'). A user that just has the permission (e.g. my_module) without the type (e.g. my_module_edit) will be given access (optional)
 	 * @return	boolean
 	 */	
-	function has_permission($permission, $type = '')
+	public function has_permission($permission, $type = '')
 	{
 		if ($this->is_super_admin()) return TRUE; // super admin's control anything
 
@@ -390,7 +393,7 @@ class Fuel_auth extends Fuel_base_library {
 	 * @param	string	The name of the module
 	 * @return	boolean
 	 */	
-	function accessible_module($module)
+	public function accessible_module($module)
 	{
 		$this->CI->load->module_config('fuel', 'fuel', TRUE);
 		$allowed = (array) $this->CI->config->item('modules_allowed', 'fuel');
@@ -405,7 +408,7 @@ class Fuel_auth extends Fuel_base_library {
 	 * @access	public
 	 * @return	array
 	 */	
-	function get_permissions()
+	public function get_permissions()
 	{
 		$valid_user = $this->valid_user();
 		if (empty($valid_user['id'])) return FALSE;
@@ -447,7 +450,7 @@ class Fuel_auth extends Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */	
-	function is_super_admin()
+	public function is_super_admin()
 	{
 		$valid_user = $this->valid_user();
 		
@@ -466,7 +469,7 @@ class Fuel_auth extends Fuel_base_library {
 	 * @param	string	The name of the action
 	 * @return	boolean
 	 */	
-	function module_has_action($action)
+	public function module_has_action($action)
 	{
 		if (empty($this->CI->item_actions)) return FALSE;
 		return (isset($this->CI->item_actions[$action]) OR in_array($action, $this->CI->item_actions));
@@ -480,7 +483,7 @@ class Fuel_auth extends Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */	
-	function is_fuelified()
+	public function is_fuelified()
 	{
 		// cache it in a static variable so we don't make multiple cookie requests
 		static $is_fuelified;
@@ -500,7 +503,7 @@ class Fuel_auth extends Fuel_base_library {
 	 * @access	public
 	 * @return	string
 	 */	
-	function user_lang()
+	public function user_lang()
 	{
 		static $user_lang;
 		if (is_null($user_lang))
@@ -532,7 +535,7 @@ class Fuel_auth extends Fuel_base_library {
 	 * @access	public
 	 * @return	void
 	 */	
-	function logout()
+	public function logout()
 	{
 		$this->CI->load->library('session');
 		$this->CI->session->unset_userdata($this->get_session_namespace());
@@ -543,6 +546,15 @@ class Fuel_auth extends Fuel_base_library {
 			'path' => WEB_PATH
 		);
 		delete_cookie($config);
+
+		// remove UI cookie
+		$ui_cookie_name = 'fuel_ui_'.str_replace('fuel_', '', $this->fuel->auth->get_fuel_trigger_cookie_name());
+		$config = array(
+			'name' => $ui_cookie_name,
+			'path' => WEB_PATH
+		);
+		delete_cookie($config);
+
 		
 	}
 	

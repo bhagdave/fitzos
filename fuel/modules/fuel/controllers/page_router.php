@@ -5,12 +5,12 @@ class Page_router extends CI_Controller {
 	public $layout = '';
 	public $location;
 	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 	}
 	
-	function _remap($method)
+	public function _remap($method)
 	{
 		$this->location = uri_path(TRUE);
 		
@@ -80,7 +80,7 @@ class Page_router extends CI_Controller {
 	* Checks database for page variables (FUEL CMS)
 	* ------------------------------------------------------
 	*/
-	function _remap_cms($page)
+	public function _remap_cms($page)
 	{
 		$page_data = $page->properties();
 		$this->load->helper('cookie');
@@ -111,6 +111,7 @@ class Page_router extends CI_Controller {
 				// save to cache but you must not be logged in for it to save
 				if ($this->fuel->config('use_page_cache') !== FALSE AND 
 					$this->fuel->config('use_page_cache') !== 'views' AND 
+					$page->is_cached() AND
 					!is_fuelified())
 				{
 					$this->cache->save($cache_id, $output, $cache_group, $this->fuel->config('page_cache_ttl'));
@@ -144,7 +145,7 @@ class Page_router extends CI_Controller {
 	* specific configuration variables if they exist
 	* ------------------------------------------------------
 	*/
-	function _remap_variables($page)
+	public function _remap_variables($page)
 	{
 		
 		// set up cache info 

@@ -8,8 +8,8 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
  */
@@ -23,7 +23,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_pagevars
+ * @link		http://docs.getfuelcms.com/libraries/fuel_pagevars
  */
 
 // --------------------------------------------------------------------
@@ -39,13 +39,13 @@ class Fuel_pagevars extends Fuel_base_library {
 	const VARIABLE_TYPE_DB = 'db';
 	const VARIABLE_TYPE_VIEW = 'views';
 	
-	function __construct($params = array())
+	public function __construct($params = array())
 	{
 		parent::__construct();
 		$this->initialize($params);
 	}
 	
-	function initialize($params)
+	public function initialize($params)
 	{
 		parent::initialize($params);
 
@@ -70,7 +70,7 @@ class Fuel_pagevars extends Fuel_base_library {
 	 * @param	string
 	 * @return	array
 	 */
-	function retrieve($location = NULL, $what = '')
+	public function retrieve($location = NULL, $what = '')
 	{
 		if (isset($location))
 		{
@@ -107,7 +107,7 @@ class Fuel_pagevars extends Fuel_base_library {
 	 * @param	boolean
 	 * @return	array
 	 */
-	function db($parse = FALSE)
+	public function db($parse = FALSE)
 	{
 		$location = $this->location;
 
@@ -145,7 +145,7 @@ class Fuel_pagevars extends Fuel_base_library {
 	 * @param	string
 	 * @return	array
 	 */
-	function view($controller = NULL){
+	public function view($controller = NULL){
 
 		$location = $this->location;
 		

@@ -8,8 +8,8 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
 
@@ -28,7 +28,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/form
+ * @link		http://docs.getfuelcms.com/libraries/form
  */
 class Form {
 	
@@ -699,34 +699,56 @@ class Form {
 	 * @param mixed attrs if array then create string
 	 * @return string
 	 */
-	protected function _create_attrs ($attrs)
+	protected function _create_attrs($attrs)
 	{
 		if (is_array($attrs))
 		{
 			$str = '';
+			$only_key = array('required', 'readonly', 'disabled', 'checked');
 			foreach($attrs as $key => $val)
 			{
+				// the key must be a string value
+				if (is_numeric($key))
+				{
+					continue;
+				}
+
 				// create data fields 
 				if ($key == 'id' AND $val === FALSE)
 				{
 					// this gets stripped out upon rendering if the id is blank so we set it so if the value is FALSE
 					$str .= ' id=""';
 				}
-				else if (is_array($val) AND $key == 'data')
+				else if (is_array($val))
 				{
-					foreach($val as $k => $v)
+					if ($key == 'data')
 					{
-						if ($v !== '')
+						foreach($val as $k => $v)
 						{
-							$str .= ' data-'.$k.'="'.$v.'"';
+							if ($v !== '')
+							{
+								$str .= ' data-'.$k.'="'.$v.'"';
+							}
 						}
 					}
+					else
+					{
+						$str .= ' '.$key.'="'.implode(',', $val).'"';
+					}
 				}
-				else
+				else if (!is_array($val))
 				{
 					if ($val != '')
 					{
-						$str .= ' '.$key.'="'.$val.'"';
+						if ($val === TRUE AND in_array($key, $only_key))
+						{
+							$str .= ' '.$key;		
+						}
+						else
+						{
+							$str .= ' '.$key.'="'.$val.'"';
+						}
+						
 					}
 				}
 			}

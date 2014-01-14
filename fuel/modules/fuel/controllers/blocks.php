@@ -3,12 +3,12 @@ require_once('module.php');
 
 class Blocks extends Module {
 	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 	}
 
-	function _form_vars($id = NULL, $fields = NULL, $log_to_recent = TRUE, $display_normal_submit_cancel = TRUE)
+	public function _form_vars($id = NULL, $fields = NULL, $log_to_recent = TRUE, $display_normal_submit_cancel = TRUE)
 	{
 		$vars = parent::_form_vars($id, $fields, $log_to_recent, $display_normal_submit_cancel);
 		$saved = $vars['data'];
@@ -35,7 +35,7 @@ class Blocks extends Module {
 		return $vars;
 	}
 	
-	function import_view_cancel()
+	public function import_view_cancel()
 	{
 		if ($this->input->post('id')){
 
@@ -53,7 +53,7 @@ class Blocks extends Module {
 		$this->output->set_output('error');
 	}
 	
-	function import_view()
+	public function import_view()
 	{
 		$out = 'error';
 		if (!empty($_POST['id']))
@@ -63,24 +63,41 @@ class Blocks extends Module {
 		$this->output->set_output($out);
 	}
 	
-	function upload($inline = FALSE)
+	public function upload($inline = FALSE)
 	{
 		$this->load->helper('file');
 		$this->load->helper('security');
 		$this->load->library('form_builder');
+		$this->load->library('upload');
 
 		$this->js_controller_params['method'] = 'upload';
 		
-		if (!empty($_POST))
+		if (!empty($_POST) AND !empty($_FILES))
 		{
-			if (!empty($_FILES['file']['name']))
-			{
-				
-				$error = FALSE;
-				$file_info = $_FILES['file'];
+			$params['upload_path'] = sys_get_temp_dir();
+			$params['allowed_types'] = 'php|html|txt';
 
+			// to ensure we check the proper mime types
+			$this->upload->initialize($params);
+
+			// Hackery to ensure that a proper php mimetype is set. 
+			// Would set in mimes.php config but that may be updated with the next version of CI which does not include the text/plain
+			$this->upload->mimes['php'] =  array(
+				'application/x-httpd-php', 
+				'application/php', 
+				'application/x-php', 
+				'text/php', 
+				'text/x-php', 
+				'application/x-httpd-php-source', 
+				'text/plain');
+
+			if ($this->upload->do_upload('file'))
+			{
+				$upload_data = $this->upload->data();
+				$error = FALSE;
+				
 				// read in the file so we can filter it
-				$file = read_file($file_info['tmp_name']);
+				$file = read_file($upload_data['full_path']);
 				
 				// sanitize the file before saving
 				$file = $this->_sanitize($file);
@@ -118,9 +135,10 @@ class Blocks extends Module {
 				}
 				
 			}
-			else if (!empty($_FILES['file']['error']))
+			else
 			{
-				add_error(lang('error_upload'));
+				$error_msg = $this->upload->display_errors('', '');
+				add_error($error_msg);
 			}
 		}
 
@@ -132,7 +150,8 @@ class Blocks extends Module {
 		$fields['id'] = array('type' => 'hidden');
 		$fields['language'] = array('type' => 'hidden');
 		
-		$common_fields = $this->_common_fields();
+		$field_values = $_POST;
+		$common_fields = $this->_common_fields($field_values);
 		$fields = array_merge($fields, $common_fields);
 		
 		
@@ -153,9 +172,12 @@ class Blocks extends Module {
 	}
 
 
-	function layout_fields($layout, $id = NULL, $lang = NULL, $_context = NULL, $_name = NULL)
+	public function layout_fields($layout, $id = NULL, $lang = NULL, $_context = NULL, $_name = NULL)
 	{
 
+		// add back in slash 
+		$layout = str_replace(':', '/', $layout);
+		
 		// check to make sure there is no conflict between page columns and layout vars
 		$layout = $this->fuel->layouts->get($layout, 'block');
 		if (!$layout)
@@ -184,23 +206,9 @@ class Blocks extends Module {
 			$layout->set_context($_context);
 		}
 		
-		$fields = $layout->fields();
-
-
-		$this->load->module_model(FUEL_FOLDER, 'fuel_pagevariables_model');
-		$this->load->library('form_builder');
-		$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
-		
-		$this->form_builder->question_keys = array();
-		$this->form_builder->submit_value = '';
-		$this->form_builder->cancel_value = '';
-		$this->form_builder->use_form_tag = FALSE;
-		//$this->form_builder->name_prefix = 'vars';
-		$this->form_builder->set_fields($fields);
-		$this->form_builder->display_errors = FALSE;
-		
 		if (!empty($id))
 		{
+			$this->load->module_model(FUEL_FOLDER, 'fuel_pagevariables_model');
 			$page_vars = $this->fuel_pagevariables_model->find_all_by_page_id($id, $lang);
 
 			// the following will pre-populate fields of a different language to the default values
@@ -216,16 +224,33 @@ class Blocks extends Module {
 			if (!empty($_name_var))
 			{
 				$_name_var_eval = '@$_name = (isset($'.$_name_var.')) ? $'.$_name_var.' : "";';
-				eval($_name_var_eval);
+				@eval($_name_var_eval);
 			}
+
 			if (isset($_name))
 			{
 				$block_vars = $_name;
-				$this->form_builder->set_field_values($block_vars);
+				$layout->set_field_values($block_vars);
 			}
 
 		}
+		$fields = $layout->fields();
+
+
+		$this->load->library('form_builder');
+		$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
 		
+		$this->form_builder->question_keys = array();
+		$this->form_builder->submit_value = '';
+		$this->form_builder->cancel_value = '';
+		$this->form_builder->use_form_tag = FALSE;
+		//$this->form_builder->name_prefix = 'vars';
+		$this->form_builder->set_fields($fields);
+		$this->form_builder->display_errors = FALSE;
+		if (isset($block_vars))
+		{
+			$this->form_builder->set_field_values($block_vars);
+		}
 		$form = $this->form_builder->render();
 		$this->output->set_output($form);
 	}

@@ -5,12 +5,12 @@ class Migrate extends Fuel_base_controller {
 	
 	protected $module = '';
 
-	function __construct()
+	public function __construct()
 	{
 		// don't validate initially because we need to handle it a little different since we can use web hooks
 		parent::__construct(FALSE);
 
-		$remote_ips = $this->fuel->config('webhook_romote_ip');
+		$remote_ips = $this->fuel->config('webhook_remote_ip');
 		$is_web_hook = ($this->fuel->auth->check_valid_ip($remote_ips));
 
 		// check if it is CLI or a web hook otherwise we need to validate
@@ -26,7 +26,7 @@ class Migrate extends Fuel_base_controller {
 	}
 
 
-	function latest($module = NULL)
+	public function latest($module = NULL)
 	{
 		$this->_init_migrate($module);
 
@@ -38,7 +38,7 @@ class Migrate extends Fuel_base_controller {
 		$this->_success($version);
 	}
 
-	function current($module = NULL)
+	public function current($module = NULL)
 	{
 		$this->_init_migrate($module);
 
@@ -50,7 +50,7 @@ class Migrate extends Fuel_base_controller {
 		$this->_success($version);
 	}
 
-	function version($version = 1, $module = NULL)
+	public function version($version = 1, $module = NULL)
 	{
 		$this->_init_migrate($module);
 

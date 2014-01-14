@@ -8,8 +8,8 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
  */
@@ -23,7 +23,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_sitevars
+ * @link		http://docs.getfuelcms.com/libraries/fuel_sitevars
  */
 
 // --------------------------------------------------------------------
@@ -41,7 +41,7 @@ class Fuel_sitevars extends Fuel_module {
 	 * @param	string	A URI path. If left blank, the current URI path will be used (optional)
 	 * @return	array
 	 */	
-	function get($location = NULL)
+	public function get($location = NULL)
 	{
 		if (is_null($location))
 		{

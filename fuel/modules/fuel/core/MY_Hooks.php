@@ -8,8 +8,8 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
 
@@ -22,7 +22,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/modules/hooks
+ * @link		http://docs.getfuelcms.com/modules/hooks
  */
 class MY_Hooks extends CI_Hooks {
 
@@ -38,7 +38,7 @@ class MY_Hooks extends CI_Hooks {
 	 * @param	array	params
 	 * @return	mixed
 	 */
-	function _call_hook($which = '', $params = array())
+	public function _call_hook($which = '', $params = array())
 	{
 		if ( ! $this->enabled OR ! isset($this->hooks[$which]))
 		{
@@ -102,7 +102,7 @@ class MY_Hooks extends CI_Hooks {
 	 * @param	array	the hook details
 	 * @return	bool
 	 */
-	function _run_hook($data)
+	public function _run_hook($data)
 	{
 		if ( ! is_array($data))
 		{

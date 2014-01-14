@@ -1,12 +1,14 @@
 ## New Fuel Tables (relationships, settings, categories, tags)
 
 CREATE TABLE `fuel_relationships` (
-`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-`candidate_table` varchar(100) DEFAULT '',
-`candidate_key` int(11) NOT NULL,
-`foreign_table` varchar(100) DEFAULT NULL,
-`foreign_key` int(11) NOT NULL,
-PRIMARY KEY (`id`)
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `candidate_table` varchar(100) DEFAULT '',
+  `candidate_key` int(11) NOT NULL,
+  `foreign_table` varchar(100) DEFAULT NULL,
+  `foreign_key` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `candidate_table` (`candidate_table`,`candidate_key`),
+  KEY `foreign_table` (`foreign_table`,`foreign_key`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `fuel_settings` (
@@ -79,3 +81,11 @@ ALTER TABLE `fuel_blog_posts` DROP `image`;
 ALTER TABLE `fuel_blog_posts` ADD `main_image` VARCHAR(100)  NOT NULL  DEFAULT ''  AFTER `author_id`;
 ALTER TABLE `fuel_blog_posts` ADD `list_image` VARCHAR(100)  NOT NULL  DEFAULT ''  AFTER `main_image`;
 ALTER TABLE `fuel_blog_posts` ADD `thumbnail_image` VARCHAR(100)  NOT NULL  DEFAULT ''  AFTER `list_image`;
+
+
+## Migrate permission relationships to relationships table 
+INSERT INTO `fuel_relationships` (`candidate_table`, `candidate_key`, `foreign_table`, `foreign_key`) 
+(SELECT 'fuel_users', `user_id`, 'fuel_permissions', `permission_id` FROM `fuel_user_to_permissions`);
+
+DROP TABLE `fuel_user_to_permissions`;
+

@@ -1,2 +1,3 @@
 <?php
-header('Location: dashboard');
+header('Location: index');
+exit();

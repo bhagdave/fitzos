@@ -84,7 +84,7 @@ $config['modules']['navigation'] = array(
 	'instructions' => lang('navigation_instructions'),
 	'filters' => array('group_id' => array('default' => 1, 'label' => lang('form_label_navigation_group'), 'type' => 'select', 'model' => 'fuel_navigation_groups_model', 'hide_if_one' => TRUE)),
 	'archivable' => TRUE,
-	'list_actions' => array('navigation/upload' => lang('btn_upload'))
+	'list_actions' => array('navigation/upload' => lang('btn_upload'), 'navigation/download' => lang('btn_download'))
 );
 
 // navigation module init values
@@ -124,6 +124,7 @@ $config['modules']['categories'] = array(
 		'name', 
 		'slug',
 		'context',
+		'parent_id',
 		'precedence',
 		'published',
 	),
@@ -232,7 +233,7 @@ $config['modules']['users'] = array(
 				'),
 			),
 		),
-	'item_actions' => array('save', 'activate', 'create', 'delete'),
+	'item_actions' => array('save', 'activate', 'duplicate', 'create', 'delete'),
 	'clear_cache_on_save' => FALSE,
 );
 
@@ -279,7 +280,10 @@ $config['modules']['logs'] = array(
 	'item_actions' => array(),
 	'table_actions' => array(),
 	'rows_selectable' => FALSE,
-	'clear_cache_on_save' => FALSE
+	'clear_cache_on_save' => FALSE,
+	'filters' => array(
+		'type' => array('type' => 'select', 'label' => 'Type:', 'options' => array('info' => 'info', 'debug' => 'debug'), 'first_option' => lang('label_select_one')),
+		),
 );
 
 //@include(APPPATH.'config/MY_fuel_modules.php');

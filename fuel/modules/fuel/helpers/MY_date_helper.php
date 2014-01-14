@@ -8,8 +8,8 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
  */
@@ -23,7 +23,7 @@
  * @subpackage	Helpers
  * @category	Helpers
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/helpers/my_date_helper
+ * @link		http://docs.getfuelcms.com/helpers/my_date_helper
  */
 
 
@@ -331,41 +331,69 @@ function format_db_date($y = NULL, $m = NULL, $d = NULL, $h = NULL, $i = NULL, $
 	return $str;
 }
 
-
 // --------------------------------------------------------------------
 
 /**
  * Creates a date range string (e.g. January 1-10, 2010)
  *
  * @access	public
- * @param	string
- * @param	string
+ * @param	string start date
+ * @param	string end date
+ * @param	array formatting parameters
  * @return	string
  */
-function date_range_string($date1, $date2)
+function date_range_string($date1, $date2, $params = array())
 {
-	$date1TS = (is_string($date1)) ? strtotime($date1) : $date1;
-	$date2TS = (is_string($date2)) ? strtotime($date2) : $date2;
+	
+	// set formatting defaults
+	$format['same_day_and_time'] = 'F j, Y h:i a';
+	$format['same_day'] = array('F j, h:i a', 'h:i a');
+	$format['same_month'] = array('F j', 'j, Y');
+	$format['same_year'] = array('F j', 'F j, Y');
+	$format['default'] = 'F j, Y';
+	$format['joiner'] = '-';
 
-	if (date('Y-m-d', $date1TS) == date('Y-m-d', $date2TS))
+	$format = array_merge($format, $params);
+
+	$date1TS = (is_string($date1)) ? strtotime($date1) : $date1;
+	if (is_null($date2) OR (int) $date2 == 0)
 	{
-		return date('F j, Y', $date1TS);
-	}
-	if (date('m/Y', $date1TS) == date('m/Y', $date2TS))
-	{
-		return date('F j', $date1TS).'-'.date('j, Y', $date2TS);
-	}
-	else if (date('Y', $date1TS) == date('Y', $date2TS))
-	{
-		return date('F j', $date1TS)."-".date('F j, Y', $date2TS);
+		$date2TS = $date1TS;
 	}
 	else
 	{
-		return date('F j, Y', $date1TS).'-'.date('F j, Y', $date2TS);
+		$date2TS = (is_string($date2)) ? strtotime($date2) : $date2;
+	}
+
+	// same day
+	if (date('Y-m-d', $date1TS) == date('Y-m-d', $date2TS) OR (int) $date2 == 0)
+	{
+		// same day but different time
+		if (date('H:i', $date1TS) != date('H:i', $date2TS))
+		{
+			return date($format['same_day'][0], $date1TS).$format['joiner'].date($format['same_day'][1], $date2TS);
+		}
+
+		// same day and time format
+		return date($format['same_day_and_time'], $date1TS);
+	}
+	// same month
+	else if (date('m/Y', $date1TS) == date('m/Y', $date2TS))
+	{
+		return date($format['same_month'][0], $date1TS).$format['joiner'].date($format['same_month'][1], $date2TS);
+	}
+	// same year
+	else if (date('Y', $date1TS) == date('Y', $date2TS))
+	{
+		return date($format['same_year'][0], $date1TS).$format['joiner'].date($format['same_year'][1], $date2TS);
+	}
+
+	// default
+	else
+	{
+		return date($format['default'], $date1TS).$format['joiner'].date($format['default'], $date2TS);
 	}
 }
-
-
 
 // --------------------------------------------------------------------
 
@@ -500,7 +528,7 @@ function standard_date($fmt = 'DATE_RFC822', $time = '')
  * Returns a timestamp from the provided time
  *
  * @access	public
- * @param	string (optional)
+ * @param	string date (optional)
  * @return	string
  */
 function timestamp($date = NULL)
@@ -519,7 +547,7 @@ function timestamp($date = NULL)
  * Returns a the month value of a provided date
  *
  * @access	public
- * @param	string (optional)
+ * @param	string date (optional)
  * @param	string options are 'm/numeric', 'F/long', 'M/short' <- default  (optional)
  * @return	string
  */
@@ -545,7 +573,7 @@ function month($date = NULL, $format = 'M')
  * Returns a the day value of a provided date
  *
  * @access	public
- * @param	string (optional)
+ * @param	string date (optional)
  * @param	string options are 'd/leading', 'j' <- default  (optional)
  * @return	string
  */
@@ -566,7 +594,7 @@ function day($date = NULL, $format = 'j')
  * Returns a the weekday value of a provided date
  *
  * @access	public
- * @param	string (optional)
+ * @param	string date (optional)
  * @param	string options are 'l/full', 'N/numeric', 'D' <- default (optional)
  * @return	string
  */
@@ -590,7 +618,7 @@ function weekday($date = NULL, $format = 'D')
  * Returns a the year value of a provided date
  *
  * @access	public
- * @param	string (optional)
+ * @param	string date (optional)
  * @param	string options are 'y/short', 'Y/long' <- default (optional)
  * @return	string
  */
@@ -612,7 +640,7 @@ function year($date = NULL, $format = 'Y')
  * Returns a the weekday value of a provided date
  *
  * @access	public
- * @param	string (optional)
+ * @param	string date (optional)
  * @param	string options are '24/military', '12' <- default (optional)
  * @return	string
  */
@@ -634,7 +662,7 @@ function hour($date = NULL, $format = '12')
  * Returns a the weekday value of a provided date
  *
  * @access	public
- * @param	string (optional)
+ * @param	string date (optional)
  * @param	string options are 'noleading', 'leading' <- default (optional)
   * @return	string
  */
@@ -654,7 +682,7 @@ function minute($date = NULL, $format = 'leading')
  * Returns a the weekday value of a provided date
  *
  * @access	public
- * @param	string (optional)
+ * @param	string date (optional)
  * @param	string options are 'noleading', 'leading' <- default (optional)
  * @return	string
  */
@@ -674,7 +702,7 @@ function second($date = NULL, $format = 'leading')
  * Returns a the ampm value of a provided date
  *
  * @access	public
- * @param	string (optional)
+ * @param	string date (optional)
  * @param	string options are 'A/upper/uppercase', 'a/lower/lowercase' <- default (optional)
  * @return	string
  */
@@ -690,6 +718,20 @@ function ampm($date = NULL, $format = 'a')
 	}
 }
 
+// --------------------------------------------------------------------
+
+/**
+ * Determines whether the time is midnight or not. Helps with dates that are set without time values
+ *
+ * @access	public
+ * @param	string date
+ * @return	string
+ */
+function is_midnight($date)
+{
+	$ts = timestamp($date);
+	return (date('H:i:s', $ts) == '00:00:00');
+}
 
 
 /* End of file MY_date_helper.php */

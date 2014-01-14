@@ -1,4 +1,31 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+/**
+ * FUEL CMS
+ * http://www.getfuelcms.com
+ *
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
+ * @link		http://www.getfuelcms.com
+ */
+
+// ------------------------------------------------------------------------
+
+/**
+ * Extends CI_Model
+ *
+ * <strong>Fuel_assets_model</strong> is used for managing asset data with the file system which includes retrieving and deleting images, pdfs, etc.
+ * 
+ * @package		FUEL CMS
+ * @subpackage	Models
+ * @category	Models
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://docs.getfuelcms.com/models/fuel_assets_model
+ */
 
 // not pulling from the database so just extend the normal model
 require_once(FUEL_PATH.'libraries/Validator.php');
@@ -18,8 +45,10 @@ class Fuel_assets_model extends CI_Model {
 	/**
 	 * Constructor
 	 *
+	 * @access	public
+	 * @return	void
 	 */
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 		$CI =& get_instance();
@@ -40,7 +69,7 @@ class Fuel_assets_model extends CI_Model {
 	 * @param	array	Search filters
 	 * @return	void
 	 */	
-	function add_filters($filters)
+	public function add_filters($filters)
 	{
 		if (empty($this->filters))
 		{
@@ -64,7 +93,7 @@ class Fuel_assets_model extends CI_Model {
 	 * @param	string	order
 	 * @return	array
 	 */	
-	function list_items($limit = null, $offset = 0, $col = 'name', $order = 'asc')
+	public function list_items($limit = null, $offset = 0, $col = 'name', $order = 'asc')
 	{
 		$CI =& get_instance();
 		$CI->load->helper('array');
@@ -115,7 +144,7 @@ class Fuel_assets_model extends CI_Model {
 					$file['name'] = $key;
 					$file['preview/kb'] = $files[$key]['size'];
 					$file['link'] = NULL;
-					$file['last_updated'] = english_date($files[$key]['date'], true);
+					$file['last_updated'] = date('Y-m-d H:i:s', $files[$key]['date']);
 					$return[] = $file;
 				}
 			}
@@ -132,7 +161,7 @@ class Fuel_assets_model extends CI_Model {
 		{
 			if (is_image_file($return[$key]['name']))
 			{
-				$return[$key]['preview/kb'] = $return[$key]['preview/kb'].' kb <div class="img_crop"><a href="'.$asset_type_path.$return[$key]['name'].'" target="_blank"><img src="'.$asset_type_path.($return[$key]['name']).'" border="0"></a></div>';
+				$return[$key]['preview/kb'] = $return[$key]['preview/kb'].' kb <div class="img_crop"><a href="'.$asset_type_path.$return[$key]['name'].'" target="_blank"><img src="'.$asset_type_path.($return[$key]['name']).'?c='.time().'" border="0"></a></div>';
 				$return[$key]['link'] = '<a href="'.$asset_type_path.$return[$key]['name'].'" target="_blank">'.$asset_dir.'/'.$return[$key]['name'].'</a>';
 				
 			}
@@ -154,7 +183,7 @@ class Fuel_assets_model extends CI_Model {
 	 * @access	public
 	 * @return	int
 	 */	
-	function list_items_total()
+	public function list_items_total()
 	{
 		return count($this->list_items());
 	}
@@ -168,7 +197,7 @@ class Fuel_assets_model extends CI_Model {
 	 * @param	string	An asset file
 	 * @return	array
 	 */	
-	function find_by_key($file)
+	public function find_by_key($file)
 	{
 		$file = $this->get_file($file);
 
@@ -192,7 +221,7 @@ class Fuel_assets_model extends CI_Model {
 	 * @param	string	An asset file
 	 * @return	string
 	 */	
-	function get_file($file)
+	public function get_file($file)
 	{
 		// if no extension is provided, then we determine that it needs to be decoded
 		if (strpos($file, '.') === FALSE)
@@ -211,7 +240,7 @@ class Fuel_assets_model extends CI_Model {
 	 * @param	string	An asset folder
 	 * @return	int
 	 */	
-	function record_count($dir = 'images')
+	public function record_count($dir = 'images')
 	{
 		$CI =& get_instance();
 		$assets_path = WEB_ROOT.$CI->config->item('assets_path').$dir.'/';
@@ -228,7 +257,7 @@ class Fuel_assets_model extends CI_Model {
 	 * @param	string	An asset file to delete
 	 * @return	string
 	 */	
-	function delete($file)
+	public function delete($file)
 	{
 		$CI =& get_instance();
 
@@ -321,7 +350,7 @@ class Fuel_assets_model extends CI_Model {
 	 * @access	public
 	 * @return	string
 	 */	
-	function key_field()
+	public function key_field()
 	{
 		return $this->key_field;
 	}
@@ -362,7 +391,7 @@ class Fuel_assets_model extends CI_Model {
 	 * @param	array 	An array of values to be passed to the form fields
 	 * @return	array
 	 */	
-	function form_fields($values = array())
+	public function form_fields($values = array())
 	{
 		$CI =& get_instance();
 		$fields = array();
@@ -388,28 +417,50 @@ class Fuel_assets_model extends CI_Model {
 		$fields['height'] = array('label' => lang('form_label_height'), 'comment' => lang('assets_comment_height'), 'size' => '3');
 		$fields['master_dim'] = array('type' => 'select', 'label' => lang('form_label_master_dim'), 'options' => array('auto' => 'auto', 'width' => 'width', 'height' => 'height'), 'comment' => lang('assets_comment_master_dim'));
 		$fields['uploaded_file_name'] = array('type' => 'hidden');
-		
+		$fields['hide_options'] = array('type' => 'hidden');
+		$fields['hide_image_options'] = array('type' => 'hidden');
 		return $fields;
 	}
 	
-	// placeholder
-	function on_before_post()
+		
+	/**
+	 * Placeholder function (not used)
+	 *
+	 * @access	public
+	 * @return	void
+	 */
+	public function on_before_post()
 	{
 		
 	}
 
-	// placeholder
-	function on_after_post($values)
+		
+	/**
+	 * Placeholder function (not used)
+	 *
+	 * @access	public
+	 * @param   array Posted values
+	 * @return	void
+	 */
+	public function on_after_post($values)
 	{
 	}
 
-	function related_items($params)
+		
+	/**
+	 * Displays the most recently uplloaded 
+	 *
+	 * @access	public
+	 * @param	array View variable data (optional)
+	 * @return	mixed Can be an array of items or a string value
+	 */
+	public function related_items($params)
 	{
 		$CI =& get_instance();
 		$uploaded_post = $CI->session->flashdata('uploaded_post');
-		if (!empty($uploaded_post['uploaded_file_webpath']))
+		if (!empty($uploaded_post['uploaded_file_webpath']) AND is_image_file($uploaded_post['uploaded_file_webpath']))
 		{
-			$img = '<a href="'.$uploaded_post['uploaded_file_webpath'].'" target="_blank"><img src="'.$uploaded_post['uploaded_file_webpath'].'" alt="" style="max-width: 100%;" /></a>';
+			$img = '<a href="'.$uploaded_post['uploaded_file_webpath'].'" target="_blank"><img src="'.$uploaded_post['uploaded_file_webpath'].'?c='.time().'" alt="" style="max-width: 100%;" /></a>';
 			return $img;
 		}
 		return '';

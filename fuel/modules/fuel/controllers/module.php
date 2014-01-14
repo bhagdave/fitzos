@@ -44,7 +44,12 @@ class Module extends Fuel_base_controller {
 		{
 			$this->module = fuel_uri_segment(2);
 			$this->module_obj = $this->fuel->modules->get($this->module, FALSE);
-			$mod_name = $this->module_obj->name();
+
+			if ($this->module_obj)
+			{
+				$mod_name = $this->module_obj->name();	
+			}
+			
 			if (empty($mod_name))
 			{
 				show_error(lang('error_missing_module', fuel_uri_segment(1)));
@@ -53,6 +58,11 @@ class Module extends Fuel_base_controller {
 			$params = $this->module_obj->info();
 		}
 
+		// stop here if the module is disabled
+		if ($params['disabled'] === TRUE)
+		{
+			show_404();
+		}
 		foreach($params as $key => $val)
 		{
 			$this->$key = $val;
@@ -88,7 +98,7 @@ class Module extends Fuel_base_controller {
 			}
 			else
 			{
-				$this->config->load($this->language);
+				$this->load->language($this->language);
 			}
 		}
 		
@@ -103,23 +113,9 @@ class Module extends Fuel_base_controller {
 		}
 		
 		// get the model name
-		$model = end(explode('/', $this->model_name));
-
-		if (empty($this->display_field))
-		{
-			$fields = $this->$model->fields();
-			
-			// loop through the fields and find the first column that doesn't have id or _id at the end of it
-			for ($i = 1; $i < count($fields); $i++)
-			{
-				if (substr($fields[$i], -3) != '_id')
-				{
-					$this->display_field = $fields[$i];
-					break;
-				}
-			}
-			if (empty($this->display_field)) $this->display_field = $fields[1]; // usually the second field is the display_field... first is the id
-		}
+		$model_parts = explode('/', $this->model_name);
+		$model = end($model_parts);
+		
 		
 		// set the module_uri
 		if (empty($this->module_uri)) $this->module_uri = $this->module;
@@ -191,7 +187,7 @@ class Module extends Fuel_base_controller {
 		{
 			$this->filters = array_merge($this->filters, $this->model->filters($this->filters));
 		}
-	
+
 		// set the language dropdown if there is a language column
 		if ($this->fuel->language->has_multiple() AND !empty($this->language_col) AND method_exists($this->model, 'get_languages'))
 		{
@@ -200,9 +196,8 @@ class Module extends Fuel_base_controller {
 			if (!empty($languages) AND (is_string($first_option) OR (is_array($first_option)) AND count($first_option) > 1))
 			{
 				$lang_filter = array('type' => 'select', 'options' => $languages, 'label' => lang('label_language'), 'first_option' => lang('label_select_a_language'));
-				$this->filters[$this->language_col] = $lang_filter;
-				$this->model->filter_join = array();
-				$this->model->filter_join[$this->language_col] = 'and';
+				$this->filters[$this->language_col.'_equal'] = $lang_filter;
+				$this->model->add_filter_join($this->language_col.'_equal', 'and');
 			}
 		}
 		
@@ -213,10 +208,10 @@ class Module extends Fuel_base_controller {
 		
 		
 		// create search filter
-		$filters[$this->display_field] = $params['search_term'];
+		$filters[$this->display_field] = trim($params['search_term']);
 		
 		// sort of hacky here... to make it easy for the model to just filter on the search term (like the users model)
-		$this->model->filter_value = $params['search_term'];
+		$this->model->filter_value = trim($params['search_term']);
 		foreach($this->filters as $key => $val)
 		{
 			$filters[$key] = $params[$key];
@@ -242,7 +237,7 @@ class Module extends Fuel_base_controller {
 			$this->config->set_item('enable_query_strings', FALSE);
 		
 			// pagination
-			$query_str_arr = $this->input->get();
+			$query_str_arr = $this->input->get(NULL, TRUE);
 			unset($query_str_arr['offset']);
 			$query_str = (!empty($query_str_arr)) ? http_build_query($query_str_arr) : '';
 		
@@ -469,7 +464,8 @@ class Module extends Fuel_base_controller {
 			}
 			
 			$this->data_table->auto_sort = TRUE;
-			$this->data_table->sort_js_func = 'fuel.sortList';
+			$heading_sort_func = (isset($this->disable_heading_sort) AND $this->disable_heading_sort) ? '' : 'fuel.sortList';
+			$this->data_table->sort_js_func = $heading_sort_func;
 			
 			$this->data_table->assign_data($items, $this->table_headers);
 
@@ -503,8 +499,9 @@ class Module extends Fuel_base_controller {
 			$this->form_builder->question_keys = array();
 			//$this->form_builder->hidden = (array) $this->model->key_field();
 			$this->form_builder->label_layout = 'left';
-			$this->form_builder->form->validator = &$this->model->get_validation();
-			$this->form_builder->submit_value = null;
+			$this->form_builder->load_custom_fields(APPPATH.'config/custom_fields.php');
+			$this->form_builder->set_validator($this->model->get_validation());
+			$this->form_builder->submit_value = NULL;
 			$this->form_builder->use_form_tag = FALSE;
 			$this->form_builder->set_fields($this->filters);
 			$this->form_builder->display_errors = FALSE;
@@ -514,7 +511,15 @@ class Module extends Fuel_base_controller {
 				$this->form_builder->date_format = $this->config->item('date_format');
 			}
 			$this->form_builder->set_field_values($field_values);
-			
+
+			if (method_exists($this->model, 'friendly_filter_info'))
+			{
+				$friendly_filter_info = $this->model->friendly_filter_info($field_values);
+				if ( ! empty($friendly_filter_info)) {
+					$vars['info'] = $friendly_filter_info;
+				}
+			}
+
 			// keycheck is already put in place by $this->form->close() in module_list layout
 			$this->form_builder->key_check = FALSE; 
 			$vars['more_filters'] = $this->form_builder->render_divs();
@@ -522,10 +527,11 @@ class Module extends Fuel_base_controller {
 			$vars['form_action'] = $this->module_uri.'/items';
 			$vars['form_method'] = 'get';
 			$vars['query_string'] = $query_str;
+			$vars['description'] = $this->description;
 			$crumbs = array($this->module_uri => $this->module_name);
 			$this->fuel->admin->set_titlebar($crumbs);
 			
-			$inline = $this->input->get('inline');
+			$inline = $this->input->get('inline', TRUE);
 			$this->fuel->admin->set_inline($inline);
 			
 			if ($inline === TRUE)
@@ -567,6 +573,7 @@ class Module extends Fuel_base_controller {
 		$filters = array();
 		
 		$page_state = $this->fuel->admin->get_page_state($this->module_uri);
+		unset($page_state['offset']);
 		
 		$defaults = array();
 		$defaults['col'] = (!empty($this->default_col)) ? $this->default_col : $this->display_field;
@@ -590,7 +597,7 @@ class Module extends Fuel_base_controller {
 		if (!empty($_POST) OR !empty($_GET))
 		{
 
-			$posted['search_term'] = $this->input->get_post('search_term');
+			$posted['search_term'] = $this->input->get_post('search_term', TRUE);
 			$posted_vars = array('col', 'order', 'limit', 'offset', 'precedence', 'view_type');
 			foreach($posted_vars as $val)
 			{
@@ -600,16 +607,51 @@ class Module extends Fuel_base_controller {
 			// custom module filters
 			$extra_filters = array();
 			
-			
 			foreach($this->filters as $key => $val)
 			{
+
 				if (isset($_POST[$key]) OR isset($_GET[$key]))
 				{
 					$posted[$key] = $this->input->get_post($key, TRUE);
+
+					// get the raw key without the comparison operators that the model uses
+					$raw_key = preg_replace(array('#_from$#', '#_fromequal$#', '#_to$#', '#_toequal$#', '#_equal$#'), '', $key);
+
+					// manipulate the value if it's a date time field
+					if (method_exists($this->model, 'field_type'))
+					{
+						$field_type = $this->model->field_type($raw_key);
+						if (is_date_format($posted[$key]) AND $field_type == 'datetime' OR $field_type == 'date')
+						{
+							$date  = ($this->input->get_post($key) AND is_date_format($this->input->get_post($key))) ? current(explode(" ", $this->input->get_post($key))) : "";
+							$hr    = ($this->input->get_post($key.'_hour') AND (int)$this->input->get_post($key.'_hour') > 0 AND (int)$this->input->get_post($key.'_hour') < 24) ? $this->input->get_post($key.'_hour') : "";
+							$min   = ($this->input->get_post($key.'_min') AND is_numeric($this->input->get_post($key.'_min')))  ? $this->input->get_post($key.'_min') : "00";
+							$ampm  = ($this->input->get_post($key.'_am_pm') AND $hr AND $min) ? $this->input->get_post($key.'_am_pm') : "";
+							if (!empty($ampm) AND !empty($hr) AND $hr > 12)
+							{
+								if ($hr > 24) 
+								{
+									$hr = "00";
+								}
+								else
+								{
+									$hr = (int) $hr - 12;
+									$ampm = "pm";
+								}
+							}
+							$posted[$key] = $date;
+							if (!empty($hr)) $posted[$key] .= " ".$hr.":".$min.$ampm;
+							$posted[$key] = date('Y-m-d H:i:s', strtotime($posted[$key]));
+						}
+					}
+
 					$this->filters[$key]['value'] = $posted[$key];
 					$extra_filters[$key] = $posted[$key];
+
+					
 				}
 			}
+
 			$posted['extra_filters'] = $extra_filters;
 		}
 		$params = array_merge($defaults, $page_state, $posted);
@@ -744,7 +786,7 @@ class Module extends Fuel_base_controller {
 		
 		$shell_vars = $this->_shell_vars($id);
 		
-		$passed_init_vars = ($this->input->get()) ? $this->input->get() : array();
+		$passed_init_vars = ($this->input->get(NULL, TRUE)) ? $this->input->get(NULL, TRUE) : array();
 		$form_vars = $this->_form_vars($id, $passed_init_vars, FALSE, $inline);
 		$vars = array_merge($shell_vars, $form_vars);
 		$vars['action'] = 'create';
@@ -1414,7 +1456,7 @@ class Module extends Fuel_base_controller {
 		$inline = $this->fuel->admin->is_inline();
 		if (!empty($_POST['id']))
 		{
-			$posted = explode('|', $this->input->post('id'));
+			$posted = explode('|', $this->input->post('id', TRUE));
 			
 			
 			// run before_delete hook
@@ -1575,7 +1617,7 @@ class Module extends Fuel_base_controller {
 				}
 				$this->_clear_cache();
 			}
-			redirect(fuel_uri($this->module_uri.'/edit/'.$this->input->post('fuel_restore_ref_id')));
+			redirect(fuel_uri($this->module_uri.'/edit/'.$this->input->post('fuel_restore_ref_id', TRUE)));
 		}
 		else
 		{
@@ -1676,6 +1718,7 @@ class Module extends Fuel_base_controller {
 			
 			$field_id = $this->input->post('field_id', TRUE);
 			$values = $this->input->post('values', TRUE);
+
 			$selected = $this->input->post('selected', TRUE);
 			
 			$field_key = end(explode('vars--', $field));
@@ -1687,7 +1730,13 @@ class Module extends Fuel_base_controller {
 			if (is_array($values))
 			{
 				$selected = (array) $selected;
-				$selected = array_merge($values, $selected);
+				foreach($values as $v)
+				{
+					if (!in_array($v, $selected))
+					{
+						$selected[] = $v;
+					}
+				}
 			}
 			
 			if (!empty($selected)) $fields[$field]['value'] = $selected;
@@ -1725,26 +1774,18 @@ class Module extends Fuel_base_controller {
 			{
 				if (!empty($selected)) $fields[$field_key]['value'] = $selected;
 				$fields[$field_key]['name'] = $field_id;
-				
+
 				// if the field is an ID, then we will do a select instead of a text field
 				if (isset($fields[$this->model->key_field()]))
 				{
-					$fields['id']['type'] = 'select';
-					$fields['id']['options'] = $this->model->options_list();
+					$fields[$this->model->key_field()]['type'] = 'select';
+					$fields[$this->model->key_field()]['options'] = $this->model->options_list();
 				}
-				$output = $this->form_builder->create_field($fields[$field_key]);	
+				$output = $this->form_builder->create_field($fields[$field_key]);
 			}
 			
 			$this->output->set_output($output);
-			
-			// // if the field is an ID, then we will do a select instead of a text field
-			// if (isset($fields[$this->model->key_field()]))
-			// {
-			// 	$fields['id']['type'] = 'select';
-			// 	$fields['id']['options'] = $this->model->options_list();
-			// }
-			// $output = $this->form_builder->create_field($fields[$field]);
-			// $this->output->set_output($output);
+		
 		}
 	}
 	
@@ -2008,7 +2049,19 @@ class Module extends Fuel_base_controller {
 					}
 					if (strpos($field_value, '{') !== FALSE )
 					{
-						$field_value = preg_replace('#(.*){(.+)\}(.*)#e', "'\\1'.\$posted['\\2'].'\\3'", $field_value);
+						//e modifier is deprecated so we have to do this
+						$callback = create_function('$match', '
+								$return = "";
+								if (!empty($match[2]))
+								{
+									$return = $match[1].$GLOBALS["__tmp_transient_posted__"][$match[2]].$match[3];
+								}
+								return $return;');
+
+						// hacky but avoids 5.3 function syntax (which is nicer but doesn't work with 5.2)
+						$GLOBALS['__tmp_transient_posted__'] = $posted;
+
+						$field_value = preg_replace_callback('#^(.*)\{(.+)\}(.*)$#', $callback, $field_value);
 					}
 
 					// set both values for the namespaced and non-namespaced... make them underscored and lower cased
@@ -2024,6 +2077,11 @@ class Module extends Fuel_base_controller {
 				}
 			}
 
+			// hacky cleanup to avoid using 5.3 syntax
+			if (isset($GLOBALS["__tmp_transient_posted__"]))
+			{
+				unset($GLOBALS["__tmp_transient_posted__"]);
+			}
 
 			$params['xss_clean'] = $this->sanitize_files;
 			$params['posted'] = $posted;
@@ -2048,31 +2106,64 @@ class Module extends Fuel_base_controller {
 				// transfer uploaded data the controller object as well
 				$this->upload_data =& $uploaded_data;
 
-				foreach($uploaded_data as $key => $val)
+				// now process the data related to upload a file including translated path names
+				if (!isset($field_name))
 				{
-					$file_tmp = current(explode('___', $key));
-
-					// if there is a field with the suffix of _upload, then we will overwrite that posted value with this value
-					if (substr($file_tmp, ($file_tmp - 7)) == '_upload')
-					{
-						$field_name = substr($file_tmp, 0, ($file_tmp - 7));
-					}
-
-					// get the file name field
-					// if the file name field exists AND there is no specified hidden filename field to assign to it AND...
-					// the model does not have an array key field AND there is a key field value posted
-					if (isset($field_name) AND isset($posted[$field_name]) AND !is_array($this->model->key_field()) AND isset($posted[$this->model->key_field()]))
-					{
-						$id = $posted[$this->model->key_field()];
-						$data = $this->model->find_one_array(array($this->model->table_name().'.'.$this->model->key_field() => $id));
-						$data[$field_name] = $val['file_name'];
-						$this->model->save($data);
-					}
+					$field_name = '';
 				}
+				$this->_process_upload_data($field_name, $uploaded_data, $posted);
 				
 			}
 		}
 		return !$errors;
+	}
+
+	protected function _process_upload_data($field_name, $uploaded_data, $posted)
+	{
+
+		$field_name = end(explode('--', $field_name));
+
+		foreach($uploaded_data as $key => $val)
+		{
+			$file_tmp = current(explode('___', $key));
+
+			// get the file name field
+			// if the file name field exists AND there is no specified hidden filename field to assign to it AND...
+			// the model does not have an array key field AND there is a key field value posted
+			if (isset($field_name) AND !is_array($this->model->key_field()) AND isset($posted[$this->model->key_field()]))
+			{
+				$id = $posted[$this->model->key_field()];
+				$data = $this->model->find_one_array(array($this->model->table_name().'.'.$this->model->key_field() => $id));
+
+				// if there is a field with the suffix of _upload, then we will overwrite that posted value with this value
+				if (substr($file_tmp, ($file_tmp - 7)) == '_upload')
+				{
+					$field_name = substr($file_tmp, 0, ($file_tmp - 7));
+				}
+
+				if (isset($posted[$field_name]))
+				{
+					$save = TRUE;
+				}
+
+				// look for repeatable values that match
+				if (preg_match('#(.+)_(\d+)_(.+)#', $file_tmp, $matches))
+				{
+					if (isset($posted[$matches[1]][$matches[2]][$matches[3]]) AND isset($data[$matches[1]][$matches[2]][$matches[3]]))
+					{
+						$data[$matches[1]][$matches[2]][$matches[3]] = $posted[$file_tmp];
+						$save = TRUE;
+					}
+				}
+
+				if ($save)
+				{
+
+					$data[$field_name] = $val['file_name'];
+					$this->model->save($data);
+				}
+			}
+		}
 	}
 	
 	protected function _run_hook($hook, $params = array())

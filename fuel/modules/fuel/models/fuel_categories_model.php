@@ -1,18 +1,40 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+/**
+ * FUEL CMS
+ * http://www.getfuelcms.com
+ *
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
+ * @link		http://www.getfuelcms.com
+ */
 
-require_once(FUEL_PATH.'models/base_module_model.php');
+// ------------------------------------------------------------------------
+
+/**
+ * Extends Base_module_model
+ *
+ * <strong>Fuel_categories_model</strong> is used for managing FUEL categories in the CMS
+ * 
+ * @package		FUEL CMS
+ * @subpackage	Models
+ * @category	Models
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://docs.getfuelcms.com/models/fuel_categories_model
+ */
+
+require_once('base_module_model.php');
 
 class Fuel_categories_model extends Base_module_model {
 
-	public $filters = array('name', 'slug', 'context');
-	public $required = array('name', 'slug');
-	public $linked_fields = array('slug' => 'name');
-	public $unique_fields = array('slug');
-
-	public $boolean_fields = array();
-	public $belongs_to = array();
-	public $has_many = array();
-	public $serialized_fields = array();
+	public $required = array('name', 'slug'); // name and slug are required
+	public $filters = array('name', 'slug', 'context'); // allows for the description field to be searchable as well as the name field
+	public $linked_fields = array('slug' => 'name'); // the slug value should be the name field's value with the url_title function applied to it if there is no value specified
+	public $unique_fields = array('slug'); // the slug field needs to be unique
 
 	protected $friendly_name = 'Categories';
 	protected $singular_name = 'Category';
@@ -26,7 +48,7 @@ class Fuel_categories_model extends Base_module_model {
 	 * @access	public
 	 * @return	void
 	 */	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct('fuel_categories'); // table name
 	}
@@ -34,18 +56,22 @@ class Fuel_categories_model extends Base_module_model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Initializes the class with the parent model and field names
+	 * Lists the module's items
 	 *
 	 * @access	public
-	 * @param	int	the number in which to limit the returned data results (optional)
-	 * @param	int	the number in which to offset the returned data results (optional)
-	 * @param	string	the column name to sort on (optional)
-	 * @param	string	the order in which to return the results (optional)
-	 * @return	array
+	 * @param	int The limit value for the list data (optional)
+	 * @param	int The offset value for the list data (optional)
+	 * @param	string The field name to order by (optional)
+	 * @param	string The sorting order (optional)
+	 * @param	boolean Determines whether the result is just an integer of the number of records or an array of data (optional)
+	 * @return	mixed If $just_count is true it will return an integer value. Otherwise it will return an array of data (optional)
 	 */	
-	function list_items($limit = NULL, $offset = NULL, $col = 'precedence', $order = 'desc')
+	public function list_items($limit = NULL, $offset = NULL, $col = 'nav_key', $order = 'desc', $just_count = FALSE)
 	{
-		$data = parent::list_items($limit, $offset, $col, $order);
+		$table = $this->table_name();
+		$this->db->select($table.'.id, '.$table.'.name, '.$table.'.slug, '.$table.'.context, p.name as parent_id, '.$table.'.precedence, '.$table.'.published', FALSE);
+		$this->db->join($table.' AS p', $this->tables('fuel_categories').'.parent_id = p.id', 'left');
+		$data = parent::list_items($limit, $offset, $col, $order, $just_count);
 		return $data;
 	}
 
@@ -57,10 +83,32 @@ class Fuel_categories_model extends Base_module_model {
 	 * @access	public
 	 * @return	array
 	 */	
-	function context_options_list()
+	public function context_options_list()
 	{
 		$this->db->group_by('context');
 		return parent::options_list('context', 'context');
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Tree view that puts categories in a hierarchy based on their parent value
+	 *
+	 * @access	public
+	 * @param	boolean Determines whether to return just published pages or not (optional... and ignored in the admin)
+	 * @return	array An array that can be used by the Menu class to create a hierachical structure
+	 */	
+	public function tree($just_published = FALSE)
+	{
+		$return = array(); 
+		$where = ($just_published) ? array('published' => 'yes') : array();
+		$categories = $this->find_all_array($where); 
+		foreach($categories as $category) 
+		{ 
+			$attributes = ((isset($category['published']) AND $category['published'] == 'no')) ? array('class' => 'unpublished', 'title' => 'unpublished') : NULL;
+			$return[] = array('id' => $category['id'], 'label' => $category['name'], 'parent_id' => $category['parent_id'], 'location' => fuel_url('categories/edit/'.$category['id']), 'attributes' => $attributes); 
+		}
+		return $return;
 	}
 
 	// --------------------------------------------------------------------
@@ -73,7 +121,7 @@ class Fuel_categories_model extends Base_module_model {
 	 * @param	array	related field information
 	 * @return	array
 	 */	
-	function form_fields($values = array(), $related = array())
+	public function form_fields($values = array(), $related = array())
 	{	
 		$fields = parent::form_fields($values, $related);
 		$fields['parent_id'] = array('type' => 'select', 'model' => 'fuel_categories', 'first_option' => lang('label_select_one'));
@@ -89,27 +137,13 @@ class Fuel_categories_model extends Base_module_model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Overwrites the on_after_save parent method and doesn't call the parent
-	 *
-	 * @access	public
-	 * @param	array	values
-	 * @return	array
-	 */	
-	function on_after_save($values)
-	{
-		return $values;
-	}
-
-	// --------------------------------------------------------------------
-	
-	/**
 	 * Overwrites the _common_query parent method to automatically sort by precedence value
 	 *
 	 * @access	public
-	 * @param	array	values
+	 * @param mixed parameter to pass to common query (optional)
 	 * @return	array
 	 */	
-	function _common_query()
+	public function _common_query($params = NULL)
 	{
 		parent::_common_query();
 		$this->db->order_by('precedence asc');
@@ -117,10 +151,10 @@ class Fuel_categories_model extends Base_module_model {
 
 }
 
+
 class Fuel_category_model extends Base_module_record {
 
-	// contains all the modules that have a foreign key relationship
-	public $_belongs_to = array();
+	public $_belongs_to = array(); // contains all the modules that have a foreign key relationship
 	
 	// --------------------------------------------------------------------
 	
@@ -141,7 +175,7 @@ class Fuel_category_model extends Base_module_record {
 		$belongs_to = array();
 
 		// loop through all the modules to check for foreign_key relationships
-		unset($modules['categories'], $modules['tags']);
+		unset($modules['categories']);
 		foreach($modules as $module)
 		{
 			//grab each model
@@ -192,6 +226,26 @@ class Fuel_category_model extends Base_module_record {
 		}
 		return FALSE;
 	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Find the children
+	 *
+	 * @access	public
+	 * @param	mixed where conditions
+	 * @param	string	the order by of the query (optional)
+	 * @param	int		the number of records to limit in the results (optional)
+	 * @param	int		the offset value for the results (optional)
+	 * @return	mixed
+	 */	
+	public function get_children($where = array(), $order = NULL, $limit = NULL, $offset = NULL)
+	{
+		$where['parent_id'] = $this->id;
+		$children = $this->_parent_model->find_all($where, $order, $limit, $offset);
+		return $children;
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**

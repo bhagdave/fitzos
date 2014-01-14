@@ -8,8 +8,8 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
  */
@@ -23,7 +23,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/general/configuration
+ * @link		http://docs.getfuelcms.com/general/configuration
  */
 
 /*
@@ -120,13 +120,46 @@ $config['ck_editor_settings'] = array(
 	'toolbarCanCollapse' => FALSE,
 );
 
+// an associative array of objects to attach to the fuel object
+$config['attach'] = array();
+
+
+/*
+|--------------------------------------------------------------------------
+| Language settings 
+|--------------------------------------------------------------------------
+*/
+
 // languages for pages. The key is saved to the page variables
 $config['languages'] = array(
 						'english' => 'English',
 						);
 
-// an associative array of objects to attach to the fuel object
-$config['attach'] = array();
+// specifies the method in which to look for pages with different languages.
+// values can be "segment", "query_string" or "both"
+$config['language_mode'] = 'segment';
+
+// append the current language value to the site URL automatically
+$config['add_language_to_site_url'] = FALSE;
+
+// The name of the query string parameter to use for setting the language
+$config['language_query_str_param'] = 'lang';
+
+// The name of the cookie to hold the currently selected language. One will be generated if left blank
+$config['language_cookie_name'] = '';
+
+// default is 2 years
+$config['language_cookie_exp'] = '63072000';
+
+// use cookies to remember a selected language
+$config['language_use_cookies'] = TRUE;
+
+// will check the user agent during language detection
+$config['language_detect_user_agent'] = '';
+
+// the default language to use 
+$config['language_default_option'] = NULL;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -164,6 +197,7 @@ $config['assets_upload_max_height']  = '768';
 
 
 $config['fuel_javascript'] = array(
+/*
 	'jquery/plugins/jquery-ui-1.8.17.custom.min',
 	'jquery/plugins/jquery.easing',
 	'jquery/plugins/jquery.bgiframe',
@@ -172,7 +206,7 @@ $config['fuel_javascript'] = array(
 	'jquery/plugins/jqModal',
 	'jquery/plugins/jquery.checksave',
 	'jquery/plugins/jquery.form',
-	'jquery/plugins/jquery.treeview.min',
+	'jquery/plugins/jquery.treeview',
 	'jquery/plugins/jquery.serialize',
 	'jquery/plugins/jquery.cookie',
 	'jquery/plugins/jquery.supercookie',
@@ -181,12 +215,23 @@ $config['fuel_javascript'] = array(
 	'jquery/plugins/jquery.simpletab.js',
 	'jquery/plugins/jquery.tablednd.js',
 	'jquery/plugins/jquery.placeholder',
+	'jquery/plugins/jquery.selso',
+	'jquery/plugins/jquery.disable.text.select.pack',
+	'jquery/plugins/jquery.supercomboselect',
+	'jquery/plugins/jquery.MultiFile',
+	'fuel/linked_field_formatters',
+	'jquery/plugins/jquery.numeric',
+	'jquery/plugins/jquery.repeatable',
 
 	// NASTY Chrome JS bug...
 	// http://stackoverflow.com/questions/10314992/chrome-sometimes-calls-incorrect-constructor
 	// http://stackoverflow.com/questions/10251272/what-could-cause-this-randomly-appearing-error-inside-jquery-itself
 	'jquery/plugins/chrome_pushstack_fix.js',
-	'fuel/global',
+	'jqx/plugins/util.js',
+	'fuel/global',*/
+
+
+	'fuel/fuel.min'
 );
 
 
@@ -196,6 +241,10 @@ $config['fuel_css'] = array();
 // allow for asset optimization. Requires that all module folders have a writable assets/cache folder
 // values can be TRUE, FALSE, inline, gzip, whitespace, or combine. See the config/asset.php file for more info
 $config['fuel_assets_output'] = FALSE;
+
+// set this value to the file permission that will be applied with chmod() after a file gets uploaded
+// value should be a unix file permission integer (i.e. 0755)
+$config['set_upload_file_perms'] = FALSE;
 
 
 /*
@@ -211,7 +260,7 @@ $config['offline'] = FALSE;
 $config['restrict_to_remote_ip'] = array();
 
 // restrict fuel webhooks like the migrate functionality to only certain IP address (can be string or an array of IP addresses)
-$config['webhook_romote_ip'] = array();
+$config['webhook_remote_ip'] = array();
 
 // default password to alert against
 $config['default_pwd'] = 'admin';
@@ -228,7 +277,7 @@ $config['seconds_to_unlock'] = 60;
 // If you set a dev password, the site will require a password to view
 $config['dev_password'] = '';
 
-// will auto search view files. 
+// will auto search view files. The max_page_params config can also be used for this as well
 // If the URI is about/history and the about/history view does not exist but about does, it will render the about page
 $config['auto_search_views'] = FALSE;
 
@@ -247,17 +296,8 @@ $config['module_sanitize_funcs'] = array(
 |--------------------------------------------------------------------------
 */
 
-// specifies which modules are allowed to be used in the FUEL admin
-$config['modules_allowed'] = array(
-	'user_guide',
-	'blog',
-	'backup',
-	'page_analysis',
-	'google_keywords',
-	'validate',
-	'tester',
-	'cronjobs'
-);
+// specifies which modules are allowed to be used in the FUEL admin (e.g. 'user_guide', 'blog', 'backup'...)
+$config['modules_allowed'] = array();
 
 // site... Dashboard will always be there
 $config['nav']['site'] = array(
@@ -356,7 +396,15 @@ $config['auto_page_navigation_group_id'] = 1;
 $config['page_uri_prefix'] = '';
 
 // view the page from the admin in a new window or within a modal window
-$config['view_in_new_window'] = FALSE;
+$config['view_in_new_window'] = TRUE;
+
+// runs the parsing process twice for pages created in the CMS which allows
+// for variables to be set from within blocks and layout fields and can
+// bubble up to the layout view file (takes slightly longer to render
+// if caching is turned off). Valid values are TRUE, FALSE, or 'AUTO' which
+// will be activated if fuel_set_var is called from within a block or page
+// layout variable. This can also be set as a property of a layout object
+$config['double_parse'] = FALSE;
 
 
 /*
@@ -378,6 +426,7 @@ $config['generate'] = array(
 										'config/{module}_routes.php',
 										'controllers/{module}_module.php',
 										'helpers/{module}_helper.php',
+										'install/install.php',
 										'libraries/Fuel_{module}.php',
 										'language/english/{module}_lang.php',
 										'models/',

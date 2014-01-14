@@ -8,8 +8,8 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
  */
@@ -25,7 +25,7 @@
  * @subpackage	Helpers
  * @category	Helpers
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/helpers/validator_helper
+ * @link		http://docs.getfuelcms.com/helpers/validator_helper
  */
 
 
@@ -43,7 +43,7 @@ function required($var)
 	if (is_string($var))
 	{
 		$var = trim($var);
-		if (!empty($var)) 
+		if ($var !== '')  
 		{
 			return TRUE;
 		} 
@@ -105,11 +105,14 @@ function has_one_of_these($args = null)
  * @param	string	string containing email address
  * @return	boolean
  */
-function valid_email($email)
+// to prevent issue with email helpers function
+if ( ! function_exists('valid_email'))
 {
-    return ( ! preg_match("/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix", $email)) ? FALSE : TRUE;
-}
- 
+	function valid_email($email)
+	{
+	    return ( ! preg_match("/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix", $email)) ? FALSE : TRUE;
+	}
+} 
 // --------------------------------------------------------------------
 
 /**
@@ -640,9 +643,8 @@ function display_errors_js($ERRORS = NULL)
 	{
 		$GLOBALS['__ERRORS_JS__'] = 0;
 	}
-	$str = "<script language=\"JavaScript\" type=\"text/javascript\">\n";
-	$str .= "// <![CDATA[\n";
-	$str .= "// exception reporting
+	$str = "<script>\n";
+	$str .= "
 	function displayErrors".$GLOBALS['__ERRORS_JS__']."() {
 		var msg = \"\";\n";
 	if(!isset($ERRORS) && defined('GLOBAL_ERRORS'))
@@ -684,17 +686,12 @@ function display_errors_js($ERRORS = NULL)
 		}
 	}
 	  var oldonload = window.onload;
-	  if (typeof window.onload != 'function') {
-	    window.onload = func;
-	  } else {
 	    window.onload = function() {
 	      if (oldonload) {
 	        oldonload();
 	      }
 	      setTimeout(displayErrors".$GLOBALS['__ERRORS_JS__'].", 0);
-	    }
-	  }
-	}\n;";
+	    }\n";
 	$str .= "// ]]>\n";
 	$str .= "</script>\n";
 	$GLOBALS['__ERRORS_JS__']++;

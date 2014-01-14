@@ -8,8 +8,8 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
  */
@@ -23,7 +23,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_blocks
+ * @link		http://docs.getfuelcms.com/libraries/fuel_blocks
  */
 
 // --------------------------------------------------------------------
@@ -44,6 +44,7 @@ class Fuel_blocks extends Fuel_module {
 	<ul>
 		<li><strong>view</strong> - the name of the view block file. Also can be the first parameter of the method</li>
 		<li><strong>vars</strong>: an array of variables to pass to the block. Also can be the second parameter of the method.</li>
+		<li><strong>scope</strong>: a string value used for placing the variables into a certain scope to prevent conflict with other loaded variables. Default behavior will load variables in to a global context. The value of TRUE will generate one for you.</li>
 		<li><strong>view_string</strong> - a string variable that represents the block</li>
 		<li><strong>model</strong> - the name of a model to automatically load for the block</li>
 		<li><strong>find</strong> - the name of the find method to run on the loaded model</li>
@@ -58,7 +59,7 @@ class Fuel_blocks extends Fuel_module {
 		<li><strong>editable</strong>: css class styles to apply to menu items... can be a nested array</li>
 		<li><strong>parse</strong>: determines whether to parse the contents of the block. The default is set to 'auto'</li>
 		<li><strong>cache</strong>: determines whether to cache the block. Default is false</li>
-		<li><strong>mode</strong>: explicitly will look in either the </li>
+		<li><strong>mode</strong>: explicitly will look in either the CMS or the views/_blocks folder</li>
 		<li><strong>module</strong>: the name of the module to look in for the block</li>
 		<li><strong>language</strong>: the language version to use for the block. Must be a value specified found in the 'languages' options in the FUEL configuration</li>
 		<li><strong>use_default</strong>: determines whether to find a non-language specified version of a block with the same name if the specified language version is not available in the CMS</li>
@@ -67,9 +68,10 @@ class Fuel_blocks extends Fuel_module {
 	 * @param	mixed	Array of parameters
 	 * @param	array	Array of variables
 	 * @param	boolean	Determines whether to check the CMS for the block or not (alternative to using the "mode" parameter)
+	 * @param	boolean	Determines whether to scope the variables. A string can also be passed otherwise the scope value will be created for you
 	 * @return	string
 	 */
-	function render($params, $vars = array(), $check_db = TRUE)
+	public function render($params, $vars = array(), $check_db = TRUE, $scope = NULL)
 	{
 		$this->CI->load->library('parser');
 
@@ -88,6 +90,7 @@ class Fuel_blocks extends Fuel_module {
 						'editable' => TRUE,
 						'parse' => 'auto',
 						'vars' => array(),
+						'scope' => $scope,
 						'cache' => FALSE,
 						'mode' => 'auto',
 						'module' => '',
@@ -167,9 +170,18 @@ class Fuel_blocks extends Fuel_module {
 		{
 			$is_module_block = FALSE;
 			$view_path = 'views/_blocks/';
+
 			if ( ! empty($p['module']) AND defined('MODULES_PATH'))
 			{
-				$view_path = MODULES_PATH.$p['module'].'/'.$view_path;
+				if ($p['module'] == 'app' OR $p['module'] == 'application')
+				{
+					$view_path = APPPATH.$view_path;
+				}
+				else
+				{
+					$view_path = MODULES_PATH.$p['module'].'/'.$view_path;	
+				}
+				
 				$is_module_block = TRUE;
 			}
 			else
@@ -203,7 +215,7 @@ class Fuel_blocks extends Fuel_module {
 			}
 
 			$p['mode'] = strtolower($p['mode']);
-			
+
 			// only check database if the fuel_mode does NOT equal 'views, the "only_views" parameter is set to FALSE and the view name does not begin with an underscore'
 			if ($check_db AND (($p['mode'] == 'auto' AND $this->mode() != 'views') OR $p['mode'] == 'cms') AND substr($p['view'], 0, 1) != '_')
 			{
@@ -238,16 +250,18 @@ class Fuel_blocks extends Fuel_module {
 					$vars['CI'] =& $this->CI;
 
 					// pass along these since we know them... perhaps the view can use them
-					$view = ($is_module_block) ? $this->CI->load->module_view($p['module'], '_blocks/'.$p['view'], $vars, TRUE) : $this->CI->load->view('_blocks/'.$p['view'], $vars, TRUE);
+					$view = ($is_module_block) ? $this->CI->load->module_view($p['module'], '_blocks/'.$p['view'], $vars, TRUE, $p['scope']) : $this->CI->load->view('_blocks/'.$p['view'], $vars, TRUE, $p['scope']);
 				}
 			}
 			else if (file_exists($view_file))
 			{
+
 				// pass in reference to global CI object
 				$vars['CI'] =& $this->CI;
 
 				// pass along these since we know them... perhaps the view can use them
-				$view = ($is_module_block) ? $this->CI->load->module_view($p['module'], '_blocks/'.$p['view'], $vars, TRUE) : $this->CI->load->view('_blocks/'.$p['view'], $vars, TRUE);
+				$view = ($is_module_block) ? $this->CI->load->module_view($p['module'], '_blocks/'.$p['view'], $vars, TRUE, $p['scope']) : $this->CI->load->view('_blocks/'.$p['view'], $vars, TRUE, $p['scope']);
+
 			}
 		}
 
@@ -272,7 +286,7 @@ class Fuel_blocks extends Fuel_module {
 	 * @param	boolean	Determines whether to sanitize the block by applying the php to template syntax function before uploading
 	 * @return	string
 	 */
-	function import($block, $sanitize = TRUE)
+	public function import($block, $sanitize = TRUE)
 	{
 		$this->CI->load->helper('file');
 		
@@ -323,7 +337,7 @@ class Fuel_blocks extends Fuel_module {
 	 * @param	boolean	Determines whether to recursively look for files (optional)
 	 * @return	array
 	 */
-	function options_list($where = array(), $dir_folder = '', $dir_filter = '^_(.*)|\.html$', $order = TRUE, $recursive = TRUE)
+	public function options_list($where = array(), $dir_folder = '', $dir_filter = '^_(.*)|\.html$', $order = TRUE, $recursive = TRUE)
 	{
 		$model = $this->model();
 		return $model->options_list_with_views($where, $dir_folder, $dir_filter, $order, $recursive);
@@ -337,7 +351,7 @@ class Fuel_blocks extends Fuel_module {
 	 * @access	public
 	 * @return	boolean
 	 */	
-	function mode()
+	public function mode()
 	{
 		$fuel_mode = $this->fuel->config('fuel_mode');
 		if (is_array($fuel_mode))

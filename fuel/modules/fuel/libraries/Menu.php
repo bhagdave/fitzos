@@ -8,8 +8,8 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
 
@@ -30,7 +30,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/menu
+ * @link		http://docs.getfuelcms.com/libraries/menu
  */
 
 class Menu {
@@ -122,7 +122,7 @@ class Menu {
 	 * @param	array
 	 * @return	void
 	 */
-	function set_params($params)
+	public function set_params($params)
 	{
 		if (is_array($params) AND count($params) > 0)
 		{
@@ -398,6 +398,19 @@ class Menu {
 	public function render_array($items, $active = NULL, $parent_id = NULL)
 	{
 		return $this->render($items, $active, $parent_id, 'array');
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Returns the active items in the navigation. A render must be performed first
+	 *
+	 * @access	public
+	 * @return	array
+	 */
+	public function active_items()
+	{
+		return $this->_active_items;
 	}
 
 	// --------------------------------------------------------------------
@@ -947,9 +960,9 @@ class Menu {
 					$css_classes[] = $this->active_class;
 				}
 
-		if (!empty($this->styles[$level][$i]))
+		if (!empty($this->styles[$level]))
 		{
-			if (is_array($this->styles[$level]))
+			if (is_array($this->styles[$level]) AND !empty($this->styles[$level][$i]))
 			{
 				$css_classes[] = $this->styles[$level][$i];
 			}
@@ -957,7 +970,6 @@ class Menu {
 			{
 				$css_classes[] = $this->styles[$level];
 			}
-			
 		}
 
 		if (!empty($css_classes))

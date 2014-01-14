@@ -77,6 +77,67 @@ myMarkItUpSettings = {
 	]
 }
 
+myMarkItUpMarkdownSettings = {
+	root: 'skins/simple/',
+	nameSpace:           "html", // Useful to prevent multi-instances CSS conflict
+    previewParserPath:  "fuel/preview", // will be __FUEL_PATH__ + "/preview" after custom field renders
+	previewInWindow: true,
+	previewParserVar: 'data',
+	onShiftEnter:       {keepDefault:false, openWith:'\n\n'},
+	markupSet:  [ 	
+		{name:markitupLanguage('b'), key:'B', className:'bold', openWith:'**', closeWith:'**' },
+		{name:markitupLanguage('i'), key:'I', className:'italic', openWith:'_', closeWith:'_' },
+		{separator:'---------------' },
+        {name:markitupLanguage('h1'), className:'h1', key:'1', closeWith:function(markItUp) { return myMarkItUpSettings.markdownTitle(markItUp, '=') }, placeHolder:markitupLanguage('placeholder_headings') },
+        {name:markitupLanguage('h2'), className:'h2', key:'2', closeWith:function(markItUp) { return myMarkItUpSettings.markdownTitle(markItUp, '-') }, placeHolder:markitupLanguage('placeholder_headings') },
+        {name:markitupLanguage('h3'), className:'h3',key:'3', openWith:'### ', placeHolder:markitupLanguage('placeholder_headings') },
+        {name:markitupLanguage('h4'), className:'h4', key:'4', openWith:'#### ', placeHolder:markitupLanguage('placeholder_headings') },
+        {separator:'---------------' },
+		{name:markitupLanguage('ol'), className:'ol', key:'', openWith:function(markItUp) {
+            return markItUp.line+'. ';
+        } },
+		{name:markitupLanguage('ul'), className:'ul', key:'', openWith:'- ' },
+		{name:markitupLanguage('blockquote'), className:'blockquote', key:'', openWith:'> ' },
+		{name:markitupLanguage('hr'), className:'hr', key:'', openWith:'***'},
+		{separator:'---------------' },
+		/*{name:'Image', className:'image', key:'I', replaceWith:'<img src="{img_path}\[![Source:!:]!]\" alt="[![Alternative text]!]" />' },*/
+		{name:markitupLanguage('img'), className: 'image', key: 'I', replaceWith: 
+			function(marketItup){ 
+				myMarkItUpSettings.markItUpImageInsert(marketItup); 
+				return false;
+			}
+		},
+		/*{name:markitupLanguage('link'), className:'link', key:'L', openWith:'<a href="{site_url(\'[![' + markitupLanguage('link') + ':!:]!]\')}" target="[![' + markitupLanguage('target') + ':!:_self]!]">', closeWith:'</a>', placeHolder:markitupLanguage('placeholder_link')},*/
+		{name:markitupLanguage('link'), className: 'link', key: 'L', replaceWith: 
+			function(marketItup){ 
+				myMarkItUpSettings.markItUpLinkInsert(marketItup); 
+				return false;
+			}
+		},
+
+		{name:markitupLanguage('mailto'), className:'mailto', key:'M', openWith:'{safe_mailto(', closeWith:')}', placeHolder:markitupLanguage('placeholder_email') },
+		{name:markitupLanguage('php'), className:'fuel_var', key:'', openWith:'{$[![' + markitupLanguage('php') + ':!:]!]', closeWith:'}', placeHolder:'' },
+		{name:markitupLanguage('clean'), className:'clean', replaceWith:function(markitup) { return markitup.selection.replace(/<(.*?)>/g, "") } },		
+		{separator:'---------------' },
+		//{name:markitupLanguage('preview'), className:'preview',  call:'preview'},
+		{name: markitupLanguage('fullscreen'), className: 'maximize', key: 'F', replaceWith: 
+			function(marketItup){ 
+				myMarkItUpSettings.markItUpFullScreen(marketItup); 
+				return false;
+			}
+		},
+	]
+}
+
+	//
+myMarkItUpSettings.markdownTitle = function(markItUp, char) {
+    heading = '';
+    n = $.trim(markItUp.selection||markItUp.placeHolder).length;
+    for(i = 0; i < n; i++) {
+        heading += char;
+    }
+    return '\n'+heading+'\n';
+}
 myMarkItUpSettings.markItUpFullScreen = function (markItUp, display){
 	
 	var origTextarea = jQuery(markItUp.textarea);
@@ -155,6 +216,11 @@ myMarkItUpSettings.markItUpFullScreen = function (markItUp, display){
 			minimize();
 			return false;
 		})
+
+		jQuery('.jqmOverlay').click(function(){
+			minimize();
+			return false;
+		})
 	} else {
 	//	minimize();
 	}
@@ -178,7 +244,7 @@ myMarkItUpSettings.markItUpImageInsert = function (markItUp){
 	var isImgSelected = selected.match(/\<img[^>]+src=[^>]+>/);
 
 	// if anchor selected then we start grabbing values
-	var width, height, alt, align, className;
+	var width, height, alt, align, className, imgFolder, imgOrder;
 
 	if (isImgSelected){
 
@@ -199,35 +265,46 @@ myMarkItUpSettings.markItUpImageInsert = function (markItUp){
 		align = myMarkItUpSettings.parseAttrs(selected, 'align');
 		className = myMarkItUpSettings.parseAttrs(selected, 'class');
 
-
 		// set title
-		if (isAnchorSelected && isAnchorSelected.length >= 1) {
-			selected = isAnchorSelected[1];
+		if (isImgSelected && isImgSelected.length >= 1) {
+			selected = isImgSelected[1];
 		}
 	}
-	myMarkItUpSettings.displayAssetInsert(selected, {width: width, height: height, alt: alt, align: align, className: className}, function(replace){
+	imgFolder = jQuery(markItUp.textarea).attr('data-img_folder');
+	imgOrder = jQuery(markItUp.textarea).attr('data-img_order');
+
+	myMarkItUpSettings.displayAssetInsert(escape(selected), {width: width, height: height, alt: alt, align: align, className: className, imgFolder: imgFolder, imgOrder: imgOrder}, function(replace){
 		jQuery(markItUp.textarea).trigger('insertion', [{replaceWith: replace}]);
 	});
 }
 
 
 myMarkItUpSettings.displayAssetInsert = function (selected, attrs, callback){
-	var url = jqx.config.fuelPath + '/assets/select/images?nocache=' + new Date().getTime();
+	var folder = 'images';
+	var imgFolder = attrs['imgFolder'];
+	if (imgFolder){
+		if (imgFolder.substr(0, 1) != '/'){
+			folder += '/';
+		}
+		folder += imgFolder;
+	}
+	var url = jqx.config.fuelPath + '/assets/select/' + folder + '?nocache=' + new Date().getTime();
 	if (selected) url += '&selected=' + escape(selected);
 	url += '&width=' + ((attrs.width) ? attrs.width : '');
 	url += '&height=' + ((attrs.height) ? attrs.height : '');
 	url += '&alt=' + ((attrs.alt) ? escape(attrs.alt) : '');
 	url += '&align=' + ((attrs.align) ? attrs.align : '');
 	url += '&class=' + ((attrs.className) ? attrs.className : '');
-
+	url += '&order=' + ((attrs.imgOrder) ? attrs.imgOrder : '');
+	var loaded = false;
 	var html = '<iframe src="' + url +'" id="asset_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; height: 500px; width: 850px;"></iframe>';
 	$modal = fuel.modalWindow(html, 'inline_edit_modal', false);
 	
 	$modal.find('iframe#asset_inline_iframe').bind('load', function(){
-
+		if (loaded) return;
 		// to prevent double loading issue
-		$(this).unbind();
-
+		//$(this).unbind();
+		var loaded = false;
 		var iframeContext = this.contentDocument;
 		$assetSelect = jQuery('#asset_select', iframeContext);
 		$assetPreview = jQuery('#asset_preview', iframeContext);
@@ -246,6 +323,9 @@ myMarkItUpSettings.displayAssetInsert = function (selected, attrs, callback){
 				var isHTTP = false; // for later
 				var replace = '<img src="';
 				if (!isHTTP) replace += '{img_path(\'';
+				if (imgFolder && imgFolder.length){
+					replace += imgFolder + '/';	
+				}
 				replace += selectedVal;
 
 				if (!isHTTP) replace += '\')}';
@@ -274,6 +354,7 @@ myMarkItUpSettings.displayAssetInsert = function (selected, attrs, callback){
 			}
 			return false;
 		});
+		loaded = true;
 	});
 
 }
@@ -285,7 +366,7 @@ myMarkItUpSettings.markItUpLinkInsert = function (markItUp){
 	var isAnchorSelected = selected.match(/\<a[^>]+href=[^>]+>(.*)<\/a>/);
 
 	// if anchor selected then we start grabbing values
-	var input, target, title, className;
+	var input, target, title, className, linkPdfs;
 
 	if (isAnchorSelected){
 
@@ -309,8 +390,8 @@ myMarkItUpSettings.markItUpLinkInsert = function (markItUp){
 			selected = isAnchorSelected[1];
 		}
 	}
-
-	myMarkItUpSettings.displayLinkEditWindow(selected, {input: input, target: target, title: title, className: className}, function(replace){
+	linkPdfs = jQuery(markItUp.textarea).attr('data-link_pdfs');
+	myMarkItUpSettings.displayLinkEditWindow(escape(selected), {input: input, target: target, title: title, className: className, linkPdfs: linkPdfs}, function(replace){
 		jQuery(markItUp.textarea).trigger('insertion', [{replaceWith: replace}]);
 	})
 }
@@ -322,7 +403,7 @@ myMarkItUpSettings.displayLinkEditWindow = function(selected, attrs, callback){
 	url += '&target=' + ((attrs.target) ? attrs.target : '');
 	url += '&title=' + ((attrs.title) ? attrs.title : '');
 	url += '&class=' + ((attrs.className) ? attrs.className : '');
-
+	url += '&pdfs=' + ((attrs.linkPdfs) ? attrs.linkPdfs : '');
 
 	var html = '<iframe src="' + url +'" id="url_inline_iframe" class="inline_iframe" frameborder="0" scrolling="no" style="border: none; width: 850px;"></iframe>';
 	$modal = fuel.modalWindow(html, 'inline_edit_modal', true);
@@ -347,9 +428,19 @@ myMarkItUpSettings.displayLinkEditWindow = function(selected, attrs, callback){
 				var selectedUrl = ($input.length && $input.val().length) ? $input.val() : $urlSelect.val();
 				var isHTTP = (selectedUrl.match(/^\w+:\/\//)) ? true : false;
 				var replace = '<a href="';
-				if (!isHTTP) replace += '{site_url(\'';
-				replace += selectedUrl;
-				if (!isHTTP) replace += '\')}';
+				
+				if (selectedUrl.substr(0, 1) != '{') {
+					if (selectedUrl.match(/\.pdf$/)){
+						replace += '{pdf_path(\'' + selectedUrl + '\')}';
+					} else {
+						if (!isHTTP) replace += '{site_url(\'';
+						replace += selectedUrl;
+						if (!isHTTP) replace += '\')}';
+					}
+				} else {
+					replace += selectedUrl;
+				}
+
 				replace += '"';
 				if ($target.length && ($target.val().length != '' && $target.val() != '_self')){
 					replace += ' target="' + $target.val() + '"';

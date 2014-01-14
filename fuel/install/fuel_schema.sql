@@ -1,16 +1,3 @@
-# ************************************************************
-# Sequel Pro SQL dump
-# Version 3408
-#
-# http://www.sequelpro.com/
-# http://code.google.com/p/sequel-pro/
-#
-# Host: localhost (MySQL 5.5.9)
-# Database: fuel_widgicorp
-# Generation Time: 2012-04-24 05:22:21 +0000
-# ************************************************************
-
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -160,8 +147,6 @@ CREATE TABLE `fuel_pages` (
 # Dump of table fuel_permissions
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `fuel_permissions`;
-
 CREATE TABLE `fuel_permissions` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `description` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -206,7 +191,8 @@ VALUES
   (NULL,'Site Documentation','site_docs','yes'),
   (NULL,'Users','users','yes'),
   (NULL,'Permissions','permissions','yes'),
-  (NULL,'Cache','cache','yes'),
+  (NULL,'Manage','manage','yes'),
+  (NULL,'Cache','manage/cache','yes'),
   (NULL,'Logs','logs','yes'),
   (NULL,'Settings','settings','yes'),
   (NULL,'Generate Code','generate','yes');
@@ -225,7 +211,9 @@ CREATE TABLE `fuel_relationships` (
   `candidate_key` int(11) NOT NULL,
   `foreign_table` varchar(100) DEFAULT NULL,
   `foreign_key` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `candidate_table` (`candidate_table`,`candidate_key`),
+  KEY `foreign_table` (`foreign_table`,`foreign_key`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 

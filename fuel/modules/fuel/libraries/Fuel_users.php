@@ -8,8 +8,8 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
  */
@@ -23,7 +23,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_users
+ * @link		http://docs.getfuelcms.com/libraries/fuel_users
  */
 
 // --------------------------------------------------------------------
@@ -32,7 +32,7 @@ class Fuel_users extends Fuel_module {
 
 	protected $module = 'users';
 
-	function initialize($params = array())
+	public function initialize($params = array())
 	{
 		parent::initialize($params);
 	}
@@ -47,7 +47,7 @@ class Fuel_users extends Fuel_module {
 	 * @param	string
 	 * @return	string
 	 */
-	function get($user_id, $return_type = NULL)
+	public function get($user_id, $return_type = NULL)
 	{
 		if (is_int($user_id))
 		{
@@ -55,7 +55,7 @@ class Fuel_users extends Fuel_module {
 		}
 		else
 		{
-			$user = $this->model()->find_one('(user_name = "'.$user_id.' OR email = "'.$user_id.'")', 'id', $return_type);
+			$user = $this->model()->find_one('(user_name = "'.$user_id.'" OR email = "'.$user_id.'")', 'id', $return_type);
 		}
 		return $user;
 	}
@@ -117,22 +117,11 @@ class Fuel_users extends Fuel_module {
 	 * @param	mixed
 	 * @return	string
 	 */
-	function reset_password($email)
+	public function reset_password($email)
 	{
 		// make sure user exists when saving
 		$model = &$this->model();
-		$model->add_validation('email', array($model, 'user_exists'), 'User does not exist', '{email}');
-		$user = $model->find_one('email = "'.$email.'"');
-		if (isset($user->id))
-		{
-			$reset_key = random_string('alnum', 8);
-			$user->reset_key = $reset_key;
-			if ($user->save())
-			{
-				return $reset_key;
-			}
-		}
-		return FALSE;
+		return $model->reset_password($email);
 	}
 	
 	// --------------------------------------------------------------------
@@ -144,7 +133,7 @@ class Fuel_users extends Fuel_module {
 	 * @param	mixed
 	 * @return	string
 	 */
-	function user_exists($email)
+	public function user_exists($email)
 	{
 		return $this->record_exists(array('email' => $email));
 	}
@@ -158,12 +147,12 @@ class Fuel_users extends Fuel_module {
 	 * @param	mixed
 	 * @return	string
 	 */
-	function send_email($user_id)
+	public function send_email($user_id)
 	{
 		$user = $this->get($user_id, 'array');
 		
 		$params['to'] = $user['email'];
-		$params['message'] = lang('new_user_email', $user['user_name'], $user['password']);
+		$params['message'] = lang('new_user_email', site_url('fuel/login'), $user['user_name'], $user['password']);
 		$params['subject'] = lang('new_user_email_subject');
 		$params['use_dev_mode'] = FALSE; // must be set for emails to always go
 

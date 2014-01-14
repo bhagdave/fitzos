@@ -21,14 +21,17 @@ class Fuel_cache_test extends Fuel_test_base {
 	
 	public function test_create_id()
 	{
-		// check with no location value passed... should be the current URI location
-		// $test = $this->fuel->cache->create_id();
-		// $expected = uri_path();
-		// $this->run($test, $expected, 'Test creating cache ID with NO location parameter passed');
+		// configure language to only be one
+		$this->fuel->language->set_options(array('english' => 'English'));
 
-		// check with no location value passed
+		// check with no location value passed... should be the current URI location
+		$test = $this->fuel->cache->create_id();
+		$expected = 'fuel.tools.tester.run.english';
+		$this->run($test, $expected, 'Test creating cache ID with NO location parameter passed');
+
+		// check with location value passed
 		$test = $this->fuel->cache->create_id('test/method');
-		$expected = 'test.method';
+		$expected = 'test.method.english';
 		$this->run($test, $expected, 'Test creating cache ID WITH a location parameters passed');
 	}
 
@@ -90,18 +93,18 @@ class Fuel_cache_test extends Fuel_test_base {
 		$location = 'test-cache';
 		$page = $this->fuel->pages->create($location);
 		$page->layout = 'none';
-		$page_vars = array('body' => 'This is a test {date()}', 'blocks' => FALSE);
+		$page_vars = array('body' => 'This is a test {date("Y-m-d")}', 'blocks' => FALSE);
 		
-//		$page->add_variables($page_vars);
+		$page->add_variables($page_vars);
 		$page->save();
 		
 		// now load the page to cache it
 		$page_contents = $this->load_page($location);
 
-		$test = $this->fuel->cache->is_cached($location, $this->fuel->config('page_cache_group'));
+		$cache_id = $this->fuel->cache->create_id($location);
+		$test = $this->fuel->cache->is_cached($cache_id, $this->fuel->config('page_cache_group'));
 		$expected = TRUE;
 		$this->run($test, $expected, 'Test that pages are being cached');
-
 
 		// check compiled folder to see how if any files exists
 		$dwoo = $this->CI->config->item('cache_path').'dwoo/compiled/';

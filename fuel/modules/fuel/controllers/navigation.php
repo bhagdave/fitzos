@@ -3,12 +3,12 @@ require_once('module.php');
 
 class Navigation extends Module {
 	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 	}
 	
-	function upload()
+	public function upload()
 	{
 		$this->load->library('form_builder');
 		$this->load->module_model(FUEL_FOLDER, 'fuel_navigation_groups_model');
@@ -24,8 +24,8 @@ class Navigation extends Module {
 				$error = FALSE;
 				$file_info = $_FILES['file'];
 				$params['file_path'] = $file_info['tmp_name'];
-				$params['var'] = $this->input->post('variable') ? $this->input->post('variable') : 'nav';
-				$params['language'] = $this->input->post('language');
+				$params['var'] = $this->input->post('variable') ? $this->input->post('variable', TRUE) : 'nav';
+				$params['language'] = $this->input->post('language', TRUE);
 				
 				if (!$this->fuel->navigation->upload($params))
 				{
@@ -60,7 +60,7 @@ class Navigation extends Module {
 
 		$fields['group_id'] = array('type' => 'select', 'options' => $nav_groups, 'module' => 'navigation_group');
 		$fields['file'] = array('type' => 'file', 'accept' => '');
-		$fields['variable'] = array('label' => 'Variable', 'value' => (($this->input->post('variable')) ? $this->input->post('variable') : 'nav'), 'size' => 10);
+		$fields['variable'] = array('label' => 'Variable', 'value' => (($this->input->post('variable')) ? $this->input->post('variable', TRUE) : 'nav'), 'size' => 10);
 		$fields['language'] = array('type' => 'select', 'options' => $this->fuel->language->options(), 'first_option' => lang('label_select_one'));
 		$fields['clear_first'] = array('type' => 'enum', 'options' => array('yes' => 'yes', 'no' => 'no'));
 		$fields['__fuel_module__'] = array('type' => 'hidden');
@@ -86,7 +86,55 @@ class Navigation extends Module {
 		$this->fuel->admin->render('upload', $vars, Fuel_admin::DISPLAY_NO_ACTION);
 	}	
 	
-	function parents($group_id = NULL, $parent_id = NULL, $id = NULL)
+	public function download()
+	{
+		if (!empty($_POST['group_id']))
+		{
+			$this->load->helper('download');
+			$where['group_id'] = $this->input->post('group_id', TRUE);
+			$where['published'] = 'yes';
+			$data = $this->model->find_all_array_assoc('nav_key', $where, 'parent_id asc, precedence asc');
+			$var = '$nav';
+			$str = "<?php \n";
+			foreach($data as $key => $val)
+			{
+				// add label
+				$str .= $var."['".$key."'] = array('label' => '".$val['label']."', ";
+
+				// add location
+				if ($key != $val['location'])
+				{
+					$str .= "'location' => '".$val['location']."', ";
+				}
+
+				if (!empty($val['parent_id']))
+				{
+					$parent_data  = $this->model->find_one_array(array('id' => $val['parent_id']));
+					$str .= "'parent_id' => '".$parent_data['nav_key']."', ";
+				}
+
+				if (is_true_val($val['hidden']))
+				{
+					$str .= "'hidden' => 'yes', ";
+				}
+
+				if (!empty($val['attributes']))
+				{
+					$str .= "'attributes' => '".$val['attributes']."', ";
+				}
+
+				if (!empty($val['selected']))
+				{
+					$str .= "'selected' => '".$val['selected']."', ";
+				}
+				$str = substr($str, 0, -2);
+				$str .= ");\n";
+			}
+			force_download('nav.php', $str);
+		}
+	}
+	
+	public function parents($group_id = NULL, $parent_id = NULL, $id = NULL)
 	{
 		if (is_ajax() AND !empty($group_id))
 		{

@@ -1,7 +1,7 @@
 <?php
 class Login extends CI_Controller {
 
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 
@@ -18,6 +18,9 @@ class Login extends CI_Controller {
 
 		// change assets path to admin
 		$this->asset->assets_path = $this->fuel->config('fuel_assets_path');
+
+		// set asset output settings
+		$this->asset->assets_output = $this->fuel->config('fuel_assets_output');
 		
 		$this->lang->load('fuel');
 		$this->load->helper('ajax');
@@ -35,7 +38,7 @@ class Login extends CI_Controller {
 
 	}
 	
-	function index()
+	public function index()
 	{
 		// check if it's a password request and redirect'
 		if ($this->uri->segment(3) == 'pwd_reset')
@@ -70,7 +73,7 @@ class Login extends CI_Controller {
 			{
 				if ($this->input->post('user_name') AND $this->input->post('password'))
 				{
-					if ($this->fuel->auth->login($this->input->post('user_name'), $this->input->post('password')))
+					if ($this->fuel->auth->login($this->input->post('user_name', TRUE), $this->input->post('password', TRUE)))
 					{
 						// reset failed login attempts
 						$user_data['failed_login_timer'] = 0;
@@ -87,7 +90,7 @@ class Login extends CI_Controller {
 						
 						$forward = $this->input->post('forward');
 						$forward_uri = uri_safe_decode($forward);
-						if ($forward AND $forward_uri != fuel_uri('dashboard'))
+						if ($forward AND $forward_uri != $this->fuel->config('login_redirect'))
 						{
 							redirect($forward_uri);
 						}
@@ -118,10 +121,12 @@ class Login extends CI_Controller {
 						{
 							$this->fuel_users_model->add_error(lang('error_max_attempts', $this->fuel->config('seconds_to_unlock')));
 							$user_data['failed_login_timer'] = time();
+							$this->fuel->logs->write(lang('auth_log_account_lockout', $this->input->post('user_name', TRUE), $this->input->ip_address()), 'debug');
 						}
 						else
 						{
 							$this->fuel_users_model->add_error(lang('error_invalid_login'));
+							$this->fuel->logs->write(lang('auth_log_failed_login', $this->input->post('user_name', TRUE), $this->input->ip_address(), ($user_data['failed_login_attempts'] + 1)), 'debug');
 						}
 					}
 				}
@@ -136,14 +141,14 @@ class Login extends CI_Controller {
 		// build form
 		
 		$this->form_builder->set_validator($this->fuel_users_model->get_validation());
-		$fields['user_name'] = array('size' => 25);
-		$fields['password'] = array('type' => 'password', 'size' => 25);
+		$fields['user_name'] = array('size' => 25, 'placeholder' => 'username', 'display_label' => FALSE);
+		$fields['password'] = array('type' => 'password', 'size' => 25, 'placeholder' => 'password', 'display_label' => FALSE);
 		$fields['forward'] = array('type' => 'hidden', 'value' => fuel_uri_segment(2));
 		$this->form_builder->show_required = FALSE;
 		$this->form_builder->submit_value = lang('login_btn');
 		$this->form_builder->set_fields($fields);
 		$this->form_builder->remove_js();
-		if (!empty($_POST)) $this->form_builder->set_field_values($_POST);
+		if (!empty($_POST)) $this->form_builder->set_field_values($this->input->post(NULL, TRUE));
 		$vars['form'] = $this->form_builder->render();
 		
 		// set any errors that 
@@ -166,7 +171,7 @@ class Login extends CI_Controller {
 		$this->load->view('login', $vars);
 	}
 	
-	function pwd_reset()
+	public function pwd_reset()
 	{
 		if (!$this->fuel->config('allow_forgotten_password')) show_404();
 		$this->js_controller_params['method'] = 'add_edit';
@@ -179,9 +184,7 @@ class Login extends CI_Controller {
 				if (!empty($user['email']))
 				{
 					$users = $this->fuel->users;
-					
 					$new_pwd = $this->fuel->users->reset_password($user['email']);
-					
 					if ($new_pwd !== FALSE)
 					{
 						$url = 'reset/'.md5($user['email']).'/'.md5($new_pwd);
@@ -195,10 +198,12 @@ class Login extends CI_Controller {
 						if ($this->fuel->notification->send($params))
 						{
 							$this->session->set_flashdata('success', lang('pwd_reset'));
+							$this->fuel->logs->write(lang('auth_log_pass_reset_request', $user['email'], $this->input->ip_address()), 'debug');
 						}
 						else
 						{
 							$this->session->set_flashdata('error', lang('error_pwd_reset'));
+							$this->fuel->logs->write($this->fuel->notification->last_error(), 'debug');
 						}
 						redirect(fuel_uri('login'));
 					}
@@ -221,7 +226,7 @@ class Login extends CI_Controller {
 		
 		// build form
 		$fields['Reset Password'] = array('type' => 'section', 'label' => lang('login_reset_pwd'));
-		$fields['email'] = array('required' => TRUE, 'size' => 30);
+		$fields['email'] = array('required' => TRUE, 'size' => 30, 'placeholder' => 'email', 'display_label' => FALSE);
 		$this->form_builder->show_required = FALSE;
 		$this->form_builder->set_fields($fields);
 		$vars['form'] = $this->form_builder->render();
@@ -234,7 +239,7 @@ class Login extends CI_Controller {
 	}
 	
 	
-	function dev()
+	public function dev()
 	{
 		$this->config->set_item('allow_forgotten_password', FALSE);
 		if (!empty($_POST))
@@ -260,7 +265,7 @@ class Login extends CI_Controller {
 		$this->form_builder->show_required = FALSE;
 		$this->form_builder->submit_value = 'Login';
 		$this->form_builder->set_fields($fields);
-		if (!empty($_POST)) $this->form_builder->set_field_values($_POST);
+		if (!empty($_POST)) $this->form_builder->set_field_values($this->input->post(NULL, TRUE));
 		$vars['form'] = $this->form_builder->render();
 		$vars['notifications'] = $this->load->view('_blocks/notifications', $vars, TRUE);
 		

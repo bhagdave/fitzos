@@ -8,8 +8,8 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
  */
@@ -27,7 +27,7 @@
  * @subpackage	Helpers
  * @category	Helpers
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/helpers/asset_helper
+ * @link		http://docs.getfuelcms.com/helpers/asset_helper
  */
 
 
@@ -296,7 +296,7 @@ function jquery($version = '1.7.1', $default = 'jquery')
  * @param	array	additional parameter to include (attrs, ie_conditional, and output)
  * @return	string
  */	
-function js($path, $module = '', $options = '')
+function js($path, $module = '', $options = array())
 {
 	$CI = _get_assets();
 	return $CI->asset->js($path, $module, $options);
@@ -313,7 +313,7 @@ function js($path, $module = '', $options = '')
  * @param	array	additional parameter to include (attrs, ie_conditional, and output)
  * @return	string
  */	
-function css($path, $module = '', $options = '')
+function css($path, $module = '', $options = array())
 {
 	$CI = _get_assets();
 	return $CI->asset->css($path, $module, $options);
@@ -335,6 +335,33 @@ function swf($flash, $id, $width, $height, $options = array()){
 	$CI = _get_assets();
 	return $CI->asset->swf($flash, $id, $width, $height, $options);
 	
+}
+
+// --------------------------------------------------------------------
+
+/**
+ * Uses the "http://placehold.it" service to display images (good for mocking up sites)
+ *
+ * @access	public
+ * @param	int		width of placeholder image (optional)
+ * @param	int		height of placeholder image (optional)
+ * @param	string	text to display inside placeholder
+ * @param	string	color of placeholder
+ * @param	boolean	determines whether to wrap it in an image tag or just return the path (optional)
+ * @return	string
+ */	
+function placeholder($width = 100, $height = '', $text = '', $colors = '', $img_tag = FALSE)
+{
+	$dimentions = $width.( !empty($height) ? 'x'.$height : '');
+	$text = !empty($text) ? '&text='.urlencode($text) : '';
+	$colors = !empty($colors) ? explode(' ', $colors) : '';
+	$colors = !empty($colors) ? '/'.$colors[0].'/'.$colors[1] : '';
+	$path = 'http://placehold.it/'.$dimentions.$colors.$text;
+	if ($img_tag)
+	{
+		return '<img src="'.$path.'" alt="'.$text.'" width="'.$width.'" height="'.$height.'" />';
+	}
+	return $path;
 }
 
 // --------------------------------------------------------------------

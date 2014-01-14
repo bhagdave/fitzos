@@ -10,7 +10,7 @@
  * @package		FUEL CMS
  * @subpackage	Libraries
  * @category	Libraries
- * @link		http://www.getfuelcms.com/user_guide/libraries/cache
+ * @link		http://docs.getfuelcms.com/libraries/cache
  */
 
 class Cache
@@ -33,7 +33,7 @@ class Cache
 	 * @param	array	config preferences
 	 * @return	void
 	 */	
-	function __construct($params = array())
+	public function __construct($params = array())
 	{
 		$this->initialize($params);
 	}
@@ -50,7 +50,7 @@ class Cache
 	 * @param	array	Config preferences
 	 * @return	void
 	 */	
-	function initialize($params = array())
+	public function initialize($params = array())
 	{
 		$this->set_params($params);
 		
@@ -71,7 +71,7 @@ class Cache
 	 * @param	string	The path to the cache folder
 	 * @return	void
 	 */	
-	function set_cache_path($path)
+	public function set_cache_path($path)
 	{
 		$this->cache_path = $path;
 	}
@@ -85,7 +85,7 @@ class Cache
 	 * @param	array	Config preferences
 	 * @return	void
 	 */
-	function set_params($params)
+	public function set_params($params)
 	{
 		if (!is_array($params) OR empty($params)) return;
 
@@ -105,7 +105,7 @@ class Cache
 	 * 	@param	Cache group ID (optional)
 	 * 	@return Boolean indicating if cache available
 	 */
-	function is_cached($cache_id, $cache_group = NULL)
+	public function is_cached($cache_id, $cache_group = NULL)
 	{
 		
 		if ($this->_get_expiry($cache_id, $cache_group) > time()) return TRUE;
@@ -125,7 +125,7 @@ class Cache
 	 * 	@param	Time to live for this item (optional)
 	 * 	@return void
 	 */
-	function save($cache_id, $data, $cache_group = NULL, $ttl = NULL)
+	public function save($cache_id, $data, $cache_group = NULL, $ttl = NULL)
 	{
 		
 		if ($cache_group !== NULL)
@@ -165,7 +165,10 @@ class Cache
 		
 		fclose($f1);
 		fclose($f2);
-		
+
+		// Added by Daylight Studio 
+		@chmod($expiry_file, FILE_WRITE_MODE);
+		@chmod($cache_file, FILE_WRITE_MODE);
 	}
 	
 	/**
@@ -176,7 +179,7 @@ class Cache
 	 * 	@param	Should I check the expiry time? (optional)
 	 * 	@return The object or NULL if not available
 	 */
-	function get($cache_id, $cache_group = NULL, $skip_checking = FALSE)
+	public function get($cache_id, $cache_group = NULL, $skip_checking = FALSE)
 	{
 		
 		if (!$skip_checking && !$this->is_cached($cache_id, $cache_group)) return NULL;
@@ -196,15 +199,15 @@ class Cache
 	 * 	@param 	Cache group ID (optional)
 	 * 	@return void
 	 */
-	function remove($cache_id, $cache_group = NULL)
+	public function remove($cache_id, $cache_group = NULL)
 	{
 		
 		$file = $this->_file($cache_id, $cache_group);
 		$cache_file = $file.$this->cache_postfix;
 		$expiry_file = $file.$this->expiry_postfix;
 		
-		@unlink($cache_file);
-		@unlink($expiry_file);
+		if (is_file($cache_file)) @unlink($cache_file);
+		if (is_file($expiry_file)) @unlink($expiry_file);
 		
 	}
 	
@@ -213,7 +216,7 @@ class Cache
 	 * 
 	 * 	@param	Cache group ID
 	 */
-	function remove_group($cache_group)
+	public function remove_group($cache_group)
 	{
 		
 		$group_dir = $this->_group_dir($cache_group);
@@ -243,7 +246,7 @@ class Cache
 	 * 	@param	Array of cache IDs
 	 * 	@param	Cache group ID
 	 */
-	function remove_ids($cache_ids, $cache_group = NULL)
+	public function remove_ids($cache_ids, $cache_group = NULL)
 	{
 
 		if (!is_array($cache_ids)) $cache_ids = array($cache_ids);

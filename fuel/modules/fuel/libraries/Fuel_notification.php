@@ -8,8 +8,8 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
 
@@ -22,7 +22,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/fuel_notification
+ * @link		http://docs.getfuelcms.com/libraries/fuel_notification
  */
 
 // --------------------------------------------------------------------
@@ -48,9 +48,9 @@ class Fuel_notification extends Fuel_base_library {
 	 * @param	array	config preferences
 	 * @return	void
 	 */	
-	function __construct($params = array())
+	public function __construct($params = array())
 	{
-		parent::__construct($params);
+		parent::__construct();
 		$this->initialize($params);
 	}
 
@@ -63,7 +63,7 @@ class Fuel_notification extends Fuel_base_library {
 	 * @param	array	Email preferences (optional)
 	 * @return	boolean
 	 */	
-	function send($params = array())
+	public function send($params = array())
 	{
 		// set defaults for from and from name
 		if (empty($params['from']))
@@ -131,7 +131,7 @@ class Fuel_notification extends Fuel_base_library {
 	 * @param	string	An intro message to place before the data (optional)
 	 * @return	string
 	 */	
-	function data_message($data, $intro = '')
+	public function data_message($data, $intro = '')
 	{
 		$msg = $intro."\n\n";
 		if (!empty($data))
@@ -157,7 +157,7 @@ class Fuel_notification extends Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */	
-	function is_dev_mode()
+	public function is_dev_mode()
 	{
 		return $this->use_dev_mode == TRUE AND (is_dev_mode());
 	}
@@ -170,7 +170,7 @@ class Fuel_notification extends Fuel_base_library {
 	 * @access	public
 	 * @return	array
 	 */	
-	function errors()
+	public function errors()
 	{
 		return $this->_errors;
 	}
@@ -183,7 +183,7 @@ class Fuel_notification extends Fuel_base_library {
 	 * @access	public
 	 * @return	boolean
 	 */	
-	function has_errors()
+	public function has_errors()
 	{
 		return (count($this->_errors) > 0);
 	}

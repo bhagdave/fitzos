@@ -86,7 +86,7 @@ on the key value specified in the config (e.g. example):</p>
 			<td>None</td>
 			<td>The name of the javascript controller. If an array is given, then the key of the array is considered the module folder to look in and the value the name of the controller.
 			The <dfn>js_controller_path</dfn> will automatically be changed to the module's assets folder if no <dfn>js_controller_path</dfn> is provided.
-			For more information on creating javascript controllers, visit the section on the javascript <a href="<?=user_guide_url('javascript/jqx')?>">jqx Framework</a></td>
+			For more information on creating javascript controllers, visit the section on the javascript <a href="<?=user_guide_url('general/javascript#jqx')?>">jqx Framework</a></td>
 		</tr>
 		<tr>
 			<td><strong>js_controller_path</strong></td>
@@ -260,6 +260,12 @@ on the key value specified in the config (e.g. example):</p>
 			<td>If set to TRUE, it will hide the module in the admin menu</td>
 		</tr>
 		<tr>
+			<td><strong>disabled</strong></td>
+			<td>FALSE</td>
+			<td>Boolean Value TRUE/FALSE</td>
+			<td>If set to TRUE, it will hide the module in the admin menu as well as show a 404</td>
+		</tr>
+		<tr>
 			<td><strong>icon_class</strong></td>
 			<td>None</td>
 			<td>None</td>
@@ -283,7 +289,24 @@ on the key value specified in the config (e.g. example):</p>
 			<td>array</td>
 			<td>The "Show" options displayed in the list view</td>
 		</tr>
-		
+		<tr>
+			<td><strong>advanced_search</strong></td>
+			<td>FALSE</td>
+			<td>Boolean Value TRUE/FALSE</td>
+			<td>If TRUE, this will display model filters in an advanced search menu</td>
+		</tr>
+		<tr>
+			<td><strong>disable_heading_sort</strong></td>
+			<td>FALSE</td>
+			<td>Boolean Value TRUE/FALSE</td>
+			<td>If TRUE, this will disable heading sorting on the list view</td>
+		</tr>
+		<tr>
+			<td><strong>description</strong></td>
+			<td>None</td>
+			<td>None</td>
+			<td>A description value that can be used in the site docs</td>
+		</tr>
 	</tbody>
 </table>
 

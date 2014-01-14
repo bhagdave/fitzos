@@ -10,7 +10,7 @@ $no_notification = (!$this->fuel->admin->has_panel('notification')) ? TRUE : FAL
 
 <body>
 
-<div id="fuel_body">
+<div id="fuel_body"<?=($this->fuel->admin->ui_cookie('leftnav_hide') === '1') ? ' class="nav_hide"' : ''; ?>>
 
 
 	<?php if ($this->fuel->admin->has_panel('top')) : ?>
@@ -90,11 +90,7 @@ $no_notification = (!$this->fuel->admin->has_panel('notification')) ? TRUE : FAL
 
 <div id="fuel_modal" class="jqmWindow"></div>
 
-<?php /* ?>
-<?php if ($this->fuel->admin->has_panel('bottom')) : ?>
-<?php $this->load->module_view(FUEL_FOLDER, '_blocks/fuel_bottom'); ?>
-<?php endif; ?>
-<?php */ ?>
+<?php $this->load->module_view(FUEL_FOLDER, '_blocks/fuel_footer');  ?>
 
 </body>
 </html>

@@ -8,8 +8,8 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
  */
@@ -25,7 +25,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/fuel
+ * @link		http://docs.getfuelcms.com/libraries/fuel
  */
 
 // --------------------------------------------------------------------
@@ -74,7 +74,7 @@ class Fuel extends Fuel_advanced_module {
 	 * Constructor
 	 *
 	 */
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 		self::$_instance =& $this;
@@ -108,7 +108,7 @@ class Fuel extends Fuel_advanced_module {
 	 * @param	array	Config preferences
 	 * @return	void
 	 */	
-	function initialize($config = array())
+	public function initialize($config = array())
 	{
 		// load main fuel config
 		$this->CI->load->module_config(FUEL_FOLDER, 'fuel', TRUE);
@@ -135,7 +135,7 @@ class Fuel extends Fuel_advanced_module {
 	 * @param	string	The module to set the configuration item. Default is fuel. (optional)
 	 * @return	void
 	 */	
-	function set_config($item, $value = NULL, $module = 'fuel')
+	public function set_config($item, $value = NULL, $module = 'fuel')
 	{
 		$fuel_config = $this->CI->config->item($module);
 		if (is_array($item))
@@ -149,7 +149,40 @@ class Fuel extends Fuel_advanced_module {
 		{
 			$fuel_config[$item] = $value;
 		}
+		$this->_config[$item] = $value;
 		$this->CI->config->set_item($module, $fuel_config);
+	}
+
+// --------------------------------------------------------------------
+	
+	/**
+	 * Returns the FUEL version 
+	 *
+	 * @access	public
+	 * @param	string	Value of what part of the version number to return. Options are "major", "minor", or "patch" (optional)
+	 * @return	void
+	 */	
+	public function version($part = NULL)
+	{
+		$version = FUEL_VERSION;
+		if (!empty($part))
+		{
+			$parts = explode('.', $version);
+			switch($part)
+			{
+				case 'major':
+					return $parts[0];
+					break;
+				case 'minor':
+					if (isset($parts[1])) return $parts[1];
+					break;
+				case 'patch':
+					if (isset($parts[2])) return $parts[2];
+					break;
+			}
+			return '0';
+		}
+		return $version;
 	}
 
 	// --------------------------------------------------------------------
@@ -161,7 +194,7 @@ class Fuel extends Fuel_advanced_module {
 	 * @param	string	The object
 	 * @return	object
 	 */	
-	function &__get($var)
+	public function &__get($var)
 	{
 		if (!isset($this->_attached[$var]))
 		{
@@ -209,7 +242,7 @@ class Fuel extends Fuel_advanced_module {
 	 * @param	string	An array of arguments
 	 * @return	object
 	 */	
-	function __call($name, $args)
+	public function __call($name, $args)
 	{
 		$obj = $this->$name;
 		if (method_exists($obj, 'get'))

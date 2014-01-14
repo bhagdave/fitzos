@@ -8,8 +8,8 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  */
 
@@ -22,7 +22,7 @@
  * @subpackage	Libraries
  * @category	Libraries
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/libraries/my_db_mysql_result
+ * @link		http://docs.getfuelcms.com/libraries/my_db_mysql_result
  */
 
 require_once(BASEPATH.'database/drivers/mysql/mysql_result'.EXT);
@@ -41,7 +41,7 @@ class MY_DB_mysql_result extends CI_DB_mysql_result {
 	 * @param	string	field name to use as associative key
 	 * @return	void
 	 */
-	function result_assoc_array($key)
+	public function result_assoc_array($key)
 	{
 		if (count($this->result_assoc_array) > 0)
 		{
@@ -85,7 +85,7 @@ class MY_DB_mysql_result extends CI_DB_mysql_result {
 	 * @param	string	field name to use as associative key
 	 * @return	void
 	 */
-	function result_assoc($key)
+	public function result_assoc($key)
 	{
 		if (count($this->result_assoc) > 0)
 		{

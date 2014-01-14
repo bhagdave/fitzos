@@ -8,8 +8,8 @@
  *
  * @package		FUEL CMS
  * @author		David McReynolds @ Daylight Studio
- * @copyright	Copyright (c) 2012, Run for Daylight LLC.
- * @license		http://www.getfuelcms.com/user_guide/general/license
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
  * @link		http://www.getfuelcms.com
  * @filesource
  */
@@ -26,7 +26,7 @@
  * @subpackage	Helpers
  * @category	Helpers
  * @author		David McReynolds @ Daylight Studio
- * @link		http://www.getfuelcms.com/user_guide/helpers/file_helper
+ * @link		http://docs.getfuelcms.com/helpers/my_file_helper
  */
 
 
@@ -179,7 +179,7 @@ function delete_old_files($dir, $older_than, $exclude = array())
  */
 function is_image_file($path)
 {
-	if (preg_match("/.+\\.jpg|jpeg|jpe|gif|png/i",$path))
+	if (preg_match("/.+\\.(jpg|jpeg|jpe|gif|png)$/i",$path))
 	{
 		return TRUE;
 	}

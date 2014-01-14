@@ -23,15 +23,19 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		this.formController = null;
 //		this.previewPath = myMarkItUpSettings.previewParserPath;
 		this.localized = jqx.config.localized;
-		
+		this.uiCookie = jqx.config.uiCookie;
 		this._submit();
 		this._initLeftMenu();
 		this._initTopMenu();
 		this._initModals();
+
 	},
 	
 	_initLeftMenu : function(){
 		if (this.leftMenuInited) return;
+
+		var cookieSettings = {group: this.uiCookie, name: 'leftnav_h3', params: {path: jqx.config.cookieDefaultPath}}
+
 		var leftNavTogglers = function(id, index){
 			$('#' + id + ' h3').bind('click', {id:id,index:index},
 				function(e){
@@ -45,12 +49,12 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 						$(this).removeClass('closed');
 						var cookieVal = 0;
 					}
-					var leftNavCookie = $.cookie('fuel_leftnav');
+					var leftNavCookie = $.supercookie(cookieSettings.group, cookieSettings.name);
 					if (leftNavCookie){
 						var cookieVals = leftNavCookie.split('|');
 						cookieVals[e.data['index']] = cookieVal;
 						leftNavCookie = cookieVals.join('|');
-						$.cookie('fuel_leftnav', leftNavCookie, {path:jqx.config.cookieDefaultPath});
+						$.supercookie(cookieSettings.group, cookieSettings.name, leftNavCookie, cookieSettings.params);
 					}
 					return false;
 				}
@@ -66,10 +70,12 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		// create a cookie to remember state
 		if (ids.length){
 			var leftNavCookie;
-			if (!$.cookie('fuel_leftnav')){
-				$.cookie('fuel_leftnav', '0|0|0|0', {path:jqx.config.cookieDefaultPath});
+
+			if (!$.supercookie(cookieSettings.group, cookieSettings.name)){
+				$.supercookie(cookieSettings.group, cookieSettings.name, '0|0|0|0', cookieSettings.params);
 			}
-			var leftNavCookie = $.cookie('fuel_leftnav');
+
+			var leftNavCookie = $.supercookie(cookieSettings.group, cookieSettings.name);
 			var cookieVals = leftNavCookie.split('|');
 			for (var i = 0; i < ids.length; i++){
 				leftNavTogglers(ids[i], i);
@@ -79,6 +85,35 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			}
 			this.leftMenuInited = true;
 		}
+		
+		// change the name of the cookie settings for the left nav toggling
+		var navToggleCookie = 'leftnav_hide';
+
+		var showLeftNav = function(){
+			$('#fuel_body').addClass('nav_show');
+			$('#fuel_body').removeClass('nav_hide');
+		}
+		var hideLeftNav = function(){
+			$('#fuel_body').addClass('nav_hide');
+			$('#fuel_body').removeClass('nav_show');
+		}
+
+		$('#nav_toggle').on('click', function(e) {
+			e.preventDefault();
+			if ($('#fuel_body').hasClass('nav_hide')){
+				showLeftNav();
+				$.supercookie(cookieSettings.group, navToggleCookie, '0', cookieSettings.params);
+			} else {
+				hideLeftNav();
+				$.supercookie(cookieSettings.group, navToggleCookie, '1', cookieSettings.params);
+			}
+		});
+
+		// hide the nav if the cookie says so
+		if ($.supercookie(cookieSettings.group, navToggleCookie) === '1'){
+			hideLeftNav();	
+		}
+		
 	},
 	
 	_initTopMenu : function(){
@@ -94,7 +129,6 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		$('.jqmWindowShow').jqmShow();
 	},
 
-	
 	_submit : function(){
 		$('#submit').click(function(){
 			$('#form').submit();
@@ -108,13 +142,13 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		}
 		switch(type){
 			case 'warn' : case 'warning':
-				cssClass = 'ico_warn warning ' + cssClass;
+				cssClass = 'ico ico_warn warning ' + cssClass;
 				break;
 			case 'error':
-				cssClass = 'ico_error error ' + cssClass;
+				cssClass = 'ico ico_error error ' + cssClass;
 				break;
 			case 'success': case 'saved':
-				cssClass = 'ico_success success ' + cssClass;
+				cssClass = 'ico ico_success success ' + cssClass;
 				break;
 		}
 		
@@ -143,9 +177,11 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			$('#form').submit();
 		});
 		
+
 		if ($('#tree').exists()){
 			var itemViewsCookieId = 'fuel_' + _this.module + '_items';
-			var itemViewsCookie = $.cookie(itemViewsCookieId);
+			//var itemViewsCookie = $.cookie(itemViewsCookieId);
+			var itemViewsCookie = $.supercookie(this.uiCookie, itemViewsCookieId);
 			
 			$('#toggle_tree').click(function(e){
 				_this._toggleRearrangeBtn();
@@ -160,7 +196,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				$('#tree_container').show();
 				$('#pagination').hide();
 				$('#view_type').val('tree');
-				$.cookie(itemViewsCookieId, $('#view_type').val(), {path:jqx.config.cookieDefaultPath});
+				//$.cookie(itemViewsCookieId, $('#view_type').val(), {path:jqx.config.cookieDefaultPath});
+				$.supercookie(_this.uiCookie, itemViewsCookieId, $('#view_type').val(), {path:jqx.config.cookieDefaultPath});
+				
 				// lazy load tree
 				if (!_this.treeLoaded){
 					_this.redrawTree();
@@ -178,7 +216,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				$('#tree_container').hide();
 				$('#pagination').show();
 				$('#view_type').val('list');
-				$.cookie(itemViewsCookieId, $('#view_type').val(), {path:jqx.config.cookieDefaultPath});
+				$.supercookie(_this.uiCookie, itemViewsCookieId, $('#view_type').val(), {path:jqx.config.cookieDefaultPath});
 				// lazy load table
 				if (!_this.tableLoaded){
 					_this.redrawTable();
@@ -186,7 +224,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				return false;
 			});
 
-			if ($.cookie(itemViewsCookieId) == 'tree'){
+			if ($.supercookie(_this.uiCookie, itemViewsCookieId) == 'tree'){
 				$('#toggle_tree').click();
 			} else {
 				$('#toggle_list').click();
@@ -218,7 +256,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			return false;
 		});
 		
-		$('.multi_delete').live('click', function(e){
+		$(document).on('click', '.multi_delete', function(e){
 			if ($('.multi_delete:checked').length){
 				$('#multi_delete').parent().show();
 			} else {
@@ -227,7 +265,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		});
 		$('#multi_delete').parent().hide();
 		
-		$('#rearrange').live('click', function(e){
+		$('#fuel_actions').on('click', '#rearrange', function(e){
 			if (!$('#toggle_list').parent().hasClass('active')){
 				$('#toggle_list').click();
 			}
@@ -255,7 +293,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		
 		// automatically set selects to submit
 		$('.more_filters select').change(function(e){
-			$('#form').submit();
+			if ($(this).parents().hasClass('adv_search') === false) {
+				$('#form').submit();
+			}
 		});
 		
 		// automatically set selects to submit
@@ -282,6 +322,11 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 				$('#multi_delete').parent().hide();
 				$('.multi_delete', '#fuel_main_content').attr('checked', false);
 			});
+
+		$('#adv-search-btn, #adv-search-close').click(function(e){
+			e.preventDefault();
+			$('.adv_search').toggle();
+		});
 	},
 	
 	add_edit : function(initSpecFields){
@@ -384,13 +429,20 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			$.removeChecksave();
 		});
 		
-		$('.save, #form input[type="submit"]').live('click', function(e){
+		$(document).on('click', '.save, #form input[type="submit"]', function(e){
+			
+			if ($(this).hasClass('disabled')){
+				return false;
+			}
+
 			$.removeChecksave();
 			$('#form').submit();
+			$(this).attr('disabled', true);
+			$(this).addClass('disabled');
 			return false;
 		});
 		
-		$('.cancel, #' + this.lang('btn_cancel')).live('click', function(e){
+		$(document).on('click', '.cancel, #' + this.lang('btn_cancel'), function(e){
 			_this.go(_this.modulePath);
 			return false;
 		});
@@ -429,7 +481,7 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 		});
 		
 		$(document).bind('keydown', jqx.config.keyboardShortcuts.view, function(e){ 
-			window.location = ($('.view_action').attr('href'));
+			window.location = ($('.key_view_action').attr('href'));
 		});
 		
 		//$('#form input:first').select();
@@ -459,8 +511,8 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 	_initFormTabs : function(context){
 		if (!$('#fuel_form_tabs', context).length){
 
-			var tabId = jqx.config.uriPath.replace(/[\/|:]/g, '_').substr(5); // remove fuel_
-			var tabCookieSettings = {group: 'fuel_tabs', name: tabId, params: {path: jqx.config.cookieDefaultPath}}
+			var tabId = 'tabs_' + jqx.config.uriPath.replace(/[\/|:]/g, '_').substr(5); // remove fuel_
+			var tabCookieSettings = {group: this.uiCookie, name: tabId, params: {path: jqx.config.cookieDefaultPath}}
 
 			var tabs = '<div id="fuel_form_tabs" class="form_tabs"><ul>';
 			
@@ -580,7 +632,9 @@ fuel.controller.BaseFuelController = jqx.lib.BaseController.extend({
 			persist: "cookie",
 			collapsed: false,
 			unique: false,
-			cookieId: _this.module + '_tree'
+			cookieId: _this.module + '_tree',
+			groupCookieId: _this.uiCookie,
+			cookieOptions: {path: jqx.config.cookieDefaultPath}
 		});
 		if (!_this.treeLoaded) _this.treeLoaded = true;
 		

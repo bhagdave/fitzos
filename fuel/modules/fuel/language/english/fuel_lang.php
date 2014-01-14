@@ -49,6 +49,7 @@ $lang['error_class_property_does_not_exist'] = 'Class property %1s does not exis
 $lang['error_class_method_does_not_exist'] = 'Class method %1s does not exist';
 $lang['error_could_not_create_folder'] = 'Could not create folder %1s';
 $lang['error_could_not_create_file'] = 'Could not create file %1s';
+$lang['error_no_build'] = "No build setup for this module.\n";
 
 
 /*
@@ -74,6 +75,12 @@ $lang['login_reset_pwd'] = 'Reset Password';
 $lang['login_btn'] = 'Login';
 $lang['logout_restore_original_user'] = 'Restore original user';
 
+$lang['auth_log_pass_reset_request'] = "Password reset request for '%1s' from %2s";
+$lang['auth_log_pass_reset'] = "Password reset for '%1s' from %2s";
+$lang['auth_log_cms_pass_reset'] = "Password reset from CMS for '%1s' from %2s";
+$lang['auth_log_login_success'] = "Successful login by '%1s' from %2s";
+$lang['auth_log_failed_login'] = "Failed login by '%1s' from %2s, login attempts: %3s";
+$lang['auth_log_account_lockout'] = "Account lockout for '%1s' from %2s";
 
 /*
 |--------------------------------------------------------------------------
@@ -154,7 +161,6 @@ $lang['section_manage'] = 'Manage';
 $lang['section_tools'] = 'Tools';
 $lang['section_settings'] = 'Settings';
 $lang['section_recently_viewed'] = 'Recently Viewed';
-$lang['section_settings'] = 'Settings';
 
 
 /*
@@ -194,6 +200,8 @@ $msg .= "3. Run git rm --cached %2s (no trailing slash).\n";
 $msg .= "4. Commit and delete the now untracked submodule files.\n";
 $lang['module_uninstall'] = $msg;
 
+// build
+$lang['module_build_asset'] = "%1s optimized and ouput to %2s\n";
 
 /*
 |--------------------------------------------------------------------------
@@ -202,6 +210,14 @@ $lang['module_uninstall'] = $msg;
 */
 $lang['migrate_success'] = "You have successfully migrated to version %s.\n";
 $lang['migrate_nothing_todo'] = "No migrations were necessary.\n";
+
+/*
+|--------------------------------------------------------------------------
+| List View
+|--------------------------------------------------------------------------
+*/
+$lang['adv_search'] = 'Advanced Search';
+$lang['reset_search'] = 'Reset Search';
 
 
 /*
@@ -239,6 +255,10 @@ $lang['form_label_target'] = 'Target';
 $lang['form_label_class'] = 'Class';
 
 $lang['navigation_related'] = 'Create navigation';
+$lang['navigation_quick_add'] = 'This field lets you quickly add a navigation item for this page. It only allows you to create a navigation item during page creation. To edit the navigation item, you must click on the\'Navigation\' link on the left, find the navigation item you want to change and click on the edit link.';
+
+$lang['page_select_pages'] = 'Pages';
+$lang['page_select_pdfs'] = 'PDFs';
 
 /*
 |--------------------------------------------------------------------------
@@ -258,14 +278,16 @@ $lang['form_label_view'] = 'View';
 */
 $lang['navigation_import'] = 'Import Navigation';
 $lang['navigation_instructions'] = 'Here you create and edit the top menu items of the page.';
-$lang['navigation_import_instructions'] = 'Select a navigation group and upload a file to import below. The file should contain the PHP array variable assigned in the variable field below (e.g. <strong>$nav</strong>). For a reference of the array format, please consult the <a href="http://www.getfuelcms.com/user_guide/modules/fuel/navigation" target="_blank">user guide</a>.';
+$lang['navigation_import_instructions'] = 'Select a navigation group and upload a file to import below. The file should contain the PHP array variable assigned in the variable field below (e.g. <strong>$nav</strong>). For a reference of the array format, please consult the <a href="http://docs.getfuelcms.com/modules/fuel/navigation" target="_blank">user guide</a>.';
 $lang['navigation_success_upload'] = 'The navigation was successfully uploaded.';
 $lang['form_label_navigation_group'] = 'Navigation Group:';
-$lang['form_label_nav_key'] = 'Nav Key';
+$lang['form_label_nav_key'] = 'Key';
 $lang['form_label_parent_id'] = 'Parent';
 $lang['form_label_attributes'] = 'Attributes';
 $lang['form_label_selected'] = 'Selected';
 $lang['form_label_hidden'] = 'Hidden';
+
+$lang['error_location_parents_match'] = 'Location and parents can\'t match.';
 
 // for upload form
 $lang['form_label_clear_first'] = 'Clear First';
@@ -330,9 +352,9 @@ $lang['form_label_send_email'] = 'Send Email';
 $lang['btn_send_email'] = 'Send Email';
 $lang['new_user_email_subject'] = 'Your FUEL CMS account has been created';
 $lang['new_user_email'] = 'Your FUEL CMS account has been created. You can login with the following information:
-Login URL:'.site_url('fuel/login').'
-User name: %1s
-Password: %2s';
+Login URL: %1s
+User name: %2s
+Password: %3s';
 $lang['new_user_created_notification'] = 'The user information was successfully saved and a notification was sent to %1s.';
 $lang['error_cannot_deactivate_yourself'] = 'You cannot deactivate yourself.';
 
@@ -423,6 +445,7 @@ $lang['btn_duplicate'] = 'Duplicate';
 $lang['btn_replace'] = 'Replace';
 $lang['btn_ok'] = 'OK';
 $lang['btn_upload'] = 'Upload';
+$lang['btn_download'] = 'Download';
 $lang['btn_export_data'] = 'Export Data';
 
 $lang['btn_no'] = 'No';

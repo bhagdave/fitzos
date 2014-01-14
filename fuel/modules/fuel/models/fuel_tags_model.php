@@ -1,12 +1,40 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+/**
+ * FUEL CMS
+ * http://www.getfuelcms.com
+ *
+ * An open source Content Management System based on the 
+ * Codeigniter framework (http://codeigniter.com)
+ *
+ * @package		FUEL CMS
+ * @author		David McReynolds @ Daylight Studio
+ * @copyright	Copyright (c) 2013, Run for Daylight LLC.
+ * @license		http://docs.getfuelcms.com/general/license
+ * @link		http://www.getfuelcms.com
+ */
 
-require_once(FUEL_PATH.'models/base_module_model.php');
+// ------------------------------------------------------------------------
+
+/**
+ * Extends Base_module_model
+ *
+ * <strong>Fuel_tags_model</strong> is used for managing FUEL tags in the CMS
+ * 
+ * @package		FUEL CMS
+ * @subpackage	Models
+ * @category	Models
+ * @author		David McReynolds @ Daylight Studio
+ * @link		http://docs.getfuelcms.com/models/fuel_tags_model
+ */
+
+require_once('base_module_model.php');
 
 class Fuel_tags_model extends Base_module_model {
 
-	public $filters = array('name', 'slug');
-	public $unique_fields = array('slug');
-	public $linked_fields = array('name' => 'slug');
+	public $filters = array('name', 'slug'); // Allows for filtering on both the name and the slug
+	public $unique_fields = array('slug'); // The slug value must be unique
+	public $linked_fields = array('name' => 'slug'); // the slug value should be the name field's value with the url_title function applied to it if there is no value specified
+	public $foreign_keys = array('category_id' => array(FUEL_FOLDER => 'fuel_categories_model')); // to create the foreign key association with the fuel_categories model
 
 	protected $friendly_name = 'Tags';
 	protected $singular_name = 'Tag';
@@ -15,12 +43,12 @@ class Fuel_tags_model extends Base_module_model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Constructor. Automatically assigns belongs_to 
+	 * Constructor.
 	 *
 	 * @access	public
 	 * @return	void
 	 */	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct('fuel_tags'); // table name
 
@@ -30,12 +58,12 @@ class Fuel_tags_model extends Base_module_model {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Constructor. Automatically assigns belongs_to 
+	 * Initializes belongs_to relationship
 	 *
 	 * @access	public
 	 * @return	void
 	 */	
-	function init_relationships()
+	public function init_relationships()
 	{
 		$CI =& get_instance();
 
@@ -44,7 +72,7 @@ class Fuel_tags_model extends Base_module_model {
 		$belongs_to = array();
 
 		// loop through all the modules to check for has_many relationships
-		unset($modules['categories'], $modules['tags']);
+		unset($modules['tags']);
 		foreach($modules as $module)
 		{
 			// grab each model
@@ -56,21 +84,24 @@ class Fuel_tags_model extends Base_module_model {
 				foreach($model->has_many as $key => $rel)
 				{
 					$mod_name = $module->name();
+					$model_name = $module->info('model_name');
+					$module_location = $module->info('model_location');
+
 					if (is_array($rel))
 					{
 						if (isset($rel['model']) AND (($rel['model'] == 'tags' OR $rel['model'] == array(FUEL_FOLDER => 'tags')) 
 							OR ($rel['model'] == 'fuel_tags_model' OR $rel['model'] == array(FUEL_FOLDER => 'fuel_tags_model'))))
 						{
-							$belongs_to[$mod_name] = $mod_name;
+							$belongs_to[$mod_name] = array('model' => $model_name, 'module' => $module_location);
 						}
 						else if (current($rel) == 'tags' OR current($rel) == 'fuel_tags_model')
 						{
-							$belongs_to[$mod_name] = $mod_name;	
+							$belongs_to[$mod_name] = array('model' => $model_name, 'module' => $module_location);
 						}
 					}
 					else if (is_string($rel) AND ($rel == 'tags' OR $rel == 'fuel_tags_model'))
 					{
-						$belongs_to[$mod_name] = $mod_name;
+						$belongs_to[$mod_name] = array('model' => $model_name, 'module' => $module_location);
 					}
 				}
 			}
@@ -80,22 +111,30 @@ class Fuel_tags_model extends Base_module_model {
 		$this->belongs_to = $belongs_to;
 	}
 
-	// --------------------------------------------------------------------
-	
 	/**
-	 * Initializes the class with the parent model and field names
+	 * Tree view that puts tags in a hierarchy based on their category
 	 *
 	 * @access	public
-	 * @param	int	the number in which to limit the returned data results (optional)
-	 * @param	int	the number in which to offset the returned data results (optional)
-	 * @param	string	the column name to sort on (optional)
-	 * @param	string	the order in which to return the results (optional)
-	 * @return	array
+	 * @param	boolean 	Determines whether to return just published pages or not (optional... and ignored in the admin)
+	 * @return	array 		An array that can be used by the Menu class to create a hierachical structure
 	 */	
-	function list_items($limit = null, $offset = null, $col = 'precedence', $order = 'desc')
+	public function tree($just_published = FALSE)
 	{
-		$data = parent::list_items($limit, $offset, $col, $order);
-		return $data;
+		$return = array(); 
+		$where = ($just_published) ? array('published' => 'yes') : array();
+
+		$categories = $this->fuel_categories_model->find_all_array($where); 
+
+		foreach($categories as $category) 
+		{ 
+			$return[] = array('id' =>$category['id'], 'label' => $category['name'], 'parent_id' => $category['parent_id'], 'location' => ''); 
+			$tags = $this->find_all_array( array('category_id'=>$category['id']), 'name asc' );
+			foreach($tags as $tag){
+				$return[] = array('id' => $tag['name'], 'label' => $tag['name'], 'parent_id' => $category['id'], 'location' => fuel_url('tags/edit/'.$tag['id'])); 
+			}
+			
+		}
+		return $return;
 	}
 
 	// --------------------------------------------------------------------
@@ -108,11 +147,9 @@ class Fuel_tags_model extends Base_module_model {
 	 * @param	array	related field information
 	 * @return	array
 	 */	
-	function form_fields($values = array(), $related = array())
+	public function form_fields($values = array(), $related = array())
 	{	
 		$fields = parent::form_fields($values, $related);
-		$CI =& get_instance();
-		$fields['category_id'] = array('type' => 'select', 'label' => 'Category', 'module' => 'categories', 'model' => array(FUEL_FOLDER => 'fuel_categories'), 'first_option' => 'Select a category...');
 		return $fields;
 	}
 
@@ -128,7 +165,7 @@ class Fuel_tags_model extends Base_module_model {
 	 * @param	mixed	the order in which to return the results (optional)
 	 * @return	array 	
 	 */	
-	function options_list($key = 'id', $val = 'name', $where = array(), $order = TRUE)
+	public function options_list($key = 'id', $val = 'name', $where = array(), $order = TRUE)
 	{
 		$this->db->join($this->_tables['fuel_categories'], $this->_tables['fuel_categories'].'.id = '.$this->_tables['fuel_tags'].'.category_id', 'LEFT');
 
@@ -157,9 +194,10 @@ class Fuel_tags_model extends Base_module_model {
 	 * Common query to automatically join the categories table
 	 *
 	 * @access	public
+	 * @param mixed parameter to pass to common query (optional)
 	 * @return	void 	
 	 */		
-	function _common_query()
+	public function _common_query($params = NULL)
 	{
 		parent::_common_query();
 		$this->db->join($this->_tables['fuel_categories'], $this->_tables['fuel_categories'].'.id = '.$this->_tables['fuel_tags'].'.category_id', 'LEFT');
@@ -169,5 +207,4 @@ class Fuel_tags_model extends Base_module_model {
 
 class Fuel_tag_model extends Base_module_record {
 	
-	// put your record model code here
 }

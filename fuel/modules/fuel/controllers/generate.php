@@ -7,7 +7,7 @@ class Generate extends Fuel_base_controller {
 	public $errors = array();
 	public $modified = array();
 	
-	function __construct()
+	public function __construct()
 	{
 		$validate = (php_sapi_name() == 'cli' OR defined('STDIN')) ? FALSE : TRUE;
 		parent::__construct($validate);
@@ -38,7 +38,7 @@ class Generate extends Fuel_base_controller {
 	 * @param	string	Module name
 	 * @return	void
 	 */	
-	function advanced($name = NULL)
+	public function advanced($name = NULL)
 	{
 		if (empty($name))
 		{
@@ -220,7 +220,7 @@ class Generate extends Fuel_base_controller {
 	 * @param	string	Module name (optional)
 	 * @return	void
 	 */	
-	function simple($name = NULL, $module = '')
+	public function simple($name = NULL, $module = '')
 	{
 		if (empty($name))
 		{
@@ -320,7 +320,7 @@ class Generate extends Fuel_base_controller {
 	 * @param	string	Module name (optional)
 	 * @return	void
 	 */	
-	function model($model, $module = '', $display_results = TRUE)
+	public function model($model, $module = '', $display_results = TRUE)
 	{
 		if (empty($model))
 		{
@@ -360,7 +360,7 @@ class Generate extends Fuel_base_controller {
 	 * @param	string	Module name (optional)
 	 * @return	void
 	 */	
-	function _model($model, $module = '')
+	public function _model($model, $module = '')
 	{
 		$fuel_config = $this->fuel->config('generate');
 		
@@ -399,6 +399,11 @@ class Generate extends Fuel_base_controller {
 				// if SQL file extension, then we try and load the SQL
 				if (preg_match('#\.sql$#', $file))
 				{
+					// load database if it isn't already
+					if (!isset($this->db))
+					{
+						$this->load->database();
+					}
 					$this->db->load_sql($content, FALSE);
 				}
 				else
@@ -413,11 +418,29 @@ class Generate extends Fuel_base_controller {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Protected helper method that returns the module names
+	 *
+	 * @access	protected
+	 * @param	string	Model names which can be plural separated by a colon ":"
+	 * @return	array
+	 */	
 	protected function _get_module_names($names)
 	{
 		return explode(':', $names);
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Protected helper method that displays the output results
+	 *
+	 * @access	protected
+	 * @param	array	Variables used to generate the results
+	 * @return	string
+	 */	
 	protected function _load_results($vars)
 	{
 		if (php_sapi_name() == 'cli' or defined('STDIN'))
@@ -432,6 +455,15 @@ class Generate extends Fuel_base_controller {
 		}
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Protected helper method that generates the table and model
+	 *
+	 * @access	protected
+	 * @param	string	Model names which can be plural separated by a colon ":"
+	 * @return	array
+	 */	
 	protected function _find_template($file, $vars, $type = 'advanced')
 	{
 		$fuel_config = $this->fuel->config('generate');
@@ -458,6 +490,17 @@ class Generate extends Fuel_base_controller {
 		return $template_path;
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Protected helper method that parses a template file
+	 *
+	 * @access	protected
+	 * @param	string	The file to parse
+	 * @param	array	Variables to pass to the parsed template
+	 * @param	string	The type of generation of model, simple, advanced (optional)
+	 * @return	string
+	 */	
 	protected function _parse_template($file, $vars, $type = 'advanced')
 	{
 		$template_path = $this->_find_template($file, $vars, $type);
@@ -472,7 +515,16 @@ class Generate extends Fuel_base_controller {
 		$this->errors[] = lang('error_could_not_create_file', $file)."\n";
 		return '';
 	}
+
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Protected helper method that returns common variables that get used during the parsing of a template
+	 *
+	 * @access	protected
+	 * @param	string	The module name
+	 * @return	array
+	 */	
 	protected function _common_vars($name)
 	{
 		$vars = array();

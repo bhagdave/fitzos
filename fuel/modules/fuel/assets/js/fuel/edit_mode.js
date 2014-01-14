@@ -43,6 +43,9 @@ if (fuel == undefined) var fuel = {};
 	
 	
 	$(document).ready(function(){
+
+		$('body').addClass('__fuel_inline__');
+		
 		function init(){
 
 			// disable the toolbar if it is being view from within the admin
@@ -160,7 +163,6 @@ if (fuel == undefined) var fuel = {};
 						var publishedClass = ($this.attr('data-published') == '0') ? ' __fuel_edit_marker_unpublished__' : '';
 						var html = '<div id="__fuel_edit__' + i + '" style="left:' + coords.x + 'px; top:' + coords.y + 'px;" class="__fuel__ __fuel_edit__" title="' + varName + '" data-module="' + module + '">';
 						var dataHref = $this.attr('data-href').replace(/\|/, '/');
-						
 						html += '<a href="' + dataHref + '" rel="' + $this.attr('data-rel') + '" class="__fuel_edit_marker__'+ newClass + publishedClass + '">';
 						html += '<span class="__fuel_edit_marker_inner__">' + varName + '</span>';
 						html += '</a>';
@@ -284,18 +286,18 @@ if (fuel == undefined) var fuel = {};
 			}
 			
 			// set up cancel button
-			$('.__fuel_edit__ .ico_cancel').live('click', function(){
+			$('.__fuel_edit__ .ico_cancel').on('click', function(){
 				closeEditor();
 				return false;
 			});
 
 			// set up save
-			$('.__fuel_edit__ .ico_save').live('click', function(){
+			$('.__fuel_edit__ .ico_save').on('click', function(){
 				$form = $(this).parents('.__fuel_edit_form__').find('form');
 				ajaxSubmit($form);
 				return false;
 			});
-			$('.__fuel_edit__ .delete').live('click', function(){
+			$('.__fuel_edit__ .delete').on('click', function(){
 				if (confirm(lang('confirm_delete'))){
 					$form = $(this).parents('.__fuel_edit_form__').find('form');
 					$form.find('.__fuel_inline_action__').val('delete');
@@ -334,11 +336,18 @@ if (fuel == undefined) var fuel = {};
 							} else {
 								var param2 = (relArr.length >= 2) ? relArr[1] : '';
 							}
-							if (param1 == 'create'){
-								var url = $(this).attr('href') + '?' + param2;
+							if (param1.substr(0, 6) == 'create'){
+								var qString = (param2.length) ? '?' + param2 : param1;
+								var url = $(this).attr('href') + qString;
 							} else {
 								var url = $(this).attr('href') + param1 + '/' + param2;
 							}
+							var lang = $('#__fuel_language__').val();
+							if (lang && lang.length){
+								url = url + '?lang=' + $('#__fuel_language__').val();	
+							}
+							
+
 							if (_anchor.next('.__fuel_edit_form__').find('iframe').size() == 0){
 								var iframeId = '__fuel_iframe__' + $this.attr('id');
 								_anchor.next('.__fuel_edit_form__').html('<div class="loader"></div><iframe src="' + url +'" id="' + iframeId +'" frameborder="0" scrolling="no" class="inline_iframe"></iframe>');
@@ -452,15 +461,25 @@ if (fuel == undefined) var fuel = {};
 			});
 
 			$('#__fuel_language__').change(function(){
-				var beginUrl = window.location.href.split('?')[0];
-				var queryStr = window.location.search.substring(1);
 				var param = $(this).attr('name');
-				var regEx = new RegExp('&?' + param + '=[^&]*');
+				var lang = $(this).val();
+				if ($('#__fuel_language_mode__').val() == 'segment'){
+					if ($('#__fuel_language_default__').val() != lang){
+						var url = basePath + lang + '/' + pageLocation;	
+					} else {
+						var url = basePath + pageLocation;
+					}
+					
+				} else {
+					var beginUrl = window.location.href.split('?')[0];
+					var queryStr = window.location.search.substring(1);
+					var regEx = new RegExp('&?' + param + '=[^&]*');
 
-				// remove any lang field values so it doesn't duplicate it in the query string
-				queryStr = queryStr.replace(regEx, '');
-				queryStr += '&' + param + '=' + $(this).val();
-				var url = beginUrl + '?' + queryStr;
+					// remove any lang field values so it doesn't duplicate it in the query string
+					queryStr = queryStr.replace(regEx, '');
+					queryStr += '&' + param + '=' + lang;
+					var url = beginUrl + '?' + queryStr;
+				}
 				window.location = url;
 				return false;
 			});

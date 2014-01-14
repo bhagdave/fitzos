@@ -1,5 +1,8 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed'); 
 
+require_once(BASEPATH.'core/Model.php');
+require_once(APPPATH.'core/MY_Model.php');
+
 class Test_users_model extends MY_Model {
 
 	public $required = array('email');
