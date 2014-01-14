@@ -262,6 +262,18 @@ class Athlete extends CI_Controller{
 		}
 		
 	}
+	function markNotificationRead($notification){
+		$this->load->model('notifications_model','notify');
+		if ($this->session->userdata('id')){
+			// get the athlete from the database
+			$id   = $this->session->userdata('id');
+			$notifications = $this->notify->getMemberNotifications($id);
+			$vars = array('notes'=>$notifications,'layout'=>'none');
+			$this->fuel->pages->render('athlete/notifications',$vars);
+		} else {
+			redirect('signin/login');
+		}
+	} 
 	function view($id){
 		if ($this->session->userdata('id')){
 			$this->load->model('athletes_model','athletes');

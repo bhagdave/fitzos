@@ -212,6 +212,18 @@ function deletePost(team,id){
 			alert( "error" );
 	});    		
 }
+function markNotificationRead(notification){
+	event.preventDefault();
+	$.ajax({
+		url: "/athlete/markNotificationRead/" + notification,
+		type:'POST'})
+		.done(function( data ) {
+			$(".js-Notifications").html(data);
+		}) 
+		.fail(function() {
+			alert( "error" );
+	});    			
+}
 function getTeamWall($team){
 	event.preventDefault();
 	$.ajax({
