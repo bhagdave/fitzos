@@ -75,9 +75,25 @@ class Athlete extends CI_Controller{
 			$data = $_POST;
 			$data['id'] = $this->session->userdata('id');
 			$this->athletes->saveProfile($data);
-			$this->session->set_flashdata('message', 'Profile Saved');			
-			$athlete = $this->athletes->loadProfile($data['id']);
+			$this->session->set_flashdata('message', 'Profile Saved');
+			// deal with the image.
+			if (isset($_FILES['file']['name'])){
+				if ($_FILES["file"]["error"] > 0){	
+					$this->session->set_flashdata('message', 'Unable to save image');
+				} else {
+					$path = 'assets/images/members/' . $_FILES["file"]["name"];
+					if (file_exists($path)){
+						// update member image to point here...
+					} else {
+						// save file...
+						move_uploaded_file($_FILES["file"]["tmp_name"],$path);
+					}
+					// update the member
+					$this->members->saveMember(array('id'=>$data['id'],'image'=>$path));
+				}
+			}			
 			// get the athlete from the database
+			$athlete = $this->athletes->loadProfile($data['id']);
 			$member  = $this->members->getMember($data['id']);
 			$vars = array('athlete'=>$athlete,'member'=>$member);
 			$this->fuel->pages->render('athlete/welcome',$vars);

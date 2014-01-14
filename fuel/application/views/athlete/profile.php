@@ -8,7 +8,7 @@
 </div>
 <div class="row-fluid">
 	<div class="span4">
-		<form class="form-horizontal" action="/athlete/profile" method="post">
+		<form class="form-horizontal" action="/athlete/profile" method="post" enctype="multipart/form-data">
 			<fieldset id="inputs">
 				<?php $this->load->view('_blocks/all-members');?>
 				<div class="control-group">
@@ -84,7 +84,12 @@
 						<label class="radio">No (I am good)<input id="no" name="find_trainer" value="No" type="radio" <?= isset($athlete->find_trainer) && $athlete->find_trainer == 'No' ? 'checked' : '' ?>></label>
 					</div>
 				</div>
-				
+				<div class="control-group">
+					<label class="control-label">Profile image</label>
+					<div class="controls">	
+						<input type="file" name="file" id="file" value="<?=isset($member->image) ? $member->image : ''  ?>">
+					</div>
+				</div>
 				<button class="btn btn-success">Submit</button>	
 				
 			</fieldset>

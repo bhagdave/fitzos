@@ -124,7 +124,19 @@ class Members_model extends Fitzos_model {
 			return $this->db->insert_id();
 		}
 	}
-	
+	function saveMember($data){
+		// check if they exist..
+		$this->db->where('id',$data['id']);
+		$count = $this->db->count_all_results('member');
+		if ($count > 0){
+			// if they do update
+			$this->db->where('id',$data['id']);
+			$this->db->update('member',$data);		
+		} else {
+			// if not then create
+			$this->createMember($data);		
+		}
+	}	
 }
  
 class Member_model extends Base_module_record {
