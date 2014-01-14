@@ -1,0 +1,1 @@
+ALTER TABLE `fitzos`.`team_wall` ADD COLUMN `member_id` INT(11) NULL  AFTER `deleted` ;

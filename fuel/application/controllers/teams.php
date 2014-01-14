@@ -108,7 +108,7 @@ class Teams extends CI_Controller{
 				// check if owner of team..
 				$user = $this->session->userdata('id');
 				$owner= $this->teams->isOwner($_REQUEST['team_id'],$user);
-				$data = array('team_id'=>$_REQUEST['team_id'], 'message'=>$_REQUEST['message']);
+				$data = array('team_id'=>$_REQUEST['team_id'], 'message'=>$_REQUEST['message'], 'member_id'=>$user);
 				$id   = $this->teams->addWallPost($data);
 				$team = $this->teams->getTeam($_REQUEST['team_id']);
 				$wall = $this->teams->getTeamWall($_REQUEST['team_id']);
