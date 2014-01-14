@@ -267,6 +267,8 @@ class Athlete extends CI_Controller{
 		if ($this->session->userdata('id')){
 			// get the athlete from the database
 			$id   = $this->session->userdata('id');
+			// mark the notification read
+			$this->notify->markRead($notification);
 			$notifications = $this->notify->getMemberNotifications($id);
 			$vars = array('notes'=>$notifications,'layout'=>'none');
 			$this->fuel->pages->render('athlete/notifications',$vars);
