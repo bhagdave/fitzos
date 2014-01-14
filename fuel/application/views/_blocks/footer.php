@@ -17,7 +17,8 @@
     'follow' : {
       'services' : [
         {'service': 'facebook', 'id': 'meetotherathletes'},
-        {'service': 'twitter', 'id': 'whatsyourpeak'}
+        {'service': 'twitter', 'id': 'whatsyourpeak'},
+        {'service': 'google_follow', 'id': '111706559051974640132'}
       ]
     },  
     'whatsnext' : {},  
