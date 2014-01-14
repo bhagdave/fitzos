@@ -219,6 +219,10 @@ class Athlete extends CI_Controller{
 			$team   = $_REQUEST['team_id'];
 			$this->load->model('teams_model','teams');
 			$id = $this->teams->setMemberRequest($team,$member);
+			$this->load->library('Fitzos_email',null,'Femail');
+			$this->Femail->sendMemberJoiningEmail($team,$member);
+			$this->load->model('notifications_model','notifications');
+			$this->notifications->notifyJoining($team,$member);
 			if ($id['id'] > 0){
 				echo("Your team membership has been requested!");
 			} else {
@@ -241,6 +245,20 @@ class Athlete extends CI_Controller{
 			redirect('signin/login');
 		}
 		
+	}
+	function view($id){
+		if ($this->session->userdata('id')){
+			$this->load->model('athletes_model','athletes');
+			$this->load->model('members_model','members');
+			$sports  = $this->members->getSports($id);
+			$athlete = $this->athletes->loadProfile($id);
+			$member  = $this->members->getMember($id);
+		} else {
+			redirect('signin/login');
+			die();
+		}
+		$vars = array('athlete'=>$athlete,'member'=>$member,'sports'=>$sports);
+		$this->fuel->pages->render('athlete/view',$vars);
 	}
 }
 ?>

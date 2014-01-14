@@ -25,6 +25,34 @@ class Notifications_model extends Base_module_model {
     		return $this->db->insert_id();
     	}
     }
+    private function getMemberDetails($id){
+    	$this->db->where('id',$id);
+    	$result = $this->db->get('member');
+    	$data = $result->result();
+    	if (isset($data[0])){
+    		return $data[0];
+    	} else {
+    		return null;
+    	}
+    }
+    function notifyJoining($team,$member){
+		// get member details..
+		$memberData = $this->getMemberDetails($member);
+		if (isset($memberData)){
+			$owner = $this->getTeamOwnerId($team);
+			if (!empty($owner)){
+				$data = array();
+				$data['from_table'] = 'member';
+				$data['from_key'] = $member;
+				$data['to_table'] = 'member';
+				$data['to_key'] = $owner->owner;
+				$data['notification'] = "The member $memberData->first_name $memberData->last_name requested team membrship!";
+				$data['published'] = 'yes';
+				$data['type'] = 'MESSAGE';
+				$notification = $this->createNotification($data);
+			}
+		}
+    }
     function sendDecline($team,$member){
    		$owner = $this->getTeamOwnerId($team);
    		if (!empty($owner)){
