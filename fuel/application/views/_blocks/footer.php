@@ -1,5 +1,4 @@
 	<div id="footer">
-		<a href="https://plus.google.com/111706559051974640132" rel="publisher">Google+</a>
 		<p>Copyright &copy; PROformance 2013 </p>
 	</div>
 </div>

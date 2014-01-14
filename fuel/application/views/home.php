@@ -37,3 +37,5 @@
 		</div>
 	</div>
 </div>
+<a href="https://plus.google.com/111706559051974640132" rel="publisher">Google+</a>
+
