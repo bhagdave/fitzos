@@ -74,7 +74,7 @@ class Teams extends CI_Controller{
 					$events = $this->teams->getTeamEvents($team_id);
 					$members= $this->teams->getTeamMembers($team_id);
 					$waiting= $this->teams->getMembersAwaiting($team_id);
-					$vars   = array('member'=>$member, 'wall'=>$wall,'owner'=>$owner, 'team'=>$team, 'members'=>$members, 'waiting'=>$waiting);
+					$vars   = array('member'=>$member, 'wall'=>$wall,'owner'=>$owner, 'team'=>$team, 'members'=>$members, 'waiting'=>$waiting, 'events'=>$events);
 					$this->fuel->pages->render('team/manage',$vars);
 				} else {
 					redirect('signin/login');
@@ -188,6 +188,14 @@ class Teams extends CI_Controller{
 	function newEvent($team){
 		if ($this->session->userdata('id')){
 			$this->load->model('teams_model','teams');
+			if (isset($_POST['team_id'])){
+				// ok update the beast...
+				$id = $this->teams->addTeamEvent($_POST);
+				if (isset($id)){
+					$this->session->set_flashdata('message', 'Event added');
+				}
+				redirect('teams/manage/' . $_POST['team_id']);
+			}
 			$data = $this->teams->getTeam($team);
 			$vars = array('team'=>$data);
 			$this->fuel->pages->render('team/addTeamEvent',$vars);
