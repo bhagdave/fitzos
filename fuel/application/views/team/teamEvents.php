@@ -15,3 +15,4 @@
 				echo("No team events");
 			}
 		?>
+	<a href="/teams/newEvent/<?=$team->id ?>" class='btn-small btn-success'>New Event</a>

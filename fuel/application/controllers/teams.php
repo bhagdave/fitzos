@@ -185,4 +185,15 @@ class Teams extends CI_Controller{
 			die();
 		}
 	}
+	function newEvent($team){
+		if ($this->session->userdata('id')){
+			$this->load->model('teams_model','teams');
+			$data = $this->teams->getTeam($team);
+			$vars = array('team'=>$data);
+			$this->fuel->pages->render('team/addTeamEvent',$vars);
+		} else {
+			redirect('signin/login');
+			die();
+		}
+	}
 }
