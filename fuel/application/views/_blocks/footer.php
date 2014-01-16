@@ -1,5 +1,5 @@
 	<div id="footer">
-		<p>Copyright &copy; PROformance 2013 </p>
+		<p>Copyright &copy; PROformance <?=date("Y") ?> </p>
 	</div>
 </div>
 <?php echo js('main').js($js); ?>
