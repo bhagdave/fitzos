@@ -161,6 +161,12 @@ class Teams_model extends Base_module_model {
 		if (is_array($data)){
 			if (!isset($data['date'])){
 				$data['date'] = date('Y-m-d');
+			} else {
+				if (strtotime($data['date'])){
+					$data['date'] = date('Y-m-d',strtotime($data['date']));
+				} else {
+					unset($data['date']);
+				}
 			}
 			$this->db->insert('event',$data);
 			return $this->db->insert_id();

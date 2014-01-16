@@ -31,6 +31,7 @@
 </div>
 <div class="row-fluid">
 	<div class="span4"><h2>Events</h2>
+		
 		<?php $this->load->view('team/teamEvents');?>
 	</div>
 </div>
