@@ -2,12 +2,13 @@
 //var_dump($athlete);
 ?>
 <div class="row">
-	<div class="span4">
+	<div class="col-md-4">
 		<?= isset($message) ? $message :'' ; ?>
 	</div>
 </div>
-<div class="row-fluid">
-	<div class="span4">
+<div class="col-md-6">
+<div class="row">
+	<div class="col-md-6">
 		<form class="form-horizontal" action="/athlete/profile" method="post" enctype="multipart/form-data">
 			<fieldset id="inputs">
 				<?php $this->load->view('_blocks/all-members');?>
@@ -101,7 +102,8 @@
 			
 			</form>
 	</div>
-	<div class="span4 top-right">
+	<div class="col-md-4 col-md-offset-1 top-right">
 		<?php echo fuel_block('athlete_profile');?>
 	</div>		
+</div>
 </div>

@@ -5,8 +5,10 @@
 <meta name="fitness socialized" content="www.reach-your-peak.com">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link href="http://<?=$_SERVER['SERVER_NAME'] ?>/assets/css/bootstrap-responsive.css" rel="stylesheet">
-<link href="http://<?=$_SERVER['SERVER_NAME'] ?>/assets/css/bootstrap.css" rel="stylesheet">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/knockout/2.3.0/knockout-min.js"></script> 
 <script src="http://<?=$_SERVER['SERVER_NAME'] ?>/assets/js/jquery.form.min.js"></script>

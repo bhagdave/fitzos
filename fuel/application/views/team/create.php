@@ -1,4 +1,5 @@
-<div class="row-fluid">
+<div class="col-md-6">
+<div class="row">
 	<div class="span2">&nbsp;</div>
 	<div class="span8">
 		<h2>Create new team</h2>
@@ -27,4 +28,5 @@
 			</fieldset>
 		</form>
 	</div>
+</div>
 </div>

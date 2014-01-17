@@ -1,13 +1,13 @@
 <div class="row">
-	<div class="span4">
+	<div class="col-md-4">
 		<?= isset($message) ? $message :'' ; ?>
 	</div>
 </div>
-<div class="row-fluid">
+<div class="row">
 	<h2>Add a new event for <?=$team->name ?></h2>
 </div>
-<div class="row-fluid">
-	<div class="span4">
+<div class="row">
+	<div class="col-md-4">
 		<form class="form-horizontal" method="post" enctype="multipart/form-data">
 			<fieldset id="inputs">
 				<div class="control-group">

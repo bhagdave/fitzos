@@ -3,12 +3,13 @@ $existingTeam = array();
 //var_dump($athlete);
 ?>
 <div class="row">
-	<div class="span4">
+	<div class="col-md-4">
 		<?= isset($message) ? $message :'' ; ?>
 	</div>
 </div>
-<div class="row-fluid">
-	<div class="span4">
+<div class="col-md-6">
+<div class="row">
+	<div class="col-md-4">
 		<h2>Your teams</h2>
 		<h4>Teams you own.</h4>
 		<?php 
@@ -47,7 +48,7 @@ $existingTeam = array();
 			}
 		?>
 		</div>
-	<div class="span4">
+	<div class="col-md-4">
 		<h2>Public teams</h2>
 		<?php 
 		if (isset($public_teams) && count($public_teams) > 0){
@@ -77,10 +78,12 @@ $existingTeam = array();
 	</div>
 	<div id="js-TeamMessages"></div>
 </div>
-<div class="row-fluid">
-	<div class="span2">&nbsp;</div>
-	<div class="span8">
+
+<div class="row">
+	<div class="col-md-2">&nbsp;</div>
+	<div class="col-md-8">
 		<a href="/teams/create/<?=$athlete->member_id ?>"><h2>Create new team</h2></a>
 	</div>
-	<div class="span2">&nbsp;</div>
+	<div class="col-md-2">&nbsp;</div>
+</div>
 </div>

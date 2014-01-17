@@ -1,7 +1,7 @@
-<div class="row-fluid">
+<div class="row">
 	<div class="span12">
-		<div class="row-fluid">
-			<div class="span4 signin">
+		<div class="row">
+			<div class="col-md-4 signin">
 				<?php $this->load->view('_blocks/all-members');?>
 			  						<div class="control-group">
 										<label class="control-label">Which major certifying agency(ies) are you certified through?</label>

@@ -1,15 +1,16 @@
+<div class="row col-md-12">
 <div class="row>
-	<div class="span4">
+	<div class="col-md-4">
 		<?= isset($message) ? $message :'' ; ?>
 	</div>
 </div>
-<div class="row-fluid">
-	<div class="span4">
+<div class="row">
+	<div class="col-md-4">
 		<div class="js-Members">
 		<?php $this->load->view('team/teamMembers');?>
 		</div>
 	</div>
-	<div class="span4">
+	<div class="col-md-4">
 		<h2>Team Wall</h2>
 		<form class="js-wallPostAdd">
 			<input type="hidden" name="team_id" value="<?=$team->id ?>" />
@@ -21,9 +22,10 @@
 		</div>
 	</div>
 </div>
-<div class="row-fluid">
-	<div class="span4">
+<div class="row">
+	<div class="col-md-4">
 		<h2>Team Membership</h2>
 		<?php echo("<a href='/teams/leave/{$team->id}/{$member->id}'><button>Leave</button></a>"); ?>	
 	</div>
+</div>
 </div>

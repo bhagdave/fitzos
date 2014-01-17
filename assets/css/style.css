@@ -21,6 +21,7 @@ p,h1,h3,h4,h5,small,label{
 .splash {
 	z-index:1;
 	background-image:url(../../../assets/images/splash_lead1.jpg);
+	background-repeat:no-repeat;
 }
 
 .info {

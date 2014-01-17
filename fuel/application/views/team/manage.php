@@ -1,23 +1,24 @@
+<div class="col-md-6">
 <div class="row">
-	<div class="span4">
+	<div class="col-md-4">
 		<?= isset($message) ? $message :'' ; ?>
 	</div>
 </div>
-<div class="row-fluid">
+<div class="row">
 	<h2><?=$team->name ?></h2>
 </div>
-<div class="row-fluid">
-	<div class="span4">
+<div class="row">
+	<div class="col-md-4">
 		<div class="js-Members">
 		<?php $this->load->view('team/teamMembers');?>
 		</div>
 	</div>
-	<div class="span4">
+	<div class="col-md-4">
 		<div class="js-MemberRequests">
 		<?php $this->load->view('team/memberRequests');?>
 		</div>
 	</div>
-	<div class="span4">
+	<div class="col-md-4">
 		<h2>Team Wall</h2>
 		<form class="js-wallPostAdd">
 			<input type="hidden" name="team_id" value="<?=$team->id ?>" />
@@ -29,9 +30,10 @@
 		</div>
 	</div>
 </div>
-<div class="row-fluid">
-	<div class="span4"><h2>Events</h2>
+<div class="row">
+	<div class="col-md-4"><h2>Events</h2>
 		
 		<?php $this->load->view('team/teamEvents');?>
 	</div>
+</div>
 </div>

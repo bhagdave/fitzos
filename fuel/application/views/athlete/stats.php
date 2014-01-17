@@ -1,3 +1,4 @@
+<div class="col-md-6">
 <?php
 //var_dump($athlete);
 //var_dump($positions);
@@ -55,3 +56,4 @@ if (isset($positions) && count($positions) > 0){
 <input placeholder="Date" type="text" class="datepicker" name="date" />
 <button class="btn btn-success">Submit</button>	
 </form>
+</div>

@@ -10,21 +10,11 @@
 			}
 	}
 ?>
-<div class="row-fluid">
-	<div class="span6 splash">
-		<div class="row-fluid">
-			<div class="offset7 span4 sign-in">
+<div class="row">
+	<div class="splash col-md-12 col-sm-12 col-xs-12">
+		<div class="row">
+			<div class="col-md-offset-6 col-md-3 sign-in col-sm-6 col-xs-6">
 				<?php $this->load->view('_blocks/sign-in');?>
-			</div>
-		</div>
-	</div>
-	<div class="span12">
-		<div class="row-fluid">
-			<div class="span8 info">
-			</div>
-			<div class="span4 cal">
-			</div>
-			<div class="span4 photo">
 			</div>
 		</div>
 	</div>

@@ -1,7 +1,7 @@
-<div class="row-fluid">
-	<div class="span12">
-		<div class="row-fluid">
-			<div class="span4 signin">
+<div class="row">
+	<div class="col-md-12">
+		<div class="row">
+			<div class="col-md-4 signin">
 				<?php $this->load->view('_blocks/all-members');?>
 							<div class="control-group">	
 								<label class="control-label">Are you currently active?</label>

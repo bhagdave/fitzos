@@ -2,7 +2,7 @@
 			<div class="control-group">	
 				<label class="control-label">Age:</label>
 				<div class="controls">
-					<input id="age" name="age" value="<?=isset($athlete->age) ? $athlete->age : ''  ?>" type="text" placeholder="Age" autofocus required>   
+					<input id="age" class="form-control" name="age" value="<?=isset($athlete->age) ? $athlete->age : ''  ?>" type="text" placeholder="Age" autofocus required>   
 				</div>
 			</div>
 			<div class="control-group">
@@ -15,6 +15,6 @@
 			<div class="control-group">
 				<label class="control-label">Location</label>
 				<div class="controls">
-					<input id="location" name="location" value="<?=isset($athlete->location) ? $athlete->location : ''  ?>" type="text" placeholder="Location" required>
+					<input id="location" class="form-control" name="location" value="<?=isset($athlete->location) ? $athlete->location : ''  ?>" type="text" placeholder="Location" required>
 				</div>
 			</div>

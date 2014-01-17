@@ -2,12 +2,13 @@
 $existingSports = array();
 ?>
 <div class="row">
-	<div class="span4">
+	<div class="col-md-4">
 		<?= isset($message) ? $message :'' ; ?>
 	</div>
 </div>
-<div class="row-fluid">
-	<div class="span4">
+<div class="col-md-6">
+<div class="row">
+	<div class="col-md-4">
 		<h2>Your Existing Sports</h2>
 	<?php
 		if (isset($members_sports)){
@@ -24,9 +25,9 @@ $existingSports = array();
 		}
 	?>
 	</div>
-	<div class="span4">
+	<div class="col-md-4">
 	</div>
-	<div class="span4">
+	<div class="col-md-4">
 		<h2>Add a Sport</h2>
 		<form action="/athlete/sports" method="post">
 			<input type="hidden" name="member_id" value="<?=$athlete->member_id ?>" />
@@ -50,4 +51,5 @@ $existingSports = array();
 		</form>
 		<a href="#"  class="btn js-addASport">Add a new sport!</a>
 	</div>
+</div>
 </div>
