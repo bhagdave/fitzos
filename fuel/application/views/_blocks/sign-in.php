@@ -21,7 +21,7 @@
   				<input type="radio" name="TC" id="TC" value="Accept">
   				<small>I accept these <br clear> <a href="terms">terms and conditions</a></small>
 			</label>
-			<button data-bind="twButton">Sign me up</button>
+			<button data-bind="twButton:matched()">Sign me up</button>
 		</fieldset>
 		</form>
 	</section>
@@ -32,20 +32,21 @@
 		self.email = ko.observable();
 		self.password = ko.observable();
 		self.confirm  = ko.observable();
+		self.rgdhfhj  = ko.observable(true);
 		self.matched  = ko.computed(function(){
 			return self.confirm() != self.password();	
-		},this);
-		self.completed = ko.computed(function(){
-			return (name && email && password && confirm) && !self.matched;
 		},this);
 	};
 	ko.bindingHandlers.twButton = {
 		init  : function(element){
-			console.log("AAAAAAAAA");
-			$(element).addClass('btn btn-success btn-mini disabled');
+			$(element).addClass('btn btn-success btn-mini');
 			$(element).prop('disabled',true);
 		},
-		update: function(element, valueAccessor){}
+		update: function(element, valueAccessor){
+			var current = valueAccessor();
+			console.log('Changing!!!' + current);
+			$(element).prop('disabled',current);
+		}
 	};
 	ko.applyBindings(new SignupModel());
 </script>
