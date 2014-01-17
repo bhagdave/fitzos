@@ -13,7 +13,7 @@
 <div class="row-fluid">
 	<div class="span6 splash">
 		<div class="row-fluid">
-			<div class="offset8 span4 sign-in">
+			<div class="offset7 span4 sign-in">
 				<?php $this->load->view('_blocks/sign-in');?>
 			</div>
 		</div>
