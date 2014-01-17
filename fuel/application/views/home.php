@@ -11,16 +11,11 @@
 	}
 ?>
 <div class="row-fluid">
-	<div class="span12">
+	<div class="span6 splash">
 		<div class="row-fluid">
-			<div class="span12 splash">
-				<img src="../../../assets/images/splash_lead1.jpg" alt=""/>
-			</div>
-			
-			<div class="span4 sign-in">
+			<div class="offset8 span4 sign-in">
 				<?php $this->load->view('_blocks/sign-in');?>
 			</div>
-			
 		</div>
 	</div>
 	<div class="span12">

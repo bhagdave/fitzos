@@ -11,10 +11,15 @@ p,h1,h3,h4,h5,small,label{
 	font-family: tahoma, san-serif;
 	font-size: 13px;
 }
-
+.sign-in h3,
+.sign-in label,
+.sign-in small{
+	color:white;
+}
 
 .splash {
 	z-index:1;
+	background-image:url(../../../assets/images/splash_lead1.jpg);
 }
 
 .info {
