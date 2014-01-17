@@ -10,10 +10,10 @@
   			Trainer
 		</label>
 		<fieldset id="inputs">
-			<input id="name" data-bind="value: name" name="name" value="<?=isset($request['name']) ? $request['name'] : ''  ?>" type="text" placeholder="Name" autofocus required>   
-			<input id="email" data-bind="value: email" name="email" value="<?=isset($request['email']) ? $request['email'] : ''  ?>" type="text" placeholder="Email" required>
-			<input id="password" data-bind="value: password,valueUpdate: 'afterkeydown'" name="password" value="<?=isset($request['password']) ? $request['password'] : ''  ?>" type="password" placeholder="Password" required>
-			<input id="confirm_password" data-bind="value: confirm,valueUpdate: 'afterkeydown'" name="confirm_password" value="<?=isset($request['confirm_password']) ? $request['confirm_password'] : ''  ?>" type="password" placeholder="Confirm Password" required>			
+			<input id="name" data-bind="value: name" name="name" type="text" placeholder="Name" autofocus required>   
+			<input id="email" data-bind="value: email" name="email" value="" type="text" placeholder="Email" required>
+			<input id="password" data-bind="value: password,valueUpdate: 'afterkeydown'" name="password" type="password" placeholder="Password" required>
+			<input id="confirm_password" data-bind="value: confirm,valueUpdate: 'afterkeydown'" name="confirm_password" type="password" placeholder="Confirm Password" required>			
 			<br>
 			<p><span data-bind="visible: matched" >Your passwords do not match</span></p>
 			
@@ -28,8 +28,8 @@
 <script type="text/javascript">
 	function SignupModel(){
 		var self   = this;
-		self.name  = ko.observable();
-		self.email = ko.observable();
+		self.name  = ko.observable(<?=isset($request['name']) ? $request['name'] : ''  ?>);
+		self.email = ko.observable(<?=isset($request['email']) ? $request['email'] : ''  ?>);
 		self.password = ko.observable();
 		self.confirm  = ko.observable();
 		self.isDone   = ko.computed(function(){

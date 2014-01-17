@@ -18,7 +18,7 @@ class Signin extends CI_Controller{
 			$this->load->model("members_model","members");
 			if ($this->members->checkIfMemberExists($_REQUEST)){
 				$mesg[] = 'That username is already taken.';
-				$this->fuel->pages->render('signin/error',$mesg);
+				redirect('/');
 			} else {
 				$id = $this->members->createMember($_REQUEST);
 				// Send email to user to activate account...
