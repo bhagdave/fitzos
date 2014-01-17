@@ -38,6 +38,12 @@
 				showButton = (self.email() != undefined); 
 			}
 			if (showButton){
+				showButton = (self.password() != undefined); 
+			}
+			if (showButton){
+				showButton = (self.confirm() != undefined); 
+			}
+			if (showButton){
 				showButton = self.confirm() === self.password(); 
 			}
 			return showButton;	
