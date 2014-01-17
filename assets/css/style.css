@@ -13,7 +13,8 @@ p,h1,h3,h4,h5,small,label{
 }
 .sign-in h3,
 .sign-in label,
-.sign-in small{
+.sign-in small,
+.sign-in p{
 	color:white;
 }
 
