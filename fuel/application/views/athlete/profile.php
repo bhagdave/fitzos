@@ -27,8 +27,12 @@
 				</div>
 				<div class="control-group">
 					<label class="control-label">Height</label>
-					<div class="controls">
-						<input id="height" data-bind="value: height" name="height" type="text" placeholder="Height">
+					<div data-bind="visible: metric" class="controls">
+						<input id="height" data-bind="value: height" name="height" type="text" placeholder="Height in metres">
+					</div>
+					<div data-bind="visible: imperial" class="controls">
+						<input id="height" data-bind="value: heightFeet" name="height-feet" type="text" placeholder="Feet">
+						<input id="height" data-bind="value: heightInches" name="height-inches" type="text" placeholder="Inches">
 					</div>
 				</div>
 				<div class="control-group">
@@ -109,12 +113,22 @@
 </div>
 <button data-bind="click: saveMe">Click me!</button>
 <script type="text/javascript">
+function roundit(which){
+	return Math.round(which*100)
+	}
+					
 function profileView(){
 	var self = this;
 	self.id = ko.observable();
 	self.nickname = ko.observable();
-	self.units = ko.observable();
+	self.units = ko.observable('Metric');
 	self.height = ko.observable();
+	self.heightFeet = ko.computed(function(){
+		return(roundit(self.height()/30.84));	
+	});
+	self.heightInches = ko.computed(function(){
+		return(roundit(self.height()/2.54) % 12);	
+	});
 	self.weight = ko.observable();
 	self.body_fat_percentage = ko.observable();
 	self.show_status = ko.observable();
@@ -123,11 +137,23 @@ function profileView(){
 	self.search = ko.observable();
 	self.message = ko.observable();
 	self.find_trainer = ko.observable();
+	self.metric = ko.observable(true);
+	self.imperial = ko.observable(false);
+	self.units.subscribe(function(newValue){
+		if (newValue === 'Metric'){
+			self.metric(true);
+			self.imperial(false);
+		} else {
+			self.metric(false);
+			self.imperial(true);
+		}
+		console.log('Metric:' + self.metric());
+	});
 	$.getJSON("/athlete/getAthlete", function(data) {
 		self.id(data.id); 
 		self.nickname(data.nickname);
 		self.units(data.units);
-		self.height(data.height);	
+		self.height(data.height);
 		self.weight(data.weight);
 		self.body_fat_percentage(data.body_fat_percentage);
 		self.show_status(data.show_status);
