@@ -20,6 +20,15 @@ class Athlete extends CI_Controller{
 		$vars = array('athlete'=>$athlete,'member'=>$member);
 		$this->fuel->pages->render('athlete/welcome',$vars);
 	}
+	function getAthlete(){
+		$this->load->model('athletes_model','athletes');
+		$id      = $this->session->userdata('id');
+		$athlete = $this->athletes->loadProfile($id);
+		echo(json_encode($athlete));
+	}
+	function setAthlete(){
+		
+	}
 	function signUp(){
 		// check for login???
 		$vars = array();

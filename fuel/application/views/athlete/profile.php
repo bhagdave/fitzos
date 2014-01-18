@@ -15,26 +15,26 @@
 				<div class="control-group">
 					<label class="control-label">Nickname</label>
 					<div class="controls">
-						<input id="nickname" name="nickname" value="<?=isset($athlete->nickname) ? $athlete->nickname : ''  ?>" type="text" placeholder="Nickname">
+						<input id="nickname" data-bind="value: nickname" name="nickname"  type="text" placeholder="Nickname">
 					</div>
 				</div>
 				<div class="control-group">
 					<label class="control-label">Units</label>
 					<div class="controls">	
-						<label class="radio">Metric<input id="metric" name="units" value="metric" type="radio"  <?= isset($athlete->units) && $athlete->units == 'Metric' ? 'checked' : '' ?>></label>					
-						<label class="radio">Imperial<input id="imperial" name="units" value="imperial" type="radio" <?= isset($athlete->units) && $athlete->units == 'Imperial' ? 'checked' : '' ?>></label>
+						<label class="radio">Metric<input data-bind="checked: units" id="metric" name="units" value="Metric" type="radio"></label>					
+						<label class="radio">Imperial<input data-bind="checked: units" id="imperial" name="units" value="Imperial" type="radio"></label>
 					</div>
 				</div>
 				<div class="control-group">
 					<label class="control-label">Height</label>
 					<div class="controls">
-						<input id="height" name="height" value="<?=isset($athlete->height) ? $athlete->height : ''  ?>" type="text" placeholder="Height">
+						<input id="height" data-bind="value: height" name="height" type="text" placeholder="Height">
 					</div>
 				</div>
 				<div class="control-group">
 					<label class="control-label">Weight</label>
 					<div class="controls">
-						<input id="weight" name="weight" value="<?=isset($athlete->weight) ? $athlete->weight : ''  ?>" type="text" placeholder="Weight" >
+						<input id="weight" data-bind="value: weight" name="weight" type="text" placeholder="Weight" >
 					</div>
 				</div>
 				<div class="control-group">
@@ -46,8 +46,8 @@
 				<div class="control-group">
 					<label class="control-label">Show status to others?</label>
 					<div class="controls">	
-						<label class="radio">Yes (I am a show off)<input id="yes" name="show_status" value="Yes" type="radio" <?= isset($athlete->show_status) && $athlete->show_status == 'Yes' ? 'checked' : '' ?>></label>					
-						<label class="radio">No (I am shy)<input id="no" name="show_status" value="No" type="radio" <?= isset($athlete->show_status) && $athlete->show_status == 'No' ? 'checked' : '' ?>></label>
+						<label class="radio">Yes (I am a show off)<input id="yes" name="show_status" value="Yes" type="radio" data-bind="checked: showstatus"></label>					
+						<label class="radio">No (I am shy)<input id="no" name="show_status" value="No" type="radio" data-bind="checked: showstatus"></label>
 					</div>
 				</div>
 				<div class="control-group">
@@ -107,3 +107,24 @@
 	</div>		
 </div>
 </div>
+<script type="text/javascript">
+function profileView(){
+	var self = this;
+	self.nickname   = ko.observable();
+	self.units      = ko.observable();
+	self.height     = ko.observable();
+	self.weight     = ko.observable();
+	self.bfp	    = ko.observable();
+	self.showstatus = ko.observable();
+	$.getJSON("/athlete/getAthlete", function(data) { 
+		self.nickname(data.nickname);
+		self.units(data.units);
+		self.height(data.height);	
+		self.weight(data.weight);
+		self.bfp(data.body_fat_percentage);
+		self.showstatus(data.show_status);
+			
+	})		
+}
+ko.applyBindings(new profileView());
+</script>
