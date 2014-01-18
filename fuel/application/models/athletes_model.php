@@ -5,6 +5,10 @@ class Athletes_model extends Fitzos_model {
 	{
 		parent::__construct('athlete');
 	}
+	function setProfile($athlete){
+		$this->db->where('id',$athlete->id);
+		$this->db->update('athlete',$athlete);
+	}
 	function saveProfile($data){
 		$update = array(
 			'gender'=>$data['gender'],

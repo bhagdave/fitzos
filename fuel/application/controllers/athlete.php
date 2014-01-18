@@ -27,7 +27,9 @@ class Athlete extends CI_Controller{
 		echo(json_encode($athlete));
 	}
 	function setAthlete(){
-		
+		$this->load->model('athletes_model','athletes');
+		$athlete = json_decode($_POST['payload']);
+		$this->athletes->setProfile($athlete);	
 	}
 	function signUp(){
 		// check for login???

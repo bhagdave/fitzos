@@ -40,49 +40,49 @@
 				<div class="control-group">
 					<label class="control-label">Body Fat Percentage</label>
 					<div class="controls">
-						<input id="bfp" name="bodyFat" value="<?=isset($athlete->body_fat_percentage) ? $athlete->body_fat_percentage : ''  ?>" type="text" placeholder="Body Fat Percentage">
+						<input id="bfp" name="bodyFat" data-bind="value: body_fat_percentage" type="text" placeholder="Body Fat Percentage">
 					</div>
 				</div>
 				<div class="control-group">
 					<label class="control-label">Show status to others?</label>
 					<div class="controls">	
-						<label class="radio">Yes (I am a show off)<input id="yes" name="show_status" value="Yes" type="radio" data-bind="checked: showstatus"></label>					
-						<label class="radio">No (I am shy)<input id="no" name="show_status" value="No" type="radio" data-bind="checked: showstatus"></label>
+						<label class="radio">Yes (I am a show off)<input id="yes" name="show_status" value="Yes" type="radio" data-bind="checked: show_status"></label>					
+						<label class="radio">No (I am shy)<input id="no" name="show_status" value="No" type="radio" data-bind="checked: show_status"></label>
 					</div>
 				</div>
 				<div class="control-group">
 					<label class="control-label">Show progress to others?</label>
 					<div class="controls">	
-						<label class="radio">Yes (I am a show off)<input id="yes" name="show_progress" value="Yes" type="radio" <?= isset($athlete->show_progress) && $athlete->show_progress == 'Yes' ? 'checked' : '' ?>></label>					
-						<label class="radio">No (I am shy)<input id="no" name="show_progress" value="No" type="radio" <?= isset($athlete->show_progress) && $athlete->show_progress == 'No' ? 'checked' : '' ?>></label>
+						<label class="radio">Yes (I am a show off)<input id="yes" name="show_progress" value="Yes" type="radio" data-bind="checked: show_progress"></label>					
+						<label class="radio">No (I am shy)<input id="no" name="show_progress" value="No" type="radio" data-bind="checked: show_progress"></label>
 					</div>
 				</div>
 				<div class="control-group">
 					<label class="control-label">Show points in league tables?</label>
 					<div class="controls">	
-						<label class="radio">Yes (I am a show off)<input id="yes" name="show_tables" value="Yes" type="radio" <?= isset($request['show_tables']) && $request['show_tables'] == 'Yes' ? 'checked' : '' ?>></label>					
-						<label class="radio">No (I am shy)<input id="no" name="show_tables" value="No" type="radio" <?= isset($athlete->show_tables) && $athlete->show_tables == 'No' ? 'checked' : '' ?>></label>
+						<label class="radio">Yes (I am a show off)<input id="yes" name="show_tables" value="Yes" type="radio" data-bind="checked: show_tables"></label>					
+						<label class="radio">No (I am shy)<input id="no" name="show_tables" value="No" type="radio" data-bind="checked: show_tables"></label>
 					</div>
 				</div>
 				<div class="control-group">
 					<label class="control-label">Appear in searches?</label>
 					<div class="controls">	
-						<label class="radio">Yes (I am a show off)<input id="yes" name="search" value="Yes" type="radio" <?= isset($athlete->search) && $athlete->search == 'Yes' ? 'checked' : '' ?>></label>					
-						<label class="radio">No (I am shy)<input id="no" name="search" value="No" type="radio" <?= isset($athlete->search) && $athlete->search == 'No' ? 'checked' : '' ?>></label>
+						<label class="radio">Yes (I am a show off)<input id="yes" name="search" value="Yes" type="radio" data-bind="checked: search"></label>					
+						<label class="radio">No (I am shy)<input id="no" name="search" value="No" type="radio" data-bind="checked: search"></label>
 					</div>
 				</div>
 				<div class="control-group">
 					<label class="control-label">Would you like messaging?</label>
 					<div class="controls">	
-						<label class="radio">Yes (I like talking)<input id="yes" name="message" value="Yes" type="radio" <?= isset($athlete->message) && $athlete->message == 'Yes' ? 'checked' : '' ?>></label>					
-						<label class="radio">No (I am shy)<input id="no" name="message" value="No" type="radio" <?= isset($athlete->message) && $athlete->message == 'No' ? 'checked' : '' ?>></label>
+						<label class="radio">Yes (I like talking)<input id="yes" name="message" value="Yes" type="radio" data-bind="checked: message"></label>					
+						<label class="radio">No (I am shy)<input id="no" name="message" value="No" type="radio" data-bind="checked: message"></label>
 					</div>
 				</div>
 				<div class="control-group">
 					<label class="control-label">Can we hook you up with a trainer?</label>
 					<div class="controls">	
-						<label class="radio">Yes (I need help)<input id="yes" name="find_trainer" value="Yes" type="radio" <?= isset($athlete->find_trainer) && $athlete->find_trainer == 'Yes' ? 'checked' : '' ?>></label>					
-						<label class="radio">No (I am good)<input id="no" name="find_trainer" value="No" type="radio" <?= isset($athlete->find_trainer) && $athlete->find_trainer == 'No' ? 'checked' : '' ?>></label>
+						<label class="radio">Yes (I need help)<input id="yes" name="find_trainer" value="Yes" type="radio" data-bind="checked: find_trainer"></label>					
+						<label class="radio">No (I am good)<input id="no" name="find_trainer" value="No" type="radio" data-bind="checked: find_trainer"></label>
 					</div>
 				</div>
 				<div class="control-group">
@@ -107,24 +107,43 @@
 	</div>		
 </div>
 </div>
+<button data-bind="click: saveMe">Click me!</button>
 <script type="text/javascript">
 function profileView(){
 	var self = this;
-	self.nickname   = ko.observable();
-	self.units      = ko.observable();
-	self.height     = ko.observable();
-	self.weight     = ko.observable();
-	self.bfp	    = ko.observable();
-	self.showstatus = ko.observable();
-	$.getJSON("/athlete/getAthlete", function(data) { 
+	self.id = ko.observable();
+	self.nickname = ko.observable();
+	self.units = ko.observable();
+	self.height = ko.observable();
+	self.weight = ko.observable();
+	self.body_fat_percentage = ko.observable();
+	self.show_status = ko.observable();
+	self.show_progress = ko.observable();
+	self.show_tables = ko.observable();
+	self.search = ko.observable();
+	self.message = ko.observable();
+	self.find_trainer = ko.observable();
+	$.getJSON("/athlete/getAthlete", function(data) {
+		self.id(data.id); 
 		self.nickname(data.nickname);
 		self.units(data.units);
 		self.height(data.height);	
 		self.weight(data.weight);
-		self.bfp(data.body_fat_percentage);
-		self.showstatus(data.show_status);
-			
-	})		
+		self.body_fat_percentage(data.body_fat_percentage);
+		self.show_status(data.show_status);
+		self.show_progress(data.show_progress);
+		self.show_tables(data.show_tables);
+		self.search(data.search);
+		self.message(data.message);
+		self.find_trainer(data.find_trainer);	
+	})
+	self.saveMe = function(){
+		var data = ko.toJSON(self);
+		console.log(data);
+		$.post("/athlete/setAthlete", {payload:data}, function(returnedData) {
+		    // This callback is executed if the post was successful     
+		})
+	}		
 }
 ko.applyBindings(new profileView());
 </script>
