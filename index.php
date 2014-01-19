@@ -9,7 +9,7 @@
  */
 define('INSTALL_ROOT', str_replace('\\', '/', realpath(dirname(__FILE__))).'/fuel/');
 
-
+date_default_timezone_set('America/New_York');
 /*
  *---------------------------------------------------------------
  * FUEL CLI (Command Line Interface)

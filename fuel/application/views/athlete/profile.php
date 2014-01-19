@@ -123,11 +123,32 @@ function profileView(){
 	self.nickname = ko.observable();
 	self.units = ko.observable('Metric');
 	self.height = ko.observable();
-	self.heightFeet = ko.computed(function(){
-		return(roundit(self.height()/30.84));	
+	self.heightFeet = ko.computed({
+		read: function(){
+			return(roundit(self.height()/30.84));	
+		},
+		write: function(value){
+			var inches = value * 12;
+			inches = inches + self.heightInches();
+			var cm = Math.round(inches * 2.5);
+			self.height(cm/100);
+		},
+		owner: this
 	});
-	self.heightInches = ko.computed(function(){
-		return(roundit(self.height()/2.54) % 12);	
+	self.heightInches = ko.computed({
+		read: function(){
+			return(roundit(self.height()/2.54) % 12);	
+		},
+		write: function(value){
+			var inches = parseInt(value);
+			console.log("Inches:" + inches);
+			inches = inches + (self.heightFeet() * 12);
+			console.log("Inches:" + inches);
+			var cm = (inches * 2.54);
+			console.log("CM:" + cm);
+			self.height(cm/100);
+		},
+		owner: this
 	});
 	self.weight = ko.observable();
 	self.body_fat_percentage = ko.observable();
@@ -147,7 +168,6 @@ function profileView(){
 			self.metric(false);
 			self.imperial(true);
 		}
-		console.log('Metric:' + self.metric());
 	});
 	$.getJSON("/athlete/getAthlete", function(data) {
 		self.id(data.id); 
