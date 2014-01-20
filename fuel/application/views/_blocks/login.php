@@ -1,4 +1,4 @@
-	<div class="splash col-md-8 col-sm-12 col-xs-12">
+	<div class="splash col-lg-6 col-md-8 col-sm-12 col-xs-12">
 		<form action="/signin/login" method="post">
 		<h5>Log In</h5>
 		<fieldset class="loginform" id="inputs">
