@@ -34,11 +34,13 @@
 						<input id="height" data-bind="value: heightFeet" name="height-feet" type="text" placeholder="Feet">
 						<input id="height" data-bind="value: heightInches" name="height-inches" type="text" placeholder="Inches">
 					</div>
-				</div>
 				<div class="control-group">
 					<label class="control-label">Weight</label>
-					<div class="controls">
-						<input id="weight" data-bind="value: weight" name="weight" type="text" placeholder="Weight" >
+					<div data-bind="visible: metric" class="controls">
+						<input id="weight" data-bind="value: weight" name="weight" type="text" placeholder="Weight in Kilos" >
+					</div>
+					<div data-bind="visible: imperial" class="controls">
+						<input id="weight" data-bind="value: weightPounds" name="weight" type="text" placeholder="Weight in Pounds" >
 					</div>
 				</div>
 				<div class="control-group">
@@ -111,7 +113,6 @@
 	</div>		
 </div>
 </div>
-<button data-bind="click: saveMe">Click me!</button>
 <script type="text/javascript">
 function roundit(which){
 	return Math.round(which*100)
@@ -151,6 +152,14 @@ function profileView(){
 		owner: this
 	});
 	self.weight = ko.observable();
+	self.weightPounds = ko.computed({
+		read: function(){
+			return(Math.round(self.weight()*2.20462));	
+		},
+		write: function(value){
+		},
+		owner:this
+	});
 	self.body_fat_percentage = ko.observable();
 	self.show_status = ko.observable();
 	self.show_progress = ko.observable();
