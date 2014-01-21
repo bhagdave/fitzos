@@ -126,13 +126,15 @@ function profileView(){
 	self.height = ko.observable();
 	self.heightFeet = ko.computed({
 		read: function(){
-			return(roundit(self.height()/30.84));	
+			var feet = (Math.floor(self.height()*3.28084));
+			return(feet);	
 		},
 		write: function(value){
 			var inches = value * 12;
 			inches = inches + self.heightInches();
-			var cm = Math.round(inches * 2.5);
-			self.height(cm/100);
+			var cm = (inches * 2.54);
+			cm = parseFloat(cm).toFixed(2);
+			self.height(parseFloat(cm).toFixed(2)/100);
 		},
 		owner: this
 	});
@@ -142,12 +144,10 @@ function profileView(){
 		},
 		write: function(value){
 			var inches = parseInt(value);
-			console.log("Inches:" + inches);
 			inches = inches + (self.heightFeet() * 12);
-			console.log("Inches:" + inches);
 			var cm = (inches * 2.54);
-			console.log("CM:" + cm);
-			self.height(cm/100);
+			cm = parseFloat(cm).toFixed(2);
+			self.height(parseFloat(cm).toFixed(2)/100);
 		},
 		owner: this
 	});
