@@ -157,6 +157,8 @@ function profileView(){
 			return(Math.round(self.weight()*2.20462));	
 		},
 		write: function(value){
+			var lbs = value;
+			self.weight(Math.round(lbs * 0.453592));
 		},
 		owner:this
 	});
