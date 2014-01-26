@@ -3,10 +3,24 @@
 		<h2>Athlete Home Page</h2>
 	</div>
 	<div class="col-md-4">
-		
+		<?php 
+			if (isset($member->image)){
+				echo("<img src='".$member->image."' alt='".$member->first_name . " " . $member->last_name ."' title='".$member->first_name . " " . $member->last_name ."'");
+			}
+		?>
 	</div>
 	<div class="col-md-4">
 		<h3><?=isset($member) ? $member->first_name . ' ' . $member->last_name : '' ; ?></h3>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-10 col-xs-12 col-lg-6">
+		<?php $this->load->view('athlete/notifications'); ?>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-10 col-xs-12 col-lg-6">
+		<?php $this->load->view('athlete/events'); ?>
 	</div>
 </div>
 <div class="row">

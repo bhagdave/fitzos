@@ -9,15 +9,19 @@ class Athlete extends CI_Controller{
 		if ($this->session->userdata('id')){
 			$this->load->model('athletes_model','athletes');
 			$this->load->model('members_model','members');
+			$this->load->model('notifications_model','notify');
+			$this->load->model('events_model','events');	
 			// get the athlete from the database
 			$id      = $this->session->userdata('id');
 			$athlete = $this->athletes->loadProfile($id);
 			$member  = $this->members->getMember($id);
+			$events  = $this->events->getEventsForMember($id);
+			$notifications = $this->notify->getMemberNotifications($id);
 		} else {
 			redirect('signin/login');
 			die();
 		}
-		$vars = array('athlete'=>$athlete,'member'=>$member);
+		$vars = array('athlete'=>$athlete,'member'=>$member,'notes'=>$notifications,'events'=>$events);
 		$this->fuel->pages->render('athlete/welcome',$vars);
 	}
 	function getAthlete(){
