@@ -14,13 +14,24 @@
 	</div>
 </div>
 <div class="row">
+	<div class="col-md-2 col-xs-12 col-lg-6">
+		<h2>Notifications</h2>
+	</div>
 	<div class="col-md-10 col-xs-12 col-lg-6">
 		<?php $this->load->view('athlete/notifications'); ?>
 	</div>
 </div>
 <div class="row">
+	<div class="col-md-2 col-xs-12 col-lg-6">
+		<h2>Events</h2>
+	</div>
 	<div class="col-md-10 col-xs-12 col-lg-6">
 		<?php $this->load->view('athlete/events'); ?>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12 col-xs-12 col-lg-12">
+		<hr>
 	</div>
 </div>
 <div class="row">
