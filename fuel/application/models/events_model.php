@@ -8,11 +8,13 @@ class Events_model extends Base_module_model {
         parent::__construct('event');
     }
     function getEventsForMember($member){
+    	$this->db->select('event.*');
 		$this->db->join("team","event.team_id = team.id");
 		$this->db->join("team_membership","team.id = team_membership.team_id");
     	$this->db->where("team_membership.member_id",$member);
 		$result = $this->db->get('event');
-		return $result->result();
+		$data = $result->result();
+		return $data;
     }
 }
  
