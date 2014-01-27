@@ -8,8 +8,8 @@ class Members_model extends Fitzos_model {
     function checkLogin($username,$password){
     	$this->db->select("email,salt,id");
     	$this->db->where('email',$username);
-    	$this->db->where('password',$password);
-    	$this->db->where('active','yes');
+//    	$this->db->where('password',$password);
+//    	$this->db->where('active','yes');
     	$result = $this->db->get('member');
     	$data = $result->result();
     	if (isset($data[0])){

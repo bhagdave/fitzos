@@ -190,6 +190,21 @@ class Teams extends CI_Controller{
 			$this->load->model('teams_model','teams');
 			if (isset($_POST['team_id'])){
 				// ok update the beast...
+				if (isset($_FILES['file']['name'])){
+					if ($_FILES["file"]["error"] > 0){	
+						$this->session->set_flashdata('message', 'Unable to save image');
+					} else {
+						$path = 'assets/images/events/' . $_FILES["file"]["name"];
+						if (file_exists($path)){
+							// update member image to point here...
+						} else {
+							// save file...
+							move_uploaded_file($_FILES["file"]["tmp_name"],$path);
+						}
+						// update the member
+						$_POST['image'] =$path;
+					}
+				}			
 				$id = $this->teams->addTeamEvent($_POST);
 				if (isset($id)){
 					$this->session->set_flashdata('message', 'Event added');
