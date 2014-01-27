@@ -5,7 +5,7 @@
 	<div class="col-md-4">
 		<?php 
 			if (isset($member->image)){
-				echo("<img src='".$member->image."' alt='".$member->first_name . " " . $member->last_name ."' title='".$member->first_name . " " . $member->last_name ."'");
+				echo("<img src='/".$member->image."' alt='".$member->first_name . " " . $member->last_name ."' title='".$member->first_name . " " . $member->last_name ."'");
 			}
 		?>
 	</div>
