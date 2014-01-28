@@ -48,6 +48,12 @@ class Athletes_model extends Fitzos_model {
 		return $result->result();
 	}
 	function saveStats($data){
+		// lets frig those dates baby..
+		if (strtotime($data['date'])){
+			$data['date'] = date('Y-m-d',strtotime($data['date']));
+		} else {
+			unset($data['date']);
+		}
 		$this->db->insert("statistics",$data);
 		return $this->db->insert_id();
 	}

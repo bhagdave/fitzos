@@ -1,6 +1,10 @@
-	<div id="footer">
-		<p>Copyright &copy; PROformance <?=date("Y") ?> </p>
+<div class="col-md-12">
+	<div class="row">
+		<div id="footer">
+			<p>Copyright &copy; PROformance <?=date("Y") ?> </p>
+		</div>
 	</div>
+</div>
 </div>
 <?php echo js('main').js($js); ?>
 <!-- AddThis Smart Layers BEGIN -->
