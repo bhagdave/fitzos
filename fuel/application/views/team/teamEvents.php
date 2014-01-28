@@ -10,7 +10,7 @@
 						echo("<button class='btn-small js-DeleteEvent' onclick='deleteEvent(".$team->id.",".$post->id .")'>Delete</button>");
 					}
 					if (isset($post->image)){
-						echo("<img src='/".$post->image."' alt='".$post->name."' title='".$post->name."'>");
+						echo("<img height=320px src='/".$post->image."' alt='".$post->name."' title='".$post->name."'>");
 					}	
 					echo("</div>");
 				}
