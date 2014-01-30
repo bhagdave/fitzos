@@ -26,21 +26,27 @@ $existingTeam = array();
 		<?php 
 			if (isset($member) && count($member) > 0){
 				foreach($member as $team){
+					echo("<div class='athleteTeams' style='border:1px solid;border-radius:10px;'>");
 					$existingTeam[] = $team->name;
 					echo("<a href='/teams/view/{$team->id}'>".$team->name. "</a>");
-					echo("<a href='/teams/leave/{$team->id}/{$athlete->member_id}'><button>Leave</button></a>");
+					echo("<a id='leaveTeam' href='/teams/leave/{$team->id}/{$athlete->member_id}'><button>Leave</button></a>");
+					echo("</div>");
 				}
 				if (isset($owned) && count($owned) > 0){
 					foreach($owned as $team){
+						echo("<div class='athleteTeams' style='border:1px solid;border-radius:10px;'>");
 						$existingTeam[] = $team->name;
 						echo('<a href="/teams/manage/' . $team->id .'"><p>' . $team->name. '</p></a>');
+						echo("</div>");
 					}
 				} 
 			} else {
 				if (isset($owned) && count($owned) > 0){
 					foreach($owned as $team){
+						echo("<div class='athleteTeams' style='border:1px solid;border-radius:10px;'>");
 						$existingTeam[] = $team->name;
 						echo('<a href="/teams/manage/' . $team->id .'"><p>' . $team->name. '</p></a>');
+						echo("</div>");
 					}
 				} else {
 					echo("<h5>You are not currently in any teams!</h5>");
