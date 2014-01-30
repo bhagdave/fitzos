@@ -34,11 +34,6 @@
 	</div>
 </div>
 <div class="row">
-	<div class="col-md-offset-1 col-md-10">
-		<?php echo fuel_block('athlete_welcome');?>
-	</div>
-</div>
-<div class="row">
 	<div class="col-md-2 col-md-offset-5">
 		<a href="/athlete/profile" width="400px" class="btn btn-success btn-block">Profile</a>
 	</div>
