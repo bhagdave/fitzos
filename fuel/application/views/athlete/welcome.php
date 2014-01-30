@@ -1,16 +1,16 @@
 <div class="row">
-	<div class="col-md-8 col-lg-10 col-xs-12">
+	<div class="col-md-6 col-lg-10 col-xs-12">
 		<h2>Athlete Home Page</h2>
 			<div class="row">
-				<div class="col-md-4 col-xs-12 col-lg-6">
+				<div class="col-md-3 col-xs-12 col-lg-6">
 					<h2>Notifications</h2>
 				</div>
-				<div class="col-md-4 col-xs-12 col-lg-6">
+				<div class="col-md-3 col-xs-12 col-lg-6">
 					<?php $this->load->view('athlete/notifications'); ?>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-4 col-xs-12 col-lg-6">
+				<div class="col-md-3 col-xs-12 col-lg-6">
 					<h2>Events</h2>
 				</div>
 				<div class="col-md-4 col-xs-12 col-lg-6">
