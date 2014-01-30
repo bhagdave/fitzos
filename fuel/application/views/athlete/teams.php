@@ -11,7 +11,7 @@ $existingTeam = array();
 <div class="row">
 	<div class="col-md-4">
 		<h2>Your teams</h2>
-		<h4>Teams you own.</h4>
+		<h3>Teams you own.</h3>
 		<?php 
 			if (isset($owned) && count($owned) > 0){
 				foreach($owned as $team){
@@ -22,14 +22,14 @@ $existingTeam = array();
 				echo("<h5>You do not currently own any teams!</h5>");
 			}
 		?>
-		<h4>Teams you are in.</h4>
+		<h3>Teams you are in.</h3>
 		<?php 
 			if (isset($member) && count($member) > 0){
 				foreach($member as $team){
 					echo("<div class='athleteTeams' style='border:1px solid;border-radius:10px;'>");
 					$existingTeam[] = $team->name;
 					echo("<a href='/teams/view/{$team->id}'>".$team->name. "</a>");
-					echo("<a id='leaveTeam' href='/teams/leave/{$team->id}/{$athlete->member_id}'><button>Leave</button></a>");
+					echo("<a style='padding:10px;' id='leaveTeam' href='/teams/leave/{$team->id}/{$athlete->member_id}'><button>Leave</button></a>");
 					echo("</div>");
 				}
 				if (isset($owned) && count($owned) > 0){
