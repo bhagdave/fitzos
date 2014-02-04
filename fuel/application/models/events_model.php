@@ -14,7 +14,6 @@ class Events_model extends Base_module_model {
     	$this->db->where("team_membership.member_id",$member);
     	$this->db->or_where("team.owner",$member);
 		$result = $this->db->get('event');
-		echo($this->db->last_query());
 		$data = $result->result();
 		return $data;
     }
