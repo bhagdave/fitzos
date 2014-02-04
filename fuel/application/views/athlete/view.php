@@ -16,10 +16,12 @@
 			foreach($sports as $sport){
 				echo("<h4>$sport->sport</h4>");
 				if (isset($sport->from_date)){
-					echo("From $sport->from_date");
+					$date = new DateTime($sport->from_date);
+					echo("From: ". $date->format('m/d/Y'));
 				}
 				if (isset($sport->to_date)){
-					echo(" Until $sport->to_date");
+					$date = new DateTime($sport->to_date);
+					echo(" Until " . $date->format('m/d/Y'));
 				}
 				echo("<br>");
 				$existingSports[] = $sport->sport;

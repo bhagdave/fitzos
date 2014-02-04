@@ -25,7 +25,7 @@
 				<div class="control-group">
 					<label class="control-label">Date</label>
 					<div class="controls">
-						<input id="js-eventDate" class="datepicker" name="date" value="<?=isset($event->date) ? $event->date : ''  ?>" type="text" placeholder="Event date">
+						<input id="js-eventDate" class="datepicker" name="date"  data-date-format="mm/dd/yyyy" value="<?=isset($event->date) ? $event->date : ''  ?>" type="text" placeholder="Event date">
 					</div>
 				</div>
 				<div class="control-group">

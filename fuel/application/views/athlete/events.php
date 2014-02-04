@@ -7,7 +7,8 @@
 						echo($post->content. "<br>");
 					}
 					if (!empty($post->date)){
-						echo($post->date. "<br>");
+						$date = new DateTime($post->date);
+						echo($date->format('m/d/Y'). "<br>");
 					}
 					echo("</div>");
 				}
