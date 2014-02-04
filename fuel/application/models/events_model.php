@@ -10,9 +10,11 @@ class Events_model extends Base_module_model {
     function getEventsForMember($member){
     	$this->db->select('event.*');
 		$this->db->join("team","event.team_id = team.id");
-		$this->db->join("team_membership","team.id = team_membership.team_id");
+		$this->db->join("team_membership","team.id = team_membership.team_id",'left');
     	$this->db->where("team_membership.member_id",$member);
+    	$this->db->or_where("team.owner",$member);
 		$result = $this->db->get('event');
+		echo($this->db->last_query());
 		$data = $result->result();
 		return $data;
     }
