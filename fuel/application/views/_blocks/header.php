@@ -22,7 +22,7 @@
 <body>
 		<header>
 			<a href="http://<?=$_SERVER['SERVER_NAME'] ?>">
-				<img src="http://<?=$_SERVER['SERVER_NAME'] ?>/assets/images/logo.png" alt="FitZos.com" name="Fitzos.com" width="178" height="99" id="FitZos" style="display:block;" class="logo"/>
+				<img src="http://<?=$_SERVER['SERVER_NAME'] ?>/assets/images/logo.png" alt="www.reach-your-peak.com" name="www.reach-your-peak.com" width="178" height="99" id="FitZos" style="display:block;" class="logo"/>
 			</a>
 <?php
 	$ci = &get_instance(); 
