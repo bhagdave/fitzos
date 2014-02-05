@@ -94,7 +94,7 @@ class Notifications_model extends Base_module_model {
 	}
 	function markRead($id){
 		$this->db->where('id',$id);
-		$this->db->update('notification',array('read'=>1));
+		$this->db->update('notifications',array('read'=>1));
 	}
 }
  
