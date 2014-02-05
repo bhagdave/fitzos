@@ -10,6 +10,9 @@
 						$date = new DateTime($post->date);
 						echo($date->format('m/d/Y'). "<br>");
 					}
+					if (isset($post->image)){
+						echo("<img height=320px src='/".$post->image."' alt='".$post->name."' title='".$post->name."'>");
+					}
 					echo("</div>");
 				}
 			} else {
