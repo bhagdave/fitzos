@@ -135,7 +135,7 @@ $('#active').change(function(){
     });
   })( jQuery );
 $(function() {
-	$('#js-eventTime').timepicker();
+	$('.timepicker').timepicker();
 	$('#js-JoinTeam').ajaxForm({
 		target: '#js-TeamMessages'
 	});

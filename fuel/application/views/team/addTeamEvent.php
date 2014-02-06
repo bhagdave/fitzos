@@ -31,7 +31,7 @@
 				<div class="control-group">
 					<label class="control-label">Time</label>
 					<div class="controls">
-						<input id="js-eventTime" name="time"  value="<?=isset($event->time) ? $event->time : ''  ?>" type="text" placeholder="Event time">
+						<input id="js-eventTime" class="timepicker" name="time"  value="<?=isset($event->time) ? $event->time : ''  ?>" type="text" placeholder="Event time">
 					</div>
 				</div>
 				
