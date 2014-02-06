@@ -9,7 +9,7 @@ if (isset($athlete_stats) && count($athlete_stats) > 0){
 	echo("<h2>Current statistics for " .$sport['name'] .".</h2>");
 	foreach($athlete_stats as $stat){
 	?>
-		<h4><?=$stat->statistic_name ?> <?=$stat->statistic_value ?> <?=date('d/m/Y',strtotime($stat->date)) ?></h4>
+		<h4><?=$stat->statistic_name ?> <?=$stat->statistic_value ?> <?=date('m/d/Y',strtotime($stat->date)) ?></h4>
 	<?php 
 	}
 } else {
