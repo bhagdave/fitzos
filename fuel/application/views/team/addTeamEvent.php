@@ -29,6 +29,13 @@
 					</div>
 				</div>
 				<div class="control-group">
+					<label class="control-label">Time</label>
+					<div class="controls">
+						<input id="js-eventTime" name="time"  value="<?=isset($event->time) ? $event->time : ''  ?>" type="text" placeholder="Event time">
+					</div>
+				</div>
+				
+				<div class="control-group">
 					<label class="control-label">Published?</label>
 					<div class="controls">	
 						<label class="radio">Yes<input id="yes" name="published" value="yes" type="radio" <?= isset($event->published) && $event->published == 'Yes' ? 'checked' : '' ?>></label>					
