@@ -19,7 +19,13 @@
 				<div class="control-group">
 					<label class="control-label">Details</label>
 					<div class="controls">	
-						<textarea cols="40" rows="2" name="content" placeholder="Details of your event"></textarea>
+						<textarea cols="40" rows="2" name="content" placeholder="Details of your event"><?isset($event->content) ? $event->content: '' ; ?></textarea>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">Location</label>
+					<div class="controls">	
+						<textarea cols="40" rows="2" name="location" placeholder="Location of your event"><?isset($event->location) ? $event->location: '' ; ?></textarea>
 					</div>
 				</div>
 				<div class="control-group">

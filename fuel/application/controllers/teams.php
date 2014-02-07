@@ -205,6 +205,9 @@ class Teams extends CI_Controller{
 						$_POST['image'] =$path;
 					}
 				}			
+				// lets add the member id for the person adding the event
+				$user = $this->session->userdata('id');
+				$_POST['member_id'] = $user;
 				$id = $this->teams->addTeamEvent($_POST);
 				if (isset($id)){
 					$this->session->set_flashdata('message', 'Event added');
