@@ -24,3 +24,12 @@
 		<h4>Attending</h4>
 	</div>
 </div>
+<div class="row">
+	<div class="col-md-8 col-md-offset-4">
+		<?php 
+		if ($edit){
+			echo("<a class='btn btn-primary' href='/event/edit/".$event->id."'>Edit Event</a>");				
+		}
+		?>
+	</div>
+</div>
