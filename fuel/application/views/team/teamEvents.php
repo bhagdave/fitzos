@@ -2,7 +2,7 @@
 			if (isset($events) && count($events) > 0){
 				foreach($events as $post){
 					echo("<div class='wallEvent'>");
-					echo("<h4>".$post->name."</h4>");
+					echo("<h4><a href='/event/view/".$post->id."'>".$post->name."</a></h4>");
 					if (!empty($post->content)){
 						echo($post->content. "<br>");
 					}
@@ -10,7 +10,7 @@
 						echo("<button class='btn-small js-DeleteEvent' onclick='deleteEvent(".$team->id.",".$post->id .")'>Delete</button>");
 					}
 					if (isset($post->image)){
-						echo("<img height=320px src='/".$post->image."' alt='".$post->name."' title='".$post->name."'>");
+						echo("<a href='/event/view/".$post->id."'><img height=320px src='/".$post->image."' alt='".$post->name."' title='".$post->name."'></a>");
 					}	
 					if (!empty($post->date)){
 						$date = new DateTime($post->date);
