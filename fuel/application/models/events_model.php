@@ -17,6 +17,16 @@ class Events_model extends Base_module_model {
 		$data = $result->result();
 		return $data;
     }
+    function getEvent($id){
+    	$this->db->where('id',$id);
+    	$result = $this->db->get('event');
+    	$data = $result->result();
+    	if (isset($data[0])){
+    		return $data[0];
+    	} else {
+    		return null;
+    	}
+    }
 }
  
 class Event_model extends Base_module_record {
