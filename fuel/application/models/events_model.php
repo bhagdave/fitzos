@@ -27,6 +27,10 @@ class Events_model extends Base_module_model {
     		return null;
     	}
     }
+    function updateEvent($data){
+    	$this->db->where('id',$data['id']);
+    	$this->db->update('event',$data);	
+    }
 }
  
 class Event_model extends Base_module_record {
