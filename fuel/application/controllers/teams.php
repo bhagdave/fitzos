@@ -222,4 +222,15 @@ class Teams extends CI_Controller{
 			die();
 		}
 	}
+	function deleteEvent($id,$team_id){
+		$member = $this->session->userdata('id');
+		$this->load->model('teams_model','teams');
+		$this->load->model('events_model','events');
+		$this->events->deleteEvent($id);
+		$events = $this->teams->getTeamEvents($team_id);
+		$team = $this->teams->getTeam($team_id);
+		$owner  = $this->teams->isOwner($team_id,$member);
+		$vars = array('events'=>$events,'team'=>$team,'layout'=>'none','owner'=>$owner);
+		$this->fuel->pages->render('team/teamEvents',$vars);
+	}
 }

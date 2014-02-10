@@ -35,8 +35,9 @@
 	<div class="row">
 		<div class="col-md-8 teamEvents">
 			<h2>Events</h2>
-			
+			<div class="js-Events">				
 			<?php $this->load->view('team/teamEvents');?>
+			</div>
 		</div>
 	</div>
 </div>

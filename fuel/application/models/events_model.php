@@ -31,6 +31,9 @@ class Events_model extends Base_module_model {
     	$this->db->where('id',$data['id']);
     	$this->db->update('event',$data);	
     }
+    function deleteEvent($id){
+    	$this->db->delete('event',array('id'=>$id));
+    }
 }
  
 class Event_model extends Base_module_record {

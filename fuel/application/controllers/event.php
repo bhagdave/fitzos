@@ -69,4 +69,8 @@ class Event extends CI_Controller{
 			die();
 		}
 	}
+	function delete($id){
+		$this->load->model('events_model','events');
+		$this->events->deleteEvent($id);
+	}
 }

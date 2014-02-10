@@ -213,6 +213,19 @@ function deletePost(team,id){
 			alert( "error" );
 	});    		
 }
+function deleteEvent(team,event){
+	if (confirm("Are you sure?")){
+		$.ajax({
+			url: "/teams/deleteEvent/" + event + '/'+ team,
+			type:'POST'})
+			.done(function( data ) {
+				$('.js-Events').html(data);
+			}) 
+			.fail(function() {
+				alert( "error" );
+		});    					
+	}
+}
 function markNotificationRead(notification){
 	event.preventDefault();
 	$.ajax({
