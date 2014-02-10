@@ -5,6 +5,7 @@
 		</div>
 	</div>
 </div>
+<a href="http://reachyourpeak.spreadshirt.com/">Reach Your Peak Shop</a>
 </div>
 <?php echo js('main').js($js); ?>
 <!-- AddThis Smart Layers BEGIN -->
