@@ -27,6 +27,12 @@ class Events_model extends Base_module_model {
     		return null;
     	}
     }
+    function getMembersAttending($id){
+		$this->db->where('event_id',$id);
+		$this->db->join('athlete','athlete.member_id = event_attendance.member_id');
+		$result = $this->db->get('event_attendance');
+		return $result->result();	    	
+    }
     function updateEvent($data){
     	$this->db->where('id',$data['id']);
     	$this->db->update('event',$data);	

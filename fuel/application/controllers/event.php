@@ -22,7 +22,9 @@ class Event extends CI_Controller{
 				} else {
 					$edit = false;
 				}
-				$vars = array('team'=>$team, 'edit'=>$edit, 'event'=>$event);
+				// lets get a list of those attending
+				$attending = $this->events_model->getMembersAttending($event->id);
+				$vars = array('team'=>$team, 'edit'=>$edit, 'event'=>$event,'attending'=>$attending);
 				$this->fuel->pages->render('event/view',$vars);
 			} else {
 				redirect('404');

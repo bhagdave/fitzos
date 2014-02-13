@@ -27,6 +27,20 @@
 <div class="row">
 	<div class="col-md-8 col-md-offset-4">
 		<?php 
+		if (isset($attending) && !empty($attending)){
+			echo("<h4>Members Attending</h4>");
+			foreach($attending as $member){
+				echo("<p>$member->name</p>");
+			}
+		} else {
+			echo("<h4>No members currently attending</h4>");
+		}
+		?>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-8 col-md-offset-4">
+		<?php 
 		if ($edit){
 			echo("<a class='btn btn-primary' href='/event/edit/".$event->id."'>Edit Event</a>");				
 		}
