@@ -34,11 +34,6 @@
 		?>
 	</div>
 	<div class="col-md-4">
-		<h4>Attending</h4>
-	</div>
-</div>
-<div class="row">
-	<div class="col-md-8 col-md-offset-4">
 		<?php $this->load->view('event/attending');?>
 	</div>
 </div>
