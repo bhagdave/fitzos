@@ -24,12 +24,24 @@ class Event extends CI_Controller{
 				}
 				// lets get a list of those attending
 				$attending = $this->events_model->getMembersAttending($event->id);
-				$vars = array('team'=>$team, 'edit'=>$edit, 'event'=>$event,'attending'=>$attending);
+				$vars = array('team'=>$team, 'edit'=>$edit, 'event'=>$event,'attending'=>$attending,'user'=>$user);
 				$this->fuel->pages->render('event/view',$vars);
 			} else {
 				redirect('404');
 				die();
 			}
+		} else {
+			redirect('signin/login');
+			die();
+		}
+	}
+	function attendEvent($event,$user){
+		if ($this->session->userdata('id')){
+			$this->load->model('events_model');
+			$this->events_model->setAttendEvent($event,$user);
+			$attending = $this->events_model->getMembersAttending($event);
+			$vars = array('attending'=>$attending,'layout'=>'none');
+			$this->fuel->pages->render('event/view',$vars);
 		} else {
 			redirect('signin/login');
 			die();

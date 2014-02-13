@@ -238,6 +238,19 @@ function markNotificationRead(notification){
 			alert( "error" );
 	});    			
 }
+function attendEvent(eventId,user){
+	event.preventDefault();
+	$.ajax({
+		url: "/event/attendEvent/" + eventId + '/' + user,
+		type:'POST'})
+		.done(function( data ) {
+			$(".js-attending").html(data);
+		}) 
+		.fail(function() {
+			alert( "error" );
+	});    				
+}
+
 function getTeamWall($team){
 	event.preventDefault();
 	$.ajax({
