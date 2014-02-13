@@ -24,7 +24,12 @@
 </div>
 <div class="row">
 	<div class="col-md-4">
-		<h4><?=isset($event->location) ? $event->location : ''; ?><?=isset($event->date) ? ' on ' .$event->date : ''; ?><?=isset($event->time) ? ' @ ' . $event->time : ''; ?></h4>
+	<?php
+		if (isset($event->date)){
+			$eventDate = new DateTime($event->date);
+		} 
+	?>
+		<h4><?=isset($event->location) ? $event->location : 'Location not set '; ?><?=isset($eventDate) ? ' on ' .$eventDate->format('d/m/Y') : ''; ?><?=isset($event->time) ? ' @ ' . $event->time : ''; ?></h4>
 	</div>
 	<div class="col-md-4">
 		<?php 
