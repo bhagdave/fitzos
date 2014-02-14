@@ -276,7 +276,9 @@ function getTeamWall($team){
 	});    		
 }
 function showInviteForm(){
-	$('#inviteDialog').dialog();
+	$('#inviteDialog').dialog({
+	      modal: true
+	    });
 }
 function sendInvites(){
 	event.preventDefault();
