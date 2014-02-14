@@ -51,6 +51,35 @@ class Events_model extends Base_module_model {
 		$this->db->where('member_id',$user);
 		$this->db->update('event_attendance',array('cancelled'=>'YES'));
 	}
+	function getTeamMembersToInvite($team,$eventId){
+		/*
+		 * select * from team_membership where team_id = 2 and 
+member_id not in (select member_id from event_attendance where event_id = 4) and
+member_id not in (select member_id from event where id = 4)
+		 */
+		$this->db->where('id',$eventId);
+		$result = $this->db->get('event');
+		$data = $result->result();
+		if (isset($data[0])){
+			$event = $data[0];
+		} else {
+			$event = null;
+		}
+		$members[] = $event->member_id;
+		$this->db->select('member_id');
+		$this->db->where('event_id',$eventId);
+		$result = $this->db->get("event_attendance");
+		$data = $result->result();
+		foreach($data as $member){
+			$members[] = $member->member_id;
+		}		
+		$this->db->where('team_id',$team);
+		$this->db->where('status','yes');
+		$this->db->where_not_in('member_id',$members);
+		$this->db->join('member','member.id = member_id');
+		$result = $this->db->get('team_membership');
+		return $result->result();
+	}
 	function sendInvite($member,$user,$eventId){
 		// do notification...
 		$this->load->model('notifications_model');

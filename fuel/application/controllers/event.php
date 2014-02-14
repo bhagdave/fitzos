@@ -22,7 +22,7 @@ class Event extends CI_Controller{
 				// lets get a list of those attending
 				$attending = $this->events_model->getMembersAttending($event->id);
 				// get the team members
-				$members = $this->teams_model->getTeamMembers($event->team_id);
+				$members = $this->events_model->getTeamMembersToInvite($event->team_id,$event->id);
 				$vars = array('team'=>$team,'members'=>$members, 'edit'=>$edit, 'event'=>$event,'attending'=>$attending,'user'=>$user);
 				$this->fuel->pages->render('event/view',$vars);
 			} else {
