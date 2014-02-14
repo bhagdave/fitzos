@@ -41,7 +41,7 @@ class Event extends CI_Controller{
 			$this->events_model->setAttendEvent($event,$user);
 			$attending = $this->events_model->getMembersAttending($event);
 			$vars = array('attending'=>$attending,'layout'=>'none');
-			$this->fuel->pages->render('event/view',$vars);
+			$this->fuel->pages->render('event/attending',$vars);
 		} else {
 			redirect('signin/login');
 			die();

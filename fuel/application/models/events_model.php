@@ -29,6 +29,7 @@ class Events_model extends Base_module_model {
     }
     function getMembersAttending($id){
 		$this->db->where('event_id',$id);
+		$this->db->where('cancelled','NO');
 		$this->db->join('athlete','athlete.member_id = event_attendance.member_id');
 		$result = $this->db->get('event_attendance');
 		return $result->result();	    	
@@ -38,12 +39,17 @@ class Events_model extends Base_module_model {
     	$this->db->update('event',$data);	
     }
     function setAttendEvent($event,$user){
-    	$data = array('member_id'=>$user,'event_id'=>$event,'paid'=>'no');
+    	$data = array('member_id'=>$user,'event_id'=>$event,'paid'=>'NO','cancelled'=>'NO');
     	$this->db->insert('event_attendance',$data);
     }
     function deleteEvent($id){
     	$this->db->delete('event',array('id'=>$id));
     }
+	function rejectAttendee($event,$user){
+		$this->db->where('event_id',$event);
+		$this->db->where('member_id',$user);
+		$this->db->update('event_attendance',array('cancelled'=>'YES'));
+	}
 }
  
 class Event_model extends Base_module_record {
