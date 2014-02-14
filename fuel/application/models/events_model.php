@@ -13,6 +13,7 @@ class Events_model extends Base_module_model {
 		$this->db->join("team_membership","team.id = team_membership.team_id",'left');
     	$this->db->where("team_membership.member_id",$member);
     	$this->db->or_where("team.owner",$member);
+    	$this->db->or_where("event.member_id",$member);
 		$result = $this->db->get('event');
 		$data = $result->result();
 		return $data;
