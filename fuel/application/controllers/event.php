@@ -35,12 +35,38 @@ class Event extends CI_Controller{
 			die();
 		}
 	}
-	function attendEvent($event,$user){
+	function attendEvent($event,$member){
 		if ($this->session->userdata('id')){
+			$user = $this->session->userdata('id');
 			$this->load->model('events_model');
-			$this->events_model->setAttendEvent($event,$user);
+			$this->events_model->setAttendEvent($event,$member);
 			$attending = $this->events_model->getMembersAttending($event);
-			$vars = array('attending'=>$attending,'layout'=>'none');
+			$event = $this->events_model->getEvent($event);
+			if ($event->member_id == $user){
+				$edit = true;
+			}else {
+				$edit = false;
+			}
+			$vars = array('attending'=>$attending,'layout'=>'none','edit'=>$edit);
+			$this->fuel->pages->render('event/attending',$vars);
+		} else {
+			redirect('signin/login');
+			die();
+		}
+	}
+	function removeAttendee($event, $member){
+		if ($this->session->userdata('id')){
+			$user = $this->session->userdata('id');
+			$this->load->model('events_model');
+			$this->events_model->rejectAttendee($event,$member);
+			$attending = $this->events_model->getMembersAttending($event);
+			$event = $this->events_model->getEvent($event);
+			if ($event->member_id == $user){
+				$edit = true;
+			}else {
+				$edit = false;
+			}
+			$vars = array('attending'=>$attending,'layout'=>'none','edit'=>$edit);
 			$this->fuel->pages->render('event/attending',$vars);
 		} else {
 			redirect('signin/login');

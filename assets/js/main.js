@@ -250,6 +250,18 @@ function attendEvent(eventId,user){
 			alert( "error" );
 	});    				
 }
+function removeAttendee(eventId,user){
+	event.preventDefault();
+	$.ajax({
+		url: "/event/removeAttendee/" + eventId + '/' + user,
+		type:'POST'})
+		.done(function( data ) {
+			$(".js-attending").html(data);
+		}) 
+		.fail(function() {
+			alert( "error" );
+	});    					
+}
 
 function getTeamWall($team){
 	event.preventDefault();
