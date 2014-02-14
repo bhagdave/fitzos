@@ -14,13 +14,8 @@ class Event extends CI_Controller{
 			$event = $this->events_model->getEvent($id);
 			if (isset($event)){
 				$edit = false;
-				$team = $this->teams_model->getTeam($event->team_id);
-				if (isset($team)){
-					if ($team->owner == $user || $event->member_id == $user){
-						$edit = true;
-					}
-				} else {
-					$edit = false;
+				if ($event->member_id == $user){
+					$edit = true;
 				}
 				// lets get a list of those attending
 				$attending = $this->events_model->getMembersAttending($event->id);
