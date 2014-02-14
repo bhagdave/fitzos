@@ -9,6 +9,6 @@
 		}
 	?>
 		<br/>
-		<button class="btn btn-success" onclick="sendInvites();">Send Invites</button>
+		<button class="btn btn-success" onclick="sendInvites(<?=$event->id?>);">Send Invites</button>
 	</form>
 </div>

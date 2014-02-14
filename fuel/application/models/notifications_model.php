@@ -21,7 +21,7 @@ class Notifications_model extends Base_module_model {
     function createNotification($data){
     	if (is_array($data)){
     		$data['date_added'] = date('Y-m-d');
-    		$data['read'] = 'no';
+    		$data['read'] = 0;
     		$this->db->insert('notifications',$data);
     		return $this->db->insert_id();
     	}

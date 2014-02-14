@@ -280,8 +280,20 @@ function showInviteForm(){
 	      modal: true
 	    });
 }
-function sendInvites(){
+function sendInvites(eventId){
 	event.preventDefault();
 	data = $('#js-Invitations').serialize();
+	$.ajax({
+		url: "/event/sendInvites/" + eventId,
+		data:data,		
+		type:'POST'
+		})
+		.done(function( data ) {
+			//$(".js-teamWall").html(data);
+			$('#inviteDialog').dialog("close");
+		}) 
+		.fail(function() {
+			alert( "error" );
+	});    		
 	console.log('Here with ' + data);
 }
