@@ -278,3 +278,8 @@ function getTeamWall($team){
 function showInviteForm(){
 	$('#inviteDialog').dialog();
 }
+function sendInvites(){
+	event.preventDefault();
+	data = $('#js-Invitations').serialize();
+	console.log('Here with ' + data);
+}

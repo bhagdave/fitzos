@@ -51,6 +51,10 @@ class Events_model extends Base_module_model {
 		$this->db->where('member_id',$user);
 		$this->db->update('event_attendance',array('cancelled'=>'YES'));
 	}
+	function sendInvite($member){
+		// do notification...
+		// do enmails
+	}
 }
  
 class Event_model extends Base_module_record {

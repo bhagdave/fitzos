@@ -105,3 +105,6 @@ ul li{
 #leaveTeam{
 	padding:10px;!important
 }
+#inviteDialog{
+	display:none;
+}

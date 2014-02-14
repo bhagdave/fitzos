@@ -112,4 +112,18 @@ class Event extends CI_Controller{
 		$this->load->model('events_model','events');
 		$this->events->deleteEvent($id);
 	}
+	function sendInvites(){
+		if ($this->session->userdata('id')){
+			if (isset($_POST)){
+				$this->load->model('events_model');
+				foreach($_POST as $member){
+					$memberId = str_replace('mmbrd','',$member);
+					$this->events_model->sendInvite($memberId);
+				}
+			}
+		} else {
+			redirect('signin/login');
+			die();
+		}
+	}
 }
