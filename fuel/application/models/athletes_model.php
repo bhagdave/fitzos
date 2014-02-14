@@ -40,7 +40,7 @@ class Athletes_model extends Fitzos_model {
 		}
 	}
 	function getStatsForAthleteSport($id,$sport){
-		$this->db->select('statistic_name,statistic_value,date,formula');
+		$this->db->select('statistic_name,statistic_value,date,formula,comment');
 		$this->db->where('sport_id',$sport);
 		$this->db->where('source_table','member');
 		$this->db->where('source_id',$id);

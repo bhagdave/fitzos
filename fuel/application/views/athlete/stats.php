@@ -9,7 +9,7 @@ if (isset($athlete_stats) && count($athlete_stats) > 0){
 	echo("<h2>Current statistics for " .$sport['name'] .".</h2>");
 	foreach($athlete_stats as $stat){
 	?>
-		<h4><?=$stat->statistic_name ?> <?=$stat->statistic_value ?> <?=date('m/d/Y',strtotime($stat->date)) ?></h4>
+		<h4><?=$stat->statistic_name ?> <?=$stat->statistic_value ?> <?=$stat->comment ?> <?=date('m/d/Y',strtotime($stat->date)) ?></h4>
 	<?php 
 	}
 } else {
@@ -51,6 +51,7 @@ if (isset($positions) && count($positions) > 0){
 	echo('</div>');
 }
 ?>
+<textarea name="comment" placeholder="Comment" rows="1" cols="40"></textarea>
 <input placeholder="Date" type="text" class="datepicker" data-date-format="mm/dd/yyyy" name="date" />
 <button class="btn btn-success">Submit</button>	
 </form>
