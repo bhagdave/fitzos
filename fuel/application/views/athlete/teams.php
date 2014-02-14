@@ -78,7 +78,7 @@ $existingTeam = array();
 		<?php 
 		}
 		else {
-			echo("<h4>There are no public teams available at the moment!</h4>");
+			echo("<h4>There are no public teams that you are not already a member of available at the moment!</h4>");
 		}
 		?>
 	</div>
