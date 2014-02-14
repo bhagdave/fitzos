@@ -39,7 +39,8 @@ class Teams extends CI_Controller{
 			$data   = $this->teams->getTeam($team);
 			$events = $this->teams->getTeamEvents($team);
 			$members= $this->teams->getTeamMembers($team);
-			$vars   = array('member'=>$member, 'wall'=>$wall, 'team'=>$data, 'members'=>$members, 'events'=>$events);
+			$od     = $this->teams->getTeamOwner($team);
+			$vars   = array('member'=>$member, 'wall'=>$wall, 'team'=>$data, 'members'=>$members, 'events'=>$events, 'od'=>$od);
 			$this->fuel->pages->render('team/view',$vars);
 		} else {
 			redirect('signin/login');

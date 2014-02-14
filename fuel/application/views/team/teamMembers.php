@@ -11,4 +11,8 @@
 			} else {
 				echo("<h4>No members currently</h4>");
 			}
+			if (isset($od)){
+				echo("<h4>Team Owner:");
+				echo("<a href='/athlete/view/$od->id'>$od->first_name $od->last_name</a></h4>");
+			}
 		?>
