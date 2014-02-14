@@ -2,7 +2,12 @@
 			if (isset($wall) && count($wall) > 0){
 				foreach($wall as $post){
 					echo("<div class='wallPost'>");
-					echo($post->message. " by $post->first_name $post->last_name");
+					echo($post->message);
+					if (isset($post->first_name)){
+						echo (" by $post->first_name $post->last_name");
+					} else {
+						echo (" by Administrator!");
+					}
 					if (!empty($post->image)){
 						echo("<img src='" .$post->image."'>");
 					}

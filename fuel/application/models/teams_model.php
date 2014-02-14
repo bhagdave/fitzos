@@ -112,18 +112,28 @@ class Teams_model extends Base_module_model {
 		$this->db->update('team_membership',array('status'=>'left'));
 		if ($this->db->affected_rows() > 0){
 			$member = $this->getMember($member);
+			$teamData = $this->getTeam($team);
 			$data = array();
 			$data['team_id'] = $team;
-			$msg = "$member->first_name $member->last_name has left the team!";
+			$msg = "$member->first_name $member->last_name has left the team $teamData->name!";
 			$data['message'] = $msg;
 			$this->addWallPost($data);
+			$data['notification'] = $msg;
+			$data['to_table'] = 'member';
+			$data['to_key'] = $teamData->owner;
+			$data['from_table'] = 'member';
+			$data['from_key'] = $member->id;
 			unset($data['message']);
-			$data['content'] = $msg;
+			unset($data['team_id']);
 			$data['published'] = 'yes';
-			$data['public'] = 'PRIVATE';
-			$data['name'] = 'Member Leaving';
-			$this->addTeamEvent($data);
+			$data['read'] = 0;
+			$data['date_added'] = date('Y-m-d',now());
+			$data['type'] = 'MESSAGE';
+			$this->createNotification($data);
 		}
+	}
+	private function createNotification($data){
+		$this->db->insert('notifications',$data);
 	}
 	function acceptMember($team,$member){
 		$this->db->where("member_id",$member);
