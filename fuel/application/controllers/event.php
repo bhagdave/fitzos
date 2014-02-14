@@ -13,13 +13,17 @@ class Event extends CI_Controller{
 			$this->load->model('athletes_model');
 			$event = $this->events_model->getEvent($id);
 			if (isset($event)){
+				// get the team
+				$team = $this->teams_model->getTeam($event->team_id);
 				$edit = false;
 				if ($event->member_id == $user){
 					$edit = true;
 				}
 				// lets get a list of those attending
 				$attending = $this->events_model->getMembersAttending($event->id);
-				$vars = array('team'=>$team, 'edit'=>$edit, 'event'=>$event,'attending'=>$attending,'user'=>$user);
+				// get the team members
+				$members = $this->teams_model->getTeamMembers($event->team_id);
+				$vars = array('team'=>$team,'members'=>$members, 'edit'=>$edit, 'event'=>$event,'attending'=>$attending,'user'=>$user);
 				$this->fuel->pages->render('event/view',$vars);
 			} else {
 				redirect('404');

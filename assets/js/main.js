@@ -275,3 +275,6 @@ function getTeamWall($team){
 			alert( "error" );
 	});    		
 }
+function showInviteForm(){
+	$('#inviteDialog').dialog();
+}

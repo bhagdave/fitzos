@@ -43,7 +43,10 @@
 	</div>
 </div>
 <div class="row actions">
-	<div class="col-md-2 col-md-offset-2">
+	<div class="col-md-2">
+		<button class="btn btn-primary js-Invite" onclick="showInviteForm();">Invite Members</button>
+	</div>
+	<div class="col-md-2">
 		<?php 
 		if ($edit){
 			echo("<a class='btn btn-primary' href='/event/edit/".$event->id."'>Edit Event</a>");				
@@ -58,3 +61,4 @@
 		?>
 	</div>
 </div>
+<?php $this->load->view('event/invitation');?>
