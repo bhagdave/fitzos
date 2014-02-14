@@ -2,7 +2,7 @@
 			if (isset($wall) && count($wall) > 0){
 				foreach($wall as $post){
 					echo("<div class='wallPost'>");
-					echo($post->message);
+					echo($post->message. " by $post->first_name $post->last_name");
 					if (!empty($post->image)){
 						echo("<img src='" .$post->image."'>");
 					}
