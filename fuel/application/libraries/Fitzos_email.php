@@ -26,7 +26,16 @@ class Fitzos_email {
 		$message = $this->CI->load->view('email/memberActivation',array('member'=>$member),TRUE);
 		$this->_sendMail($member->email, 'member_services@reach-your-peak.com', 'FITZOS Member activation', $message);
 	}
-	
+	function sendEventInvite($member_id,$event_id){
+		$this->CI =& get_instance();
+		$members  = $this->CI->load->model("members_model");
+		$events   = $this->CI->load->model("teams_model");
+		// get data for the member
+		$member = $members->getMember($member_id);
+		$event  = $events->getTeamOwner($event_id);
+		$message = $this->CI->load->view('email/eventInvite',array('member'=>$member,'event'=>$event),TRUE);
+		$this->_sendMail($member->email, 'member_services@reach-your-peak.com', 'Event Invitation', $message);
+	}
 	function sendMemberJoiningEmail($team_id,$member_id){
 		$this->CI =& get_instance();
 		$members = $this->CI->load->model("members_model");

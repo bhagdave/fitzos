@@ -52,11 +52,6 @@ class Events_model extends Base_module_model {
 		$this->db->update('event_attendance',array('cancelled'=>'YES'));
 	}
 	function getTeamMembersToInvite($team,$eventId){
-		/*
-		 * select * from team_membership where team_id = 2 and 
-member_id not in (select member_id from event_attendance where event_id = 4) and
-member_id not in (select member_id from event where id = 4)
-		 */
 		$this->db->where('id',$eventId);
 		$result = $this->db->get('event');
 		$data = $result->result();
@@ -95,6 +90,8 @@ member_id not in (select member_id from event where id = 4)
 		);
 		$this->notifications_model->createNotification($data);
 		// do enmails
+		$this->load->library('Fitzos_email',null,'Femail');
+		$this->Femail->sendEventInvite($member,$eventId);
 	}
 }
  
