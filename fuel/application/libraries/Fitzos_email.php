@@ -32,7 +32,7 @@ class Fitzos_email {
 		$events   = $this->CI->load->model("teams_model");
 		// get data for the member
 		$member = $members->getMember($member_id);
-		$event  = $events->getTeamOwner($event_id);
+		$event  = $events->getEvent($event_id);
 		$message = $this->CI->load->view('email/eventInvite',array('member'=>$member,'event'=>$event),TRUE);
 		$this->_sendMail($member->email, 'member_services@reach-your-peak.com', 'Event Invitation', $message);
 	}
