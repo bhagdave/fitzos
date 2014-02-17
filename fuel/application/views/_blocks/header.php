@@ -50,5 +50,5 @@
 	<?php 
 	}
 ?>
-		</header>
+	</header>
 

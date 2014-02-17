@@ -254,6 +254,14 @@ class Athlete extends CI_Controller{
 			redirect('signin/login');
 		}
 	} 
+	function find(){
+		if ($this->session->userdata('id')){
+			// display the find page...
+		} else {
+			redirect('signin/login');
+			die();
+		}
+	}
 	function view($id){
 		if ($this->session->userdata('id')){
 			$this->load->model('athletes_model','athletes');

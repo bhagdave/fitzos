@@ -53,4 +53,10 @@
 		<a href="/athlete/notifications" class="btn btn-success btn-block">Notifications</a>
 	</div>
 </div>
+<div class="row">
+	<div class="col-md-2 col-md-offset-5">
+		<a href="/athlete/find" class="btn btn-success btn-block">Find a Friend</a>
+	</div>
+</div>
+
 		

@@ -47,8 +47,6 @@
 <?php
 	if ($isMember){
 		echo("<a href='/athlete/edit/".$id."'>Edit your profile</a>");
-	}
-	if ($isMember){
 	?>
 		<div class="row">
 			<div class="col-md-6 col-lg-10 col-xs-12">
