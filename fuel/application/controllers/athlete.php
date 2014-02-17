@@ -4,11 +4,11 @@ class Athlete extends CI_Controller{
 	{
 		parent::__construct();
 		$this->load->library("session");
+		$this->load->model('athletes_model','athletes');
 	}
 	function edit($id){
 		$user = $this->session->userdata('id');
 		if (isset($user) && $user == $id){
-			$this->load->model('athletes_model','athletes');
 			$this->load->model('members_model','members');
 			$this->load->model('notifications_model','notify');
 			$this->load->model('events_model','events');
@@ -27,7 +27,6 @@ class Athlete extends CI_Controller{
 	}
 	function index(){
 		if ($this->session->userdata('id')){
-			$this->load->model('athletes_model','athletes');
 			$this->load->model('members_model','members');
 			$this->load->model('notifications_model','notify');
 			$this->load->model('events_model','events');	
@@ -46,7 +45,6 @@ class Athlete extends CI_Controller{
 		$this->fuel->pages->render('athlete/view',$vars);
 	}
 	function getAthlete(){
-		$this->load->model('athletes_model','athletes');
 		$id      = $this->session->userdata('id');
 		$athlete = $this->athletes->loadProfile($id);
 		echo(json_encode($athlete));
@@ -56,55 +54,13 @@ class Athlete extends CI_Controller{
 		$athlete = json_decode($_POST['payload']);
 		$this->athletes->setProfile($athlete);	
 	}
-	function signUp(){
-		// check for login???
-		$vars = array();
-		$this->fuel->pages->render('athlete/welcome',$vars);
-	}
-	function portal(){
-		// check for login???
-		$vars = array();
-		$this->fuel->pages->render('athlete/welcome',$vars);
-		
-	}
 	function calendar(){
 		// check for login???
 		$vars = array();
 		$this->fuel->pages->render('athlete/welcome',$vars);
 		
 	}
-	function events(){
-		// check for login???
-		$vars = array();
-		$this->fuel->pages->render('athlete/welcome',$vars);
-		
-	}
-	function badges(){
-		// check for login???
-		$vars = array();
-		$this->fuel->pages->render('athlete/welcome',$vars);
-		
-	}
-	function plans(){
-		// check for login???
-		$vars = array();
-		$this->fuel->pages->render('athlete/welcome',$vars);
-		
-	}
-	function messages(){
-		// check for login???
-		$vars = array();
-		$this->fuel->pages->render('athlete/welcome',$vars);
-		
-	}
-	function progress(){
-		// check for login???
-		$vars = array();
-		$this->fuel->pages->render('athlete/welcome',$vars);
-		
-	}
 	function profile(){
-		$this->load->model('athletes_model','athletes');
 		if (isset($_POST['age'])){	
 			$this->load->model('members_model','members');
 			// post to the database baby...
@@ -151,7 +107,6 @@ class Athlete extends CI_Controller{
 		}
 	}
 	function sports(){
-		$this->load->model('athletes_model','athletes');
 		$this->load->model('members_model','members');
 		$this->load->model('sports_model','sports');
 		$vars = array();
@@ -186,7 +141,6 @@ class Athlete extends CI_Controller{
 		}
 	}	
 	function stats($sport){
-		$this->load->model('athletes_model','athletes');
 		$this->load->model('members_model','members');
 		$this->load->model('sports_model','sports');
 		$vars = array();
@@ -217,7 +171,6 @@ class Athlete extends CI_Controller{
 	}
 	function addStats(){
 		$data = $_POST;
-		$this->load->model('athletes_model','athletes');
 		$vars = array();
 		if (isset($data['source_id'])){
 			// post to the database
@@ -237,7 +190,6 @@ class Athlete extends CI_Controller{
 		}
 	}
 	function teams(){
-		$this->load->model('athletes_model','athletes');
 		$this->load->model('members_model','members');
 		$this->load->model('teams_model','teams');
 		$vars = array();
@@ -285,7 +237,6 @@ class Athlete extends CI_Controller{
 		}
 	}
 	function notifications(){
-		$this->load->model('athletes_model','athletes');
 		$this->load->model('notifications_model','notify');
 		if ($this->session->userdata('id')){
 			// get the athlete from the database
