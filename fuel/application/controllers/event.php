@@ -4,13 +4,13 @@ class Event extends CI_Controller{
 	{
 		parent::__construct();
 		$this->load->library("session");
+		$this->load->model('events_model');
+		$this->load->model('teams_model');
+		$this->load->model('athletes_model');
 	}
 	function view($id){
 		if ($this->session->userdata('id')){
 			$user = $this->session->userdata('id');
-			$this->load->model('events_model');
-			$this->load->model('teams_model');
-			$this->load->model('athletes_model');
 			$event = $this->events_model->getEvent($id);
 			if (isset($event)){
 				// get the team
@@ -37,7 +37,6 @@ class Event extends CI_Controller{
 	function attendEvent($event,$member){
 		if ($this->session->userdata('id')){
 			$user = $this->session->userdata('id');
-			$this->load->model('events_model');
 			$this->events_model->setAttendEvent($event,$member);
 			$attending = $this->events_model->getMembersAttending($event);
 			$event = $this->events_model->getEvent($event);
@@ -56,7 +55,6 @@ class Event extends CI_Controller{
 	function removeAttendee($event, $member){
 		if ($this->session->userdata('id')){
 			$user = $this->session->userdata('id');
-			$this->load->model('events_model');
 			$this->events_model->rejectAttendee($event,$member);
 			$attending = $this->events_model->getMembersAttending($event);
 			$event = $this->events_model->getEvent($event);
@@ -74,7 +72,6 @@ class Event extends CI_Controller{
 	}
 	function edit($id){
 		if ($this->session->userdata('id')){
-			$this->load->model('events_model');
 			if (isset($_POST['team_id'])){
 				// ok update the beast...
 				if (isset($_FILES['file']['name'])){
@@ -109,14 +106,12 @@ class Event extends CI_Controller{
 		}
 	}
 	function delete($id){
-		$this->load->model('events_model','events');
 		$this->events->deleteEvent($id);
 	}
 	function sendInvites($event){
 		if ($this->session->userdata('id')){
 			if (isset($_POST)){
 				$user = $this->session->userdata('id');
-				$this->load->model('events_model');
 				foreach($_POST as $key=>$member){
 					$memberId = str_replace('mmbrd','',$key);
 					$this->events_model->sendInvite($memberId,$user,$event);
