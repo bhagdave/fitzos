@@ -5,6 +5,26 @@ class Athlete extends CI_Controller{
 		parent::__construct();
 		$this->load->library("session");
 	}
+	function edit($id){
+		$user = $this->session->userdata('id');
+		if (isset($user) && $user == $id){
+			$this->load->model('athletes_model','athletes');
+			$this->load->model('members_model','members');
+			$this->load->model('notifications_model','notify');
+			$this->load->model('events_model','events');
+			// get the athlete from the database
+			$athlete = $this->athletes->loadProfile($id);
+			$member  = $this->members->getMember($id);
+			$sports  = $this->members->getSports($id);
+			$events  = $this->events->getEventsForMember($id);
+			$notifications = $this->notify->getMemberNotifications($id);
+		} else {
+			redirect('404');
+			die();
+		}
+		$vars = array('athlete'=>$athlete,'member'=>$member,'notes'=>$notifications,'events'=>$events,'sports'=>$sports);
+		$this->fuel->pages->render('athlete/welcome',$vars);
+	}
 	function index(){
 		if ($this->session->userdata('id')){
 			$this->load->model('athletes_model','athletes');
@@ -15,14 +35,15 @@ class Athlete extends CI_Controller{
 			$id      = $this->session->userdata('id');
 			$athlete = $this->athletes->loadProfile($id);
 			$member  = $this->members->getMember($id);
+			$sports  = $this->members->getSports($id);
 			$events  = $this->events->getEventsForMember($id);
 			$notifications = $this->notify->getMemberNotifications($id);
 		} else {
 			redirect('signin/login');
 			die();
 		}
-		$vars = array('athlete'=>$athlete,'member'=>$member,'notes'=>$notifications,'events'=>$events);
-		$this->fuel->pages->render('athlete/welcome',$vars);
+		$vars = array('id'=>$id,'athlete'=>$athlete,'member'=>$member,'notes'=>$notifications,'events'=>$events,'sports'=>$sports);
+		$this->fuel->pages->render('athlete/view',$vars);
 	}
 	function getAthlete(){
 		$this->load->model('athletes_model','athletes');
@@ -302,7 +323,7 @@ class Athlete extends CI_Controller{
 			redirect('signin/login');
 			die();
 		}
-		$vars = array('athlete'=>$athlete,'member'=>$member,'sports'=>$sports);
+		$vars = array('id'=>$id,'athlete'=>$athlete,'member'=>$member,'sports'=>$sports);
 		$this->fuel->pages->render('athlete/view',$vars);
 	}
 }

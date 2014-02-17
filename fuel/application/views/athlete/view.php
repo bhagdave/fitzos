@@ -36,4 +36,11 @@
 	?>
 	</div>
 </div>
+<div>
+<?php
+	if (isset($id) && $id == $member->id){
+		echo("<a href='/athlete/edit/".$id."'>Edit your profile</a>");
+	}
+?>
+</div>
 		
