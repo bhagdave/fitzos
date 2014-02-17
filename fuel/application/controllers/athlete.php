@@ -5,19 +5,19 @@ class Athlete extends CI_Controller{
 		parent::__construct();
 		$this->load->library("session");
 		$this->load->model('athletes_model','athletes');
+		$this->load->model('notifications_model','notify');
+		$this->load->model('members_model','members');
 	}
 	function edit($id){
 		$user = $this->session->userdata('id');
 		if (isset($user) && $user == $id){
-			$this->load->model('members_model','members');
-			$this->load->model('notifications_model','notify');
 			$this->load->model('events_model','events');
 			// get the athlete from the database
 			$athlete = $this->athletes->loadProfile($id);
 			$member  = $this->members->getMember($id);
 			$sports  = $this->members->getSports($id);
 			$events  = $this->events->getEventsForMember($id);
-			$notifications = $this->notify->getMemberNotifications($id);
+			$notifications = $this->notify->getNotifications('member',$id);
 		} else {
 			redirect('404');
 			die();
@@ -27,8 +27,6 @@ class Athlete extends CI_Controller{
 	}
 	function index(){
 		if ($this->session->userdata('id')){
-			$this->load->model('members_model','members');
-			$this->load->model('notifications_model','notify');
 			$this->load->model('events_model','events');	
 			// get the athlete from the database
 			$id      = $this->session->userdata('id');
@@ -36,7 +34,7 @@ class Athlete extends CI_Controller{
 			$member  = $this->members->getMember($id);
 			$sports  = $this->members->getSports($id);
 			$events  = $this->events->getEventsForMember($id);
-			$notifications = $this->notify->getMemberNotifications($id);
+			$notifications = $this->notify->getNotifications('member',$id);
 		} else {
 			redirect('signin/login');
 			die();
@@ -50,7 +48,6 @@ class Athlete extends CI_Controller{
 		echo(json_encode($athlete));
 	}
 	function setAthlete(){
-		$this->load->model('athletes_model','athletes');
 		$athlete = json_decode($_POST['payload']);
 		$this->athletes->setProfile($athlete);	
 	}
@@ -62,7 +59,6 @@ class Athlete extends CI_Controller{
 	}
 	function profile(){
 		if (isset($_POST['age'])){	
-			$this->load->model('members_model','members');
 			// post to the database baby...
 			$data = $_POST;
 			$data['id'] = $this->session->userdata('id');
@@ -107,7 +103,6 @@ class Athlete extends CI_Controller{
 		}
 	}
 	function sports(){
-		$this->load->model('members_model','members');
 		$this->load->model('sports_model','sports');
 		$vars = array();
 		if (isset($_POST['member_id'])){
@@ -141,7 +136,6 @@ class Athlete extends CI_Controller{
 		}
 	}	
 	function stats($sport){
-		$this->load->model('members_model','members');
 		$this->load->model('sports_model','sports');
 		$vars = array();
 		if ($this->session->userdata('id')){
@@ -190,7 +184,6 @@ class Athlete extends CI_Controller{
 		}
 	}
 	function teams(){
-		$this->load->model('members_model','members');
 		$this->load->model('teams_model','teams');
 		$vars = array();
 		if ($this->session->userdata('id')){
@@ -237,11 +230,10 @@ class Athlete extends CI_Controller{
 		}
 	}
 	function notifications(){
-		$this->load->model('notifications_model','notify');
 		if ($this->session->userdata('id')){
 			// get the athlete from the database
 			$id   = $this->session->userdata('id');
-			$notifications = $this->notify->getMemberNotifications($id);
+			$notifications = $this->notify->getNotifications('member',$id);
 			$vars = array('notes'=>$notifications);
 			$this->fuel->pages->render('athlete/notifications',$vars);	
 		} else {
@@ -250,13 +242,12 @@ class Athlete extends CI_Controller{
 		
 	}
 	function markNotificationRead($notification){
-		$this->load->model('notifications_model','notify');
 		if ($this->session->userdata('id')){
 			// get the athlete from the database
 			$id   = $this->session->userdata('id');
 			// mark the notification read
 			$this->notify->markRead($notification);
-			$notifications = $this->notify->getMemberNotifications($id);
+			$notifications = $this->notify->getNotifications('member',$id);
 			$vars = array('notes'=>$notifications,'layout'=>'none');
 			$this->fuel->pages->render('athlete/notifications',$vars);
 		} else {
