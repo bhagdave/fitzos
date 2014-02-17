@@ -92,6 +92,14 @@ class Notifications_model extends Base_module_model {
 		$result = $this->db->get("notifications");
 		return $result->result();
 	}
+	function getNotifications($type,$id){
+		$this->db->where("to_table",$type);
+		$this->db->where("to_key",$id);
+		$this->db->where("read",0);
+		$this->db->order_by('date_added','desc');
+		$result = $this->db->get("notifications");
+		return $result->result();
+	}
 	function markRead($id){
 		$this->db->where('id',$id);
 		$this->db->update('notifications',array('read'=>1));
