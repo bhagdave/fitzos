@@ -1,3 +1,10 @@
+<?php
+	if (isset($id) && $id == $member->id){
+		$isMember = True;
+	} else {
+		$isMember = False;
+	}
+?>
 <div class="row">
 	<div class="col-md-4">
 		<h2><?=isset($member) ? $member->first_name . ' ' . $member->last_name : '' ; ?></h2>
@@ -38,8 +45,33 @@
 </div>
 <div>
 <?php
-	if (isset($id) && $id == $member->id){
+	if ($isMember){
 		echo("<a href='/athlete/edit/".$id."'>Edit your profile</a>");
+	}
+	if ($isMember){
+	?>
+		<div class="row">
+			<div class="col-md-6 col-lg-10 col-xs-12">
+					<div class="row">
+						<div class="col-md-3 col-xs-12 col-lg-6">
+							<h2>Notifications</h2>
+						</div>
+						<div class="col-md-3 col-xs-12 col-lg-6">
+							<?php $this->load->view('athlete/notifications'); ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-3 col-xs-12 col-lg-6">
+							<h2>Events</h2>
+						</div>
+						<div class="col-md-4 col-xs-12 col-lg-6">
+							<?php $this->load->view('athlete/events'); ?>
+						</div>
+					</div>			
+			</div>
+		</div>
+
+	<?php
 	}
 ?>
 </div>
