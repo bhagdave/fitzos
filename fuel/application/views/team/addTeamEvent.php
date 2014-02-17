@@ -35,9 +35,15 @@
 					</div>
 				</div>
 				<div class="control-group">
-					<label class="control-label">Time</label>
+					<label class="control-label">Start Time</label>
 					<div class="controls">
-						<input id="js-eventTime" class="timepicker" name="time"  value="<?=isset($event->time) ? $event->time : ''  ?>" type="text" placeholder="Event time">
+						<input id="js-eventTime" class="timepicker" name="time"  value="<?=isset($event->time) ? $event->time : ''  ?>" type="text" placeholder="Event start time">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">Finish Time</label>
+					<div class="controls">
+						<input id="js-eventTime" class="timepicker" name="end_time"  value="<?=isset($event->end_time) ? $event->end_time : ''  ?>" type="text" placeholder="Finish time">
 					</div>
 				</div>
 				

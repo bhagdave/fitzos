@@ -16,6 +16,12 @@
 						$date = new DateTime($post->date);
 						echo($date->format('m/d/Y'). "<br>");
 					}
+					if (!empty($post->time)){
+						echo("Starts ".$post->time. "<br>");
+					}
+					if (!empty($post->end_time)){
+						echo("Finishes ".$post->end_time. "<br>");
+					}
 					echo("</div>");
 				}
 			} else {
