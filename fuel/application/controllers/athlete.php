@@ -273,7 +273,7 @@ class Athlete extends CI_Controller{
 			redirect('signin/login');
 			die();
 		}
-		$vars = array('id'=>$id,'athlete'=>$athlete,'member'=>$member,'sports'=>$sports);
+		$vars = array('id'=>$this->session->userdata('id'),'athlete'=>$athlete,'member'=>$member,'sports'=>$sports);
 		$this->fuel->pages->render('athlete/view',$vars);
 	}
 }
