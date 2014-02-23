@@ -11,10 +11,12 @@ class Events_model extends Base_module_model {
     	$this->db->select('event.*');
 		$this->db->join("team","event.team_id = team.id");
 		$this->db->join("team_membership","team.id = team_membership.team_id",'left');
-    	$this->db->where("team_membership.member_id",$member);
-    	$this->db->or_where("team.owner",$member);
-    	$this->db->or_where("event.member_id",$member);
+    	$this->db->distinct();
+		$sql = "(`team_membership`.`member_id` = $member OR `team`.`owner` = $member OR `event`.`member_id` = $member)";
+		$this->db->where($sql);
+    	$this->db->where('event.date >=' ,date('Y-m-d'));
 		$result = $this->db->get('event');
+//		echo($this->db->last_query());
 		$data = $result->result();
 		return $data;
     }
