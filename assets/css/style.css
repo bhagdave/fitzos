@@ -1,13 +1,13 @@
 
 /* -- Start Css */
 h2{
-	color:black;
+	color:white;
 	font-family: Georgia,Serif;
 	font-size: 24px;
 }
 
 p,h1,h3,h4,h5,small,label{
-	color:black;
+	color:white;
 	font-family: tahoma, san-serif;
 	font-size: 13px;
 }
@@ -41,7 +41,7 @@ p,h1,h3,h4,h5,small,label{
 	height:208px;
 	bgcolor:#cccccc;
 	float:right;
-
+}
 .top-right{
 	display:block;
 }
@@ -62,7 +62,7 @@ body{
 }
 
 ul li{
-	color:red
+	color:red;
 }
 
 .footer {
@@ -99,12 +99,18 @@ ul li{
     margin: 0;
     padding: 0.3em;
   }
+  
 .athleteSports{
 	border:2px;
 }
 #leaveTeam{
-	padding:10px;!important
+	padding:10px;
 }
 #inviteDialog{
 	display:none;
+}
+.js-Notifications .athleteNotes {
+	background: red;
+	border: 1px solid red;
+	border-radius:9px;
 }
