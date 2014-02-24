@@ -45,7 +45,7 @@ class Event extends CI_Controller{
 			}else {
 				$edit = false;
 			}
-			$vars = array('attending'=>$attending,'layout'=>'none','edit'=>$edit);
+			$vars = array('attending'=>$attending,'event'=>$event,'layout'=>'none','edit'=>$edit);
 			$this->fuel->pages->render('event/attending',$vars);
 		} else {
 			redirect('signin/login');
