@@ -289,8 +289,8 @@ function sendInvites(eventId){
 		type:'POST'
 		})
 		.done(function( data ) {
-			//$(".js-teamWall").html(data);
 			$('#inviteDialog').dialog("close");
+			$("#inviteDialog").html(data);
 		}) 
 		.fail(function() {
 			alert( "error" );

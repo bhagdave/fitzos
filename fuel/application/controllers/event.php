@@ -21,9 +21,11 @@ class Event extends CI_Controller{
 				}
 				// lets get a list of those attending
 				$attending = $this->events_model->getMembersAttending($event->id);
+				// get those already invited
+				$invited = $this->events_model->getInvitedMembers($event->id);
 				// get the team members
 				$members = $this->events_model->getTeamMembersToInvite($event->team_id,$event->id);
-				$vars = array('team'=>$team,'members'=>$members, 'edit'=>$edit, 'event'=>$event,'attending'=>$attending,'user'=>$user);
+				$vars = array('team'=>$team,'members'=>$members, 'edit'=>$edit, 'event'=>$event,'attending'=>$attending,'user'=>$user,'invited'=>$invited);
 				$this->fuel->pages->render('event/view',$vars);
 			} else {
 				redirect('404');
@@ -116,6 +118,12 @@ class Event extends CI_Controller{
 					$memberId = str_replace('mmbrd','',$key);
 					$this->events_model->sendInvite($memberId,$user,$event);
 				}
+				// get those already invited
+				$invited = $this->events_model->getInvitedMembers($event->id);
+				// get the team members
+				$members = $this->events_model->getTeamMembersToInvite($event->team_id,$event->id);
+				$vars = array('team'=>$team,'members'=>$members, 'edit'=>$edit, 'event'=>$event,'attending'=>$attending,'user'=>$user,'invited'=>$invited);
+				$this->fuel->pages->render('event/invitation',$vars);
 			}
 		} else {
 			redirect('signin/login');

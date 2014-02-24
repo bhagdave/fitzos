@@ -42,11 +42,22 @@ class Events_model extends Base_module_model {
     	$this->db->update('event',$data);	
     }
     function setAttendEvent($event,$user){
+    	// update the attending table..
     	$data = array('member_id'=>$user,'event_id'=>$event,'paid'=>'NO','cancelled'=>'NO');
     	$this->db->insert('event_attendance',$data);
+    	// see if they are on the list of invites and update
+    	$this->db->where('event_id',$event);
+    	$this->db->where('member_id',$user);
+    	$this->db->update('event_invites',array('status'=>'accepted'));
     }
     function deleteEvent($id){
     	$this->db->delete('event',array('id'=>$id));
+    }
+    function getInvitedMembers($event){
+    	$this->db->where('event_id',$event);
+    	$this->db->join('member','member.id = member_id');
+    	$result = $this->db->get('event_invite');
+    	return $result->result();
     }
 	function rejectAttendee($event,$user){
 		$this->db->where('event_id',$event);
@@ -94,6 +105,14 @@ class Events_model extends Base_module_model {
 		// do enmails
 		$this->load->library('Fitzos_email',null,'Femail');
 		$this->Femail->sendEventInvite($member,$eventId);
+		// record invite
+		$invite = array(
+			'event_id'=>$eventId,
+			'member_id'=>$member,
+			'status'=>'invited',
+			'invite_sent'=>date('Y-m-d')			
+		);
+		$this->db->insert('event_invite',$invite);
 	}
 }
  
