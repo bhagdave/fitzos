@@ -110,7 +110,6 @@ ul li{
 	display:none;
 }
 .js-Notifications .athleteNotes {
-	background: red;
-	border: 1px solid red;
+	border: 1px solid black;
 	border-radius:9px;
 }
