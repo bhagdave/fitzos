@@ -157,7 +157,7 @@ class Teams extends CI_Controller{
 			$this->teams->addNewMemberWallPost($team,$member);
 			// now send back the Member requests section
 			$waiting= $this->teams->getMembersAwaiting($team);
-			$vars   = array('waiting'=>$waiting,'layout'=>'none');
+			$vars   = array('waiting'=>$waiting,'layout'=>'none','team'=>$team);
 			$this->fuel->pages->render('team/memberRequests',$vars);
 		} else {
 			redirect('signin/login');
