@@ -28,6 +28,10 @@ class Signin extends CI_Controller{
 			}
 		}
 	}
+	function logout(){
+		$this->session->sess_destroy();
+		redirect('/');
+	}
 	function login(){
 		$this->load->model("members_model","members");
 		if (isset($_REQUEST['username']) && isset($_REQUEST['password'])){
