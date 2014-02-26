@@ -141,6 +141,24 @@ class Events_model extends Base_module_model {
 			return false;
 		}
 	}
+	function addWallPost($data){
+		if (is_array($data)){
+			if (!isset($data['date'])){
+				$data['date'] = date('Y-m-d');
+			}
+			$this->db->insert('event_wall',$data);
+			return $this->db->insert_id();
+		} else {
+			return null;
+		}
+	}
+	function deletePost($event,$id){
+		$this->db->where('event_id',$event);
+		$this->db->where('id',$id);
+		$this->db->set('deleted','yes');
+		$this->db->update('event_wall');
+	}
+	
 }
  
 class Event_model extends Base_module_record {

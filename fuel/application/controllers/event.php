@@ -154,20 +154,22 @@ class Event extends CI_Controller{
 		}					
 	}
 	function deleteWallPost($event,$post){
+		if ($this->session->userdata('id')){
+			$this->events_model->deletePost($event,$post);
+			$this->getWall($event);
+		} else {
+			redirect('signin/login');
+			die();
+		}					
 	}
 	function addWallPost(){
 		$this->load->model('teams_model','teams');
 		if (isset($_REQUEST)){
 			if ($this->session->userdata('id')){
 				// check if owner of team..
-				$user  = $this->session->userdata('id');
-				$owner = $this->teams->isOwner($_REQUEST['team_id'],$user);
-				$data  = array('event_id'=>$_REQUEST['event_id'], 'message'=>$_REQUEST['message'], 'member_id'=>$user);
-				$id    = $this->events_model->addWallPost($data);
-				$event = $this->events_model->getEvent($_REQUEST['event_id']);
-				$wall  = $this->events_wall->getWall($_REQUEST['event_id']);
-	 			$vars  = array('wall'=>$wall,'owner'=>$owner,'layout'=>'none','event'=>$data);
-				$this->fuel->pages->render('event/eventWall',$vars);			
+				$data = array('event_id'=>$_REQUEST['event_id'], 'message'=>$_REQUEST['message'], 'member_id'=>$user);
+				$id   = $this->events_model->addWallPost($data);
+				$this->getWall($event);
 			} else {
 				redirect('signin/login');
 				die();
