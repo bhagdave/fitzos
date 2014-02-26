@@ -121,6 +121,26 @@ class Events_model extends Base_module_model {
 		);
 		$this->db->insert('event_invites',$invite);
 	}
+	function getWall($event){
+		$this->db->select('event_wall.*,member.first_name,member.last_name');
+		$this->db->where('event_id',$event);
+		$this->db->join('member','member.id = member_id','left');
+		$this->db->order_by('date','desc');
+		$this->db->where('deleted','no');
+		$result = $this->db->get('event_wall');
+		return $result->result();
+	}
+	function isOwner($event,$id){
+		if (isset($event) && isset($id)){
+			$this->db->where('event.id',$event);
+			$this->db->where("(member_id = $id or team.owner = $id)");
+			$this->db->join('team','team.id = team_id');
+			$result = $this->db->get('event');
+			return $result->num_rows() > 0;
+		} else {
+			return false;
+		}
+	}
 }
  
 class Event_model extends Base_module_record {

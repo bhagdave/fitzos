@@ -157,7 +157,6 @@ class Teams_model extends Base_module_model {
 	}
 	function isOwner($team = null,$user = null){
 		if (isset($team) && isset($user)){
-			echo("Team:" . $team . " User" . $user);
 			$this->db->where('id',$team);
 			$this->db->where('owner',$user);
 			$result = $this->db->get('team');

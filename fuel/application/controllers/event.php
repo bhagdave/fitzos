@@ -25,7 +25,18 @@ class Event extends CI_Controller{
 				$invited = $this->events_model->getInvitedMembers($event->id);
 				// get the team members
 				$members = $this->events_model->getTeamMembersToInvite($event->team_id,$event->id);
-				$vars = array('team'=>$team,'members'=>$members, 'edit'=>$edit, 'event'=>$event,'attending'=>$attending,'user'=>$user,'invited'=>$invited);
+	 			$wall  = $this->events_model->getWall($id);
+	 			$owner = $this->events_model->isOwner($id,$user);
+				$vars = array(
+						'team'=>$team,
+						'wall'=>$wall,
+						'owner'=>$owner,
+						'members'=>$members, 
+						'edit'=>$edit, 
+						'event'=>$event,
+						'attending'=>$attending,
+						'user'=>$user,
+						'invited'=>$invited);
 				$this->fuel->pages->render('event/view',$vars);
 			} else {
 				redirect('404');
@@ -128,6 +139,39 @@ class Event extends CI_Controller{
 		} else {
 			redirect('signin/login');
 			die();
+		}
+	}
+	function getWall($event){
+		if ($this->session->userdata('id')){
+	 		$wall  = $this->events_model->getWall($event);
+	 		$owner = $this->events_model->isOwner($event,$this->session->userdata('id'));
+			$data  = $this->events_model->getEvent($event);
+	 		$vars  = array('wall'=>$wall,'owner'=>$owner,'layout'=>'none','event'=>$data);
+			$this->fuel->pages->render('event/eventWall',$vars);			
+		} else {
+			redirect('signin/login');
+			die();
+		}					
+	}
+	function deleteWallPost($event,$post){
+	}
+	function addWallPost(){
+		$this->load->model('teams_model','teams');
+		if (isset($_REQUEST)){
+			if ($this->session->userdata('id')){
+				// check if owner of team..
+				$user  = $this->session->userdata('id');
+				$owner = $this->teams->isOwner($_REQUEST['team_id'],$user);
+				$data  = array('event_id'=>$_REQUEST['event_id'], 'message'=>$_REQUEST['message'], 'member_id'=>$user);
+				$id    = $this->events_model->addWallPost($data);
+				$event = $this->events_model->getEvent($_REQUEST['event_id']);
+				$wall  = $this->events_wall->getWall($_REQUEST['event_id']);
+	 			$vars  = array('wall'=>$wall,'owner'=>$owner,'layout'=>'none','event'=>$data);
+				$this->fuel->pages->render('event/eventWall',$vars);			
+			} else {
+				redirect('signin/login');
+				die();
+			}
 		}
 	}
 }
