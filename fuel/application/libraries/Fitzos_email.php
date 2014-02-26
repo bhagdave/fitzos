@@ -29,7 +29,7 @@ class Fitzos_email {
 	function sendEventInvite($member_id,$event_id){
 		$this->CI =& get_instance();
 		$members  = $this->CI->load->model("members_model");
-		$events   = $this->CI->load->model("teams_model");
+		$events   = $this->CI->load->model("events_model");
 		// get data for the member
 		$member = $members->getMember($member_id);
 		$event  = $events->getEvent($event_id);

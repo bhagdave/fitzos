@@ -122,7 +122,7 @@ class Event extends CI_Controller{
 				$invited = $this->events_model->getInvitedMembers($event->id);
 				// get the team members
 				$members = $this->events_model->getTeamMembersToInvite($event->team_id,$event->id);
-				$vars = array('team'=>$team,'members'=>$members, 'edit'=>$edit, 'event'=>$event,'attending'=>$attending,'user'=>$user,'invited'=>$invited);
+				$vars = array('layout'=>'none','ajax'=>'yes','team'=>$team,'members'=>$members, 'edit'=>$edit, 'event'=>$event,'attending'=>$attending,'user'=>$user,'invited'=>$invited);
 				$this->fuel->pages->render('event/invitation',$vars);
 			}
 		} else {

@@ -56,7 +56,7 @@ class Events_model extends Base_module_model {
     function getInvitedMembers($event){
     	$this->db->where('event_id',$event);
     	$this->db->join('member','member.id = member_id');
-    	$result = $this->db->get('event_invite');
+    	$result = $this->db->get('event_invites');
     	return $result->result();
     }
 	function rejectAttendee($event,$user){
@@ -77,6 +77,13 @@ class Events_model extends Base_module_model {
 		$this->db->select('member_id');
 		$this->db->where('event_id',$eventId);
 		$result = $this->db->get("event_attendance");
+		$data = $result->result();
+		foreach($data as $member){
+			$members[] = $member->member_id;
+		}		
+		$this->db->select('member_id');
+		$this->db->where('event_id',$eventId);
+		$result = $this->db->get("event_invites");
 		$data = $result->result();
 		foreach($data as $member){
 			$members[] = $member->member_id;
@@ -112,7 +119,7 @@ class Events_model extends Base_module_model {
 			'status'=>'invited',
 			'invite_sent'=>date('Y-m-d')			
 		);
-		$this->db->insert('event_invite',$invite);
+		$this->db->insert('event_invites',$invite);
 	}
 }
  
