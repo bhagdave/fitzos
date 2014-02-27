@@ -46,7 +46,8 @@
 <div>
 <?php
 	if ($isMember){
-		echo("<a href='/athlete/edit/".$id."'>Edit your profile</a>");
+		echo("<a href='/athlete/edit/".$id."'>Edit your profile</a><br/>");
+		echo("<a href='#' class='js-emailFriend'>Email Invite To Friend</a>");
 	?>
 		<div class="row">
 			<div class="col-md-6 col-lg-10 col-xs-12">
@@ -73,4 +74,7 @@
 	}
 ?>
 </div>
+<?php 
+	$this->load->view('athlete/inviteFriend');
+?>
 		

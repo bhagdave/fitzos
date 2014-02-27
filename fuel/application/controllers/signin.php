@@ -66,5 +66,15 @@ class Signin extends CI_Controller{
 			$this->fuel->pages->render("signin/activationError" );
 		}
 	}
+	function invite(){
+		if (isset($_POST['email'])){
+			// let us send an invite email..
+			$user = $this->session->userdata('id');
+			$this->load->model("members_model","members");
+			$member = $this->members->getMember($user);
+			$this->load->library('Fitzos_email',null,'Femail');
+			$this->Femail->sendMemberInvite($member,$_POST['email']);
+		}
+	}
 }
 ?>

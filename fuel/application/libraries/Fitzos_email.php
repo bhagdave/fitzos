@@ -47,4 +47,8 @@ class Fitzos_email {
 		$message = $this->CI->load->view('email/teamRequest',array('member'=>$member,'team'=>$team),TRUE);
 		$this->_sendMail($owner->email, 'member_services@reach-your-peak.com', 'Team membership requested', $message);
 	}
+	function sendMemberInvite($member,$email){
+		$message = $this->CI->load->view('email/memberInvite',array('member'=>$member),TRUE);
+		$this->_sendMail($email, 'member_services@reach-your-peak.com', 'Reach Your Peak Membership Invite', $message);
+	}
 }

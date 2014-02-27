@@ -178,6 +178,27 @@ $(function() {
     			alert( "error" );
     		});    	
     });
+    $( ".js-InviteFriend" ).submit(function( event ) {
+    	event.preventDefault();
+    	data = $('.js-InviteFriend').serialize();
+    	$.ajax({
+    		url: "/signin/invite",
+    		type:'POST',
+    		data:data})
+    		.done(function( data ) {
+    			
+    		}) 
+    		.fail(function() {
+    			alert( "error" );
+    		});    	
+    });
+    
+    $('.js-emailFriend').bind('click',function(){
+    	event.preventDefault();
+    	$('#inviteFriendDialog').dialog({
+  	      modal: true
+  	    });
+    });
 });
 function getMembers(team){
 	$.ajax({
