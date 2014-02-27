@@ -69,9 +69,10 @@ class Api extends CI_Controller{
 					$this->respond("ERR","Sign up failed", $mesg);
 				} else {
 					$id = $this->members->createMember($_REQUEST);
+					$member = $this->members->getMember($id);
 					// Send email to user to activate account...
 					$this->load->library('Fitzos_email',null,'Femail');
-					$this->Femail->sendMemberActivation($id);
+					$this->Femail->sendMemberActivation($member);
 					$this->respond("OK","Sign up worked", $id);
 				}
 			}

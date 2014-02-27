@@ -21,9 +21,10 @@ class Signin extends CI_Controller{
 				redirect('/');
 			} else {
 				$id = $this->members->createMember($_REQUEST);
+				$member = $this->members->getMember($id);
 				// Send email to user to activate account...
 				$this->load->library('Fitzos_email',null,'Femail');
-				$this->Femail->sendMemberActivation($id);
+				$this->Femail->sendMemberActivation($member);
 				$this->fuel->pages->render("signin/activationPending" );
 			}
 		}

@@ -110,8 +110,10 @@ class Events_model extends Base_module_model {
 		);
 		$this->notifications_model->createNotification($data);
 		// do enmails
+		$this->load->model('members_model');
+		$memberData = $this->members_model->getMember($member);
 		$this->load->library('Fitzos_email',null,'Femail');
-		$this->Femail->sendEventInvite($member,$eventId);
+		$this->Femail->sendEventInvite($memberData,$event);
 		// record invite
 		$invite = array(
 			'event_id'=>$eventId,

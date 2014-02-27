@@ -216,8 +216,11 @@ class Athlete extends CI_Controller{
 			$team   = $_REQUEST['team_id'];
 			$this->load->model('teams_model','teams');
 			$id = $this->teams->setMemberRequest($team,$member);
+			$teamData = $this->teams->getTeam($_REQUEST['team_id']);
+			$memberData = $this->members->getMember($member);
+			$owner  = $this->teams->getTeamOwner($team_id);	
 			$this->load->library('Fitzos_email',null,'Femail');
-			$this->Femail->sendMemberJoiningEmail($team,$member);
+			$this->Femail->sendMemberJoiningEmail($teamData,$memberData,$owner);
 			$this->load->model('notifications_model','notifications');
 			$this->notifications->notifyJoining($team,$member);
 			if ($id['id'] > 0){
