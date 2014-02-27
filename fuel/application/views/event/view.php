@@ -42,6 +42,19 @@
 		<?php $this->load->view('event/attending');?>
 	</div>
 </div>
+<div class="row">
+	<div class="col-md-4 teamWall">
+		<h2>Event Wall</h2>
+		<form class="js-eventWallPostAdd">
+			<input type="hidden" name="event_id" value="<?=$event->id ?>" />
+			<textarea cols="40" rows="2" name="message" placeholder="Your message"></textarea>
+			<button class="btn-small btn-success js-wallPostAddBtn">Add post</button>
+		</form>
+		<div class="js-eventWall">
+			<?php $this->load->view('event/eventWall');?>
+		</div>
+	</div>
+</div>
 <div class="row actions">
 	<div class="col-md-2">
 		<button class="btn btn-primary js-Invite" onclick="showInviteForm();">Invite Members</button>
@@ -61,4 +74,5 @@
 		?>
 	</div>
 </div>
+
 <?php $this->load->view('event/invitation');?>

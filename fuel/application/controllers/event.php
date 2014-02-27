@@ -166,10 +166,11 @@ class Event extends CI_Controller{
 		$this->load->model('teams_model','teams');
 		if (isset($_REQUEST)){
 			if ($this->session->userdata('id')){
+				$user = $this->session->userdata('id');
 				// check if owner of team..
 				$data = array('event_id'=>$_REQUEST['event_id'], 'message'=>$_REQUEST['message'], 'member_id'=>$user);
 				$id   = $this->events_model->addWallPost($data);
-				$this->getWall($event);
+				$this->getWall($_REQUEST['event_id']);
 			} else {
 				redirect('signin/login');
 				die();
