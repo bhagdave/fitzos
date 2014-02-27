@@ -5,6 +5,7 @@ class Signin extends CI_Controller{
 		parent::__construct();
 		$this->load->library('Fitzos_utility',null,'Futility');
 		$this->load->library('session');
+		$this->load->model("members_model","members");
 	}
 	
 	function start(){
@@ -15,7 +16,6 @@ class Signin extends CI_Controller{
 			$this->fuel->pages->render('signin/error',$vars);
 		} else {
 			// Put the stuff into the database
-			$this->load->model("members_model","members");
 			if ($this->members->checkIfMemberExists($_REQUEST)){
 				$mesg[] = 'That username is already taken.';
 				redirect('/');
@@ -34,7 +34,6 @@ class Signin extends CI_Controller{
 		redirect('/');
 	}
 	function login(){
-		$this->load->model("members_model","members");
 		if (isset($_REQUEST['username']) && isset($_REQUEST['password'])){
 			$username = $_REQUEST['username'];
 			$password = md5($_REQUEST['password']);
@@ -59,7 +58,6 @@ class Signin extends CI_Controller{
 		}
 	}	
 	function activate($salt){
-		$this->load->model("members_model","members");
 		$activated = $this->members->activate($salt);
 		if ($activated){
 			$this->fuel->pages->render("signin/activationSuccess" );
@@ -71,7 +69,6 @@ class Signin extends CI_Controller{
 		if (isset($_POST['email'])){
 			// let us send an invite email..
 			$user = $this->session->userdata('id');
-			$this->load->model("members_model","members");
 			$member = $this->members->getMember($user);
 			$this->load->library('Fitzos_email',null,'Femail');
 			$this->Femail->sendMemberInvite($member,$_POST['email']);
