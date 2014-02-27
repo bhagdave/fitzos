@@ -10,6 +10,7 @@ class Teams_model extends Base_module_model {
     	$this->db->select('team.*');
     	$this->db->where('public','yes');
     	$this->db->join('team_membership',"team_id = team.id and member_id not in ($id)");
+		$this->db->distinct();
     	$this->db->where_not_in('owner',$id);
     	$result = $this->db->get('team');
     	return $result->result();
