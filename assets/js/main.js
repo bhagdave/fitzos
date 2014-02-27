@@ -188,7 +188,8 @@ $(function() {
     		type:'POST',
     		data:data})
     		.done(function( data ) {
-    			
+    			$('#inviteFriendDialog, input').val('');
+    			$('#inviteFriendDialog').dialog('close');
     		}) 
     		.fail(function() {
     			alert( "error" );
@@ -315,7 +316,6 @@ function removeAttendee(eventId,user){
 			alert( "error" );
 	});    					
 }
-
 function getTeamWall($team){
 	event.preventDefault();
 	$.ajax({
