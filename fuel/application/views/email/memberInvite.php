@@ -14,7 +14,7 @@
 <body>
 	<p>Some stuff here about how wonderful it is to have joined ReachYourPeak...</p>
 	<p>A friend of yours <?=$member->first_name ?> <?=$member->last_name ?> has invited you to join us over here at Reach Your Peak.</p>
-	<p>Please click on this <a href="http://www.reach-your-peak.com/"></a>link to create your account....</p>
+	<p>Please click on this <a href="http://www.reach-your-peak.com/">link to create your account</a>....</p>
 	<div id="footer">
 		<p>Copyright &copy; PROformance 2014 </p>
 	</div>
