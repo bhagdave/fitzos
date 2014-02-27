@@ -158,6 +158,7 @@ $(function() {
     		type:'POST',
     		data:data})
     		.done(function( data ) {
+    			$('.js-wallPostAdd, textarea').val('');
     			$('.js-teamWall').html(data);
     		}) 
     		.fail(function() {
@@ -172,6 +173,7 @@ $(function() {
     		type:'POST',
     		data:data})
     		.done(function( data ) {
+    			$('.js-eventWallPostAdd, textarea').val('');
     			$('.js-eventWall').html(data);
     		}) 
     		.fail(function() {

@@ -18,7 +18,7 @@
 </div>
 <div class="row">
 	<div class="col-md-8 col-md-offset-4">
-		<h2><?=isset($event->name) ? $event->name : '' ; ?></h2>
+		<h2><?=isset($event->name) ? $event->name : '' ; ?> ON <?=$team->name ?></h2>
 		<p><?=isset($event->content) ? $event->content : ''; ?></p>
 	</div>
 </div>

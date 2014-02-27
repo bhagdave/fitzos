@@ -127,7 +127,7 @@ class Events_model extends Base_module_model {
 		$this->db->select('event_wall.*,member.first_name,member.last_name');
 		$this->db->where('event_id',$event);
 		$this->db->join('member','member.id = member_id','left');
-		$this->db->order_by('date','desc');
+		$this->db->order_by('id','asc');
 		$this->db->where('deleted','no');
 		$result = $this->db->get('event_wall');
 		return $result->result();

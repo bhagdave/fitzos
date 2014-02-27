@@ -46,7 +46,7 @@ class Teams_model extends Base_module_model {
 		$this->db->select('team_wall.*,member.first_name,member.last_name');
 		$this->db->where('team_id',$id);
 		$this->db->join('member','member.id = member_id','left');
-		$this->db->order_by('date','desc');
+		$this->db->order_by('id','desc');
 		$this->db->where('deleted','no');
 		$result = $this->db->get('team_wall');
 		return $result->result();
