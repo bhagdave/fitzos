@@ -1,3 +1,47 @@
+<div class="row">
+	<div class="col-md-12 col-xs-12 col-lg-12">
+		<hr>
+	</div>
+</div>
+<?php 
+	$uri = $_SERVER["REQUEST_URI"];
+	if ($uri != '/athlete/sports'){
+	?>
+		<div class="row">
+			<div class="col-md-2 col-md-offset-5">
+				<a href="/athlete/sports" class="btn btn-success btn-block">Sports</a>
+			</div>
+		</div>
+	<?php 
+	}
+	if ($uri != '/athlete/teams'){
+	?>
+		<div class="row">
+			<div class="col-md-2 col-md-offset-5">
+				<a href="/athlete/teams" class="btn btn-success btn-block">Teams</a>
+			</div>
+		</div>
+	<?php 
+	}
+	if ($uri != '/athlete/notifications'){
+	?>
+		<div class="row">
+			<div class="col-md-2 col-md-offset-5">
+				<a href="/athlete/notifications" class="btn btn-success btn-block">Notifications</a>
+			</div>
+		</div>
+	<?php 
+	}
+	if ($uri != '/athlete/find'){
+	?>
+		<div class="row">
+			<div class="col-md-2 col-md-offset-5">
+				<a href="/athlete/find" class="btn btn-success btn-block">Find a Friend</a>
+			</div>
+		</div>
+	<?php 
+	}
+?>
 <div class="col-md-12">
 	<div class="row">
 		<div id="footer">

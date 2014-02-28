@@ -46,7 +46,7 @@
 <div>
 <?php
 	if ($isMember){
-		echo("<a href='/athlete/edit/".$id."'>Edit your profile</a><br/>");
+		echo("<a href='/athlete/profile'>Edit your profile</a><br/>");
 		echo("<a href='#' class='js-emailFriend'>Email Invite To Friend</a>");
 	?>
 		<div class="row">
