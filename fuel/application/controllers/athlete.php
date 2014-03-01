@@ -212,11 +212,11 @@ class Athlete extends CI_Controller{
 	}
 	function joinTeam(){
 		if ($this->session->userdata('id')){
-			$member = $_REQUEST['member_id'];
-			$team   = $_REQUEST['team_id'];
+			$member = $this->input->get_post('member_id');
+			$team   = $this->input->get_post('team_id');
 			$this->load->model('teams_model','teams');
 			$id = $this->teams->setMemberRequest($team,$member);
-			$teamData = $this->teams->getTeam($_REQUEST['team_id']);
+			$teamData = $this->teams->getTeam($this->input->get_post('team_id'));
 			$memberData = $this->members->getMember($member);
 			$owner  = $this->teams->getTeamOwner($team_id);	
 			$this->load->library('Fitzos_email',null,'Femail');

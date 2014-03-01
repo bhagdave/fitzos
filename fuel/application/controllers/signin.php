@@ -9,18 +9,18 @@ class Signin extends CI_Controller{
 	}
 	
 	function start(){
-		$mesg = $this->Futility->checkSignin($_REQUEST);
+		$mesg = $this->Futility->checkSignin($this->input->get_post());
 		if (count($mesg)> 0){
 			// show error
-			$vars = array('messages'=>$mesg, 'request'=>$_REQUEST);
+			$vars = array('messages'=>$mesg, 'request'=>$this->input->get_post());
 			$this->fuel->pages->render('signin/error',$vars);
 		} else {
 			// Put the stuff into the database
-			if ($this->members->checkIfMemberExists($_REQUEST)){
+			if ($this->members->checkIfMemberExists($this->input->get_post())){
 				$mesg[] = 'That username is already taken.';
 				redirect('/');
 			} else {
-				$id = $this->members->createMember($_REQUEST);
+				$id = $this->members->createMember($this->input->get_post());
 				$member = $this->members->getMember($id);
 				// Send email to user to activate account...
 				$this->load->library('Fitzos_email',null,'Femail');
@@ -34,9 +34,9 @@ class Signin extends CI_Controller{
 		redirect('/');
 	}
 	function login(){
-		if (isset($_REQUEST['username']) && isset($_REQUEST['password'])){
-			$username = $_REQUEST['username'];
-			$password = md5($_REQUEST['password']);
+		if ($this->input->get_post('username') && $this->input->get_post('password')){
+			$username = $this->input->get_post('username');
+			$password = md5($this->input->get_post('password'));
 			$login    = $this->members->checkLogin($username, $password);
 			if (isset($login)){
 				// get the member type and go the right way...
@@ -49,11 +49,11 @@ class Signin extends CI_Controller{
 				}
 				$this->fuel->pages->render("signin/athlete");
 			} else {
-				$vars = array('message'=>"Username/Password Invalid", 'request'=>$_REQUEST);
+				$vars = array('message'=>"Username/Password Invalid", 'request'=>$this->input->get_post());
 				$this->fuel->pages->render('signin/loginError',$vars);
 			}			
 		} else {
-			$vars = array('message'=>"", 'request'=>$_REQUEST);
+			$vars = array('message'=>"", 'request'=>$this->input->get_post());
 			$this->fuel->pages->render('signin/login',$vars);
 		}
 	}	
@@ -66,12 +66,12 @@ class Signin extends CI_Controller{
 		}
 	}
 	function invite(){
-		if (isset($_POST['email'])){
+		if ($this->inout->post('email')){
 			// let us send an invite email..
 			$user = $this->session->userdata('id');
 			$member = $this->members->getMember($user);
 			$this->load->library('Fitzos_email',null,'Femail');
-			$this->Femail->sendMemberInvite($member,$_POST['email']);
+			$this->Femail->sendMemberInvite($member,$this->inout->post('email'));
 		}
 	}
 }

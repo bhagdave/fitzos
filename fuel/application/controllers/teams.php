@@ -9,9 +9,9 @@ class Teams extends CI_Controller{
 		$this->load->model('teams_model','teams');
 		$this->load->model('sports_model','sports');
 		$this->load->model('members_model','members');
-		if (isset($_POST['owner'])){
+		if ($this->input->post('owner')){
 			// posted do shit....
-			$team_id = $this->teams->createTeam($_POST);
+			$team_id = $this->teams->createTeam($this->input->post());
 			// send them to the team management
 			$this->manage($team_id);
 			return;
@@ -104,15 +104,18 @@ class Teams extends CI_Controller{
 	}
 	function addWallPost(){
 		$this->load->model('teams_model','teams');
-		if (isset($_REQUEST)){
+		if ($this->input->get_post()){
 			if ($this->session->userdata('id')){
 				// check if owner of team..
 				$user = $this->session->userdata('id');
-				$owner= $this->teams->isOwner($_REQUEST['team_id'],$user);
-				$data = array('team_id'=>$_REQUEST['team_id'], 'message'=>$_REQUEST['message'], 'member_id'=>$user);
+				$owner= $this->teams->isOwner($this->input->get_post('team_id'),$user);
+				$data = array(
+						'team_id'=>$this->input->get_post('team_id'), 
+						'message'=>$this->input->get_post('message'), 
+						'member_id'=>$user);
 				$id   = $this->teams->addWallPost($data);
-				$team = $this->teams->getTeam($_REQUEST['team_id']);
-				$wall = $this->teams->getTeamWall($_REQUEST['team_id']);
+				$team = $this->teams->getTeam($this->input->get_post('team_id'));
+				$wall = $this->teams->getTeamWall($this->input->get_post('team_id'));
 			 	$vars = array('wall'=>$wall,'owner'=>$owner,'layout'=>'none','team'=>$team);
 				$this->fuel->pages->render('team/teamWall',$vars);
 			} else {
@@ -189,7 +192,7 @@ class Teams extends CI_Controller{
 	function newEvent($team){
 		if ($this->session->userdata('id')){
 			$this->load->model('teams_model','teams');
-			if (isset($_POST['team_id'])){
+			if ($this->input->post('team_id')){
 				// ok update the beast...
 				if (isset($_FILES['file']['name'])){
 					if ($_FILES["file"]["error"] > 0){	
@@ -203,17 +206,18 @@ class Teams extends CI_Controller{
 							move_uploaded_file($_FILES["file"]["tmp_name"],$path);
 						}
 						// update the member
-						$_POST['image'] =$path;
+						$data = $this->input->post();
+						$data['image'] =$path;
 					}
 				}			
 				// lets add the member id for the person adding the event
 				$user = $this->session->userdata('id');
-				$_POST['member_id'] = $user;
-				$id = $this->teams->addTeamEvent($_POST);
+				$data['member_id'] = $user;
+				$id = $this->teams->addTeamEvent($data);
 				if (isset($id)){
 					$this->session->set_flashdata('message', 'Event added');
 				}
-				redirect('teams/manage/' . $_POST['team_id']);
+				redirect('teams/manage/' . $data['team_id']);
 			}
 			$data = $this->teams->getTeam($team);
 			$vars = array('team'=>$data);
