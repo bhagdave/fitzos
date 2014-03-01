@@ -26,6 +26,7 @@ class Athlete extends CI_Controller{
 		$this->fuel->pages->render('athlete/welcome',$vars);
 	}
 	function index(){
+		$this->benchmark->mark('code_start');
 		if ($this->session->userdata('id')){
 			$this->load->model('events_model','events');	
 			// get the athlete from the database
@@ -35,11 +36,14 @@ class Athlete extends CI_Controller{
 			$sports  = $this->members->getSports($id);
 			$events  = $this->events->getEventsForMember($id);
 			$notifications = $this->notify->getNotifications('member',$id);
-		} else {
+			$this->load->library('calendar');
+			$cal =  $this->calendar->generate(2006, 6);		} else {
 			redirect('signin/login');
 			die();
 		}
 		$vars = array('id'=>$id,'athlete'=>$athlete,'member'=>$member,'notes'=>$notifications,'events'=>$events,'sports'=>$sports);
+		$this->benchmark->mark('code_end');
+		echo $this->benchmark->elapsed_time('code_start', 'code_end');
 		$this->fuel->pages->render('athlete/view',$vars);
 	}
 	function getAthlete(){
