@@ -19,6 +19,7 @@
 <div class="row">
 	<div class="col-md-8 col-md-offset-4">
 		<h2><?=isset($event->name) ? $event->name : '' ; ?> ON <?=$team->name ?></h2>
+		<p>Created by <?=$event->first_name ?> <?=$event->last_name ?></p>
 		<p><?=isset($event->content) ? $event->content : ''; ?></p>
 	</div>
 </div>

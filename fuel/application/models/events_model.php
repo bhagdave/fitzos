@@ -21,7 +21,9 @@ class Events_model extends Base_module_model {
 		return $data;
     }
     function getEvent($id){
-    	$this->db->where('id',$id);
+    	$this->db->select('event.*,member.first_name,member.last_name');
+    	$this->db->where('event.id',$id);
+    	$this->db->join('member','member.id = member_id');
     	$result = $this->db->get('event');
     	$data = $result->result();
     	if (isset($data[0])){
