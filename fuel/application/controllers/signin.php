@@ -9,18 +9,18 @@ class Signin extends CI_Controller{
 	}
 	
 	function start(){
-		$mesg = $this->Futility->checkSignin($this->input->get_post());
+		$mesg = $this->Futility->checkSignin($this->input->post());
 		if (count($mesg)> 0){
 			// show error
-			$vars = array('messages'=>$mesg, 'request'=>$this->input->get_post());
+			$vars = array('messages'=>$mesg, 'request'=>$this->input->post());
 			$this->fuel->pages->render('signin/error',$vars);
 		} else {
 			// Put the stuff into the database
-			if ($this->members->checkIfMemberExists($this->input->get_post())){
+			if ($this->members->checkIfMemberExists($this->input->post())){
 				$mesg[] = 'That username is already taken.';
 				redirect('/');
 			} else {
-				$id = $this->members->createMember($this->input->get_post());
+				$id = $this->members->createMember($this->input->post());
 				$member = $this->members->getMember($id);
 				// Send email to user to activate account...
 				$this->load->library('Fitzos_email',null,'Femail');
@@ -34,9 +34,9 @@ class Signin extends CI_Controller{
 		redirect('/');
 	}
 	function login(){
-		if ($this->input->get_post('username') && $this->input->get_post('password')){
-			$username = $this->input->get_post('username');
-			$password = md5($this->input->get_post('password'));
+		if ($this->input->post('username') && $this->input->post('password')){
+			$username = $this->input->post('username');
+			$password = md5($this->input->post('password'));
 			$login    = $this->members->checkLogin($username, $password);
 			if (isset($login)){
 				// get the member type and go the right way...
@@ -49,11 +49,11 @@ class Signin extends CI_Controller{
 				}
 				$this->fuel->pages->render("signin/athlete");
 			} else {
-				$vars = array('message'=>"Username/Password Invalid", 'request'=>$this->input->get_post());
+				$vars = array('message'=>"Username/Password Invalid", 'request'=>$this->input->post());
 				$this->fuel->pages->render('signin/loginError',$vars);
 			}			
 		} else {
-			$vars = array('message'=>"", 'request'=>$this->input->get_post());
+			$vars = array('message'=>"", 'request'=>$this->input->post());
 			$this->fuel->pages->render('signin/login',$vars);
 		}
 	}	

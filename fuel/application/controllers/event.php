@@ -165,7 +165,7 @@ class Event extends CI_Controller{
 	}
 	function addWallPost(){
 		$this->load->model('teams_model','teams');
-		if ($this->input->get_post()){
+		if ($this->input->post()){
 			if ($this->session->userdata('id')){
 				$user = $this->session->userdata('id');
 				// check if owner of team..
