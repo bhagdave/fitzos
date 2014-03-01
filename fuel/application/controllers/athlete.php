@@ -48,7 +48,7 @@ class Athlete extends CI_Controller{
 		echo(json_encode($athlete));
 	}
 	function setAthlete(){
-		$athlete = json_decode($_POST['payload']);
+		$athlete = json_decode($this->input->post['payload']);
 		$this->athletes->setProfile($athlete);	
 	}
 	function calendar(){
@@ -58,9 +58,9 @@ class Athlete extends CI_Controller{
 		
 	}
 	function profile(){
-		if (isset($_POST['age'])){	
+		if ($this->input->post('age')){	
 			// post to the database baby...
-			$data = $_POST;
+			$data = $this->input->post();
 			$data['id'] = $this->session->userdata('id');
 			$this->athletes->saveProfile($data);
 			$this->session->set_flashdata('message', 'Profile Saved');
@@ -105,9 +105,9 @@ class Athlete extends CI_Controller{
 	function sports(){
 		$this->load->model('sports_model','sports');
 		$vars = array();
-		if (isset($_POST['member_id'])){
+		if ($this->input->post('member_id')){
 			// new sport lets take it...
-			$data = $_POST;
+			$data = $this->input->post();
 			$id = $this->members->addSport($data);
 			if ($id > 0){
 				$vars['message'] = "Sport added to your profile!";				
@@ -164,7 +164,7 @@ class Athlete extends CI_Controller{
 		}
 	}
 	function addStats(){
-		$data = $_POST;
+		$data = $this->input->post();
 		$vars = array();
 		if (isset($data['source_id'])){
 			// post to the database

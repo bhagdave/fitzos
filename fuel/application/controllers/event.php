@@ -85,7 +85,7 @@ class Event extends CI_Controller{
 	}
 	function edit($id){
 		if ($this->session->userdata('id')){
-			if (isset($_POST['team_id'])){
+			if ($this->input->post('team_id')){
 				// ok update the beast...
 				if (isset($_FILES['file']['name'])){
 					if ($_FILES["file"]["error"] > 0){
@@ -99,14 +99,15 @@ class Event extends CI_Controller{
 							move_uploaded_file($_FILES["file"]["tmp_name"],$path);
 						}
 						// update the member
-						$_POST['image'] =$path;
+						$data = $this->input->post();
+						$data['image'] =$path;
 					}
 				}
 				// lets add the member id for the person adding the event
 				$user = $this->session->userdata('id');
-				$_POST['member_id'] = $user;
-				$this->events_model->updateEvent($_POST);
-				redirect('event/view/' . $_POST['id']);
+				$data['member_id'] = $user;
+				$this->events_model->updateEvent($data);
+				redirect('event/view/' . $data['id']);
 			} else {
 				$user = $this->session->userdata('id');
 				$event = $this->events_model->getEvent($id);
