@@ -74,9 +74,6 @@
 	}
 ?>
 </div>
-<div class="row">
-	<?=$cal ?>
-</div>
 <?php 
 	$this->load->view('athlete/inviteFriend');
 ?>
