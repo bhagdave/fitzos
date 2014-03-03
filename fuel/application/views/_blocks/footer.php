@@ -36,7 +36,7 @@
 	?>
 		<div class="row">
 			<div class="col-md-2 col-md-offset-5">
-				<a href="/athlete/find" class="btn btn-success btn-block">Find a Friend</a>
+				<a href="/find/search" class="btn btn-success btn-block">Find a Friend</a>
 			</div>
 		</div>
 	<?php 

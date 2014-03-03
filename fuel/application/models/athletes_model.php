@@ -30,7 +30,10 @@ class Athletes_model extends Fitzos_model {
 		$this->db->update('athlete',$update);
 	}
 	function loadProfile($memberId){
-		$this->db->where('member_id',$memberId);
+			return $this->getAthlete($memberId);
+	}
+	function getAthlete($id){
+		$this->db->where('member_id',$id);
 		$result = $this->db->get('athlete');
 		$data = $result->result();
 		if (isset($data[0])){
