@@ -12,19 +12,31 @@
 			if (count($results['locations'])>0){
 				echo("<h2>Members matching location</h2>");
 				foreach($results['locations'] as $location){
-					echo("<a href='/athlete/view/$location->id'>$location->first_name $location->last_name</a>");	
+					echo("<a href='/athlete/view/$location->id'>");
+					if (isset($location->image)){
+						echo("<img src='/$location->image'>");
+					}
+					echo("$location->first_name $location->last_name</a>");	
 				}
 			}
 			if (count($results['sports'])>0){
 				echo("<h2>Members matching sport</h2>");
 				foreach($results['sports'] as $sport){
-					echo("<a href='/athlete/view/$sport->id'>$sport->first_name $sport->last_name</a>");
+					echo("<a href='/athlete/view/$sport->id'>");
+					if (isset($sport->image)){
+						echo("<img src='/$sport->image'>");
+					}
+					echo("$sport->first_name $sport->last_name</a>");
 				}
 			}
 			if (count($results['names'])>0){
 				echo("<h2>Members matching name</h2>");
 				foreach($results['names'] as $name){
-					echo("<a href='/athlete/view/$name->id'>$name->first_name $name->last_name</a>");
+					echo("<a href='/athlete/view/$name->id'>");
+					if (isset($name->image)){
+						echo("<img src='/$name->image'>");
+					}
+					echo("$name->first_name $name->last_name</a>");
 				}
 			}
 		}
@@ -36,13 +48,21 @@
 			if (count($suggestions['locations'])>0){
 				echo("<h2>Members with a similar location</h2>");
 				foreach($suggestions['locations'] as $location){
-					echo("<a href='/athlete/view/$location->id'>$location->first_name $location->last_name</a>");	
+					echo("<a href='/athlete/view/$location->id'>");
+					if (isset($location->image)){
+						echo("<img src='/$location->image'>");
+					}
+					echo("$location->first_name $location->last_name</a>");
 				}
 			}
 			if (count($suggestions['sports'])>0){
 				echo("<h2>Members with the same sports</h2>");
 				foreach($suggestions['sports'] as $sport){
-					echo("<a href='/athlete/view/$sport->id'>$sport->first_name $sport->last_name</a>");
+					echo("<a href='/athlete/view/$sport->id'>");
+					if (isset($sport->image)){
+						echo("<img src='/$sport->image'>");
+					}
+					echo("$sport->first_name $sport->last_name</a>");
 				}
 			}
 		}
