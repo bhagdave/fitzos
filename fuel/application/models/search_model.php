@@ -18,6 +18,28 @@ class Search_model extends Base_module_model {
 			'sports'=>$sameSports
 		);
 	}
+	function getSearchResults($criteria,$id){
+		if (!empty($criteria['location'])){
+			$locations = $this->getMembersWithLocation($criteria['location'], $id);
+		} else {
+			$locations = null;
+		}
+		if (!empty($criteria['sport'])){
+			$sports    = $this->getMembersWithSport($criteria['sport'], $id);
+		} else {
+			$sports = null;
+		}
+		if (!empty($criteria['name'])){
+			$names     = $this->getMembersWithName($criteria['name'], $id);
+		} else {
+			$names = null;
+		}
+		return array(
+			'names'=>$names,
+			'sports'=>$sports,
+			'locations'=>$locations
+		);
+	}
 	function getMembersWithLocation($location,$id){
 		$this->db->select('member.*');
 		$this->db->distinct();
@@ -37,6 +59,25 @@ class Search_model extends Base_module_model {
 		$this->db->join('member_sports','member_sports.member_id = member.id');
 		$this->db->where('member.id !=',$id);
 		$this->db->where_in('member_sports.sport_id',$search);
+		$result = $this->db->get('member');
+		return $result->result();
+	}
+	function getMembersWithName($name,$id){
+		$this->db->select('member.*');
+		$this->db->distinct();
+		$this->db->like('first_name',$name);
+		$this->db->or_like('last_name',$name);
+		$this->db->where('member.id !=',$id);
+		$result = $this->db->get('member');
+		return $result->result();
+	}
+	function getMembersWithSport($sport,$id){
+		$this->db->select('member.*');
+		$this->db->distinct();
+		$this->db->join('member_sports','member_sports.member_id = member.id');
+		$this->db->join('sport','member_sports.sport_id = sport.id');
+		$this->db->where('member.id !=',$id);
+		$this->db->where('sport.name',$sport);
 		$result = $this->db->get('member');
 		return $result->result();
 	}
