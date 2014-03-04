@@ -8,6 +8,7 @@
 </div>
 <div class="results">
 	<?php 
+		$noResults = true;
 		if (isset($results)){
 			if (count($results['combined'])>0){
 				echo("<h2>Members matching all criteria</h2>");
@@ -17,6 +18,7 @@
 						echo("<img src='/$combined->image'>");
 					}
 					echo("$combined->first_name $combined->last_name</a>");	
+					$noResults = false;
 				}
 			}
 			if (count($results['locations'])>0){
@@ -27,6 +29,7 @@
 						echo("<img src='/$location->image'>");
 					}
 					echo("$location->first_name $location->last_name</a>");	
+					$noResults = false;
 				}
 			}
 			if (count($results['sports'])>0){
@@ -37,6 +40,7 @@
 						echo("<img src='/$sport->image'>");
 					}
 					echo("$sport->first_name $sport->last_name</a>");
+					$noResults = false;
 				}
 			}
 			if (count($results['names'])>0){
@@ -47,8 +51,12 @@
 						echo("<img src='/$name->image'>");
 					}
 					echo("$name->first_name $name->last_name</a>");
+					$noResults = false;
 				}
 			}
+		}
+		if ($noResults && isset($criteria)){
+			echo("<h2>No results found.</h2>");
 		}
 		?>
 </div>
@@ -56,7 +64,7 @@
 	<?php 
 		if (isset($suggestions)){
 			if (count($suggestions['locations'])>0){
-				echo("<h2>Members with a similar location</h2>");
+				echo("<h2>Members with a similar location as you</h2>");
 				foreach($suggestions['locations'] as $location){
 					echo("<a href='/athlete/view/$location->id'>");
 					if (isset($location->image)){
@@ -66,7 +74,7 @@
 				}
 			}
 			if (count($suggestions['sports'])>0){
-				echo("<h2>Members with the same sports</h2>");
+				echo("<h2>Members with the same sports as you</h2>");
 				foreach($suggestions['sports'] as $sport){
 					echo("<a href='/athlete/view/$sport->id'>");
 					if (isset($sport->image)){
