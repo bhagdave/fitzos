@@ -25,20 +25,45 @@ class Search_model extends Base_module_model {
 			$locations = null;
 		}
 		if (!empty($criteria['sport'])){
-			$sports    = $this->getMembersWithSport($criteria['sport'], $id);
+			$sports = $this->getMembersWithSport($criteria['sport'], $id);
 		} else {
 			$sports = null;
 		}
 		if (!empty($criteria['name'])){
-			$names     = $this->getMembersWithName($criteria['name'], $id);
+			$names = $this->getMembersWithName($criteria['name'], $id);
 		} else {
 			$names = null;
+		}
+		if (!empty($criteria['location']) ||
+			!empty($criteria['name']) ||
+			!empty($criteria['sport'])){
+			$combined = $this->getCombinedSearchResults($criteria);
 		}
 		return array(
 			'names'=>$names,
 			'sports'=>$sports,
-			'locations'=>$locations
+			'locations'=>$locations,
+			'combined'=>$combined
 		);
+	}
+	function getCombinedSearchResults($criteria){
+		$this->db->select('member.*');
+		$this->db->distinct();
+		$this->db->join('member','member.id = athlete.member_id');
+		$this->db->join('member_sports','member_sports.member_id = member.id','left');
+		$this->db->join('sport','sport.id = member_sports.sport_id','left');
+		if (isset($criteria['location']) && !empty($criteria['location'])){
+			$this->db->like('location',$criteria['location']);
+		}
+		if (isset($criteria['sport']) && !empty($criteria['sport'])){
+			$this->db->like('sport.name',$criteria['sport']);
+		}
+		if (isset($criteria['name']) && !empty($criteria['name'])){
+			$this->db->where("(member.first_name like '%".$criteria['name']."%' or member.last_name like '%".$criteria['name']."%')",null,true);
+		}
+		$result = $this->db->get('athlete');
+		//echo($this->db->last_query());
+		return $result->result();
 	}
 	function getMembersWithLocation($location,$id){
 		$this->db->select('member.*');

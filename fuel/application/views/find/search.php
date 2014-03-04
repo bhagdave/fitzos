@@ -9,6 +9,16 @@
 <div class="results">
 	<?php 
 		if (isset($results)){
+			if (count($results['combined'])>0){
+				echo("<h2>Members matching all criteria</h2>");
+				foreach($results['combined'] as $combined){
+					echo("<a href='/athlete/view/$combined->id'>");
+					if (isset($combined->image)){
+						echo("<img src='/$combined->image'>");
+					}
+					echo("$combined->first_name $combined->last_name</a>");	
+				}
+			}
 			if (count($results['locations'])>0){
 				echo("<h2>Members matching location</h2>");
 				foreach($results['locations'] as $location){
