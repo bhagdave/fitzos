@@ -25,6 +25,13 @@ class Athlete extends CI_Controller{
 		$vars = array('athlete'=>$athlete,'member'=>$member,'notes'=>$notifications,'events'=>$events,'sports'=>$sports);
 		$this->fuel->pages->render('athlete/welcome',$vars);
 	}
+	function beFriend($id){
+		if ($this->session->userdata('id')){
+		} else {
+			redirect('signin/login');
+			die();
+		}
+	}
 	function index(){
 		$this->benchmark->mark('code_start');
 		if ($this->session->userdata('id')){

@@ -71,6 +71,8 @@
 		</div>
 
 	<?php
+	} else {
+		echo("<a href='/athlete/beFriend/".$member->id."'>Friend Request</a>");
 	}
 ?>
 </div>
