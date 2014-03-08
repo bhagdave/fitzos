@@ -1,5 +1,7 @@
 <?php 
 class Athlete extends CI_Controller{
+	//TODO : Code for accept friend
+	//TODO : Code for deny friend
 	function __construct()
 	{
 		parent::__construct();
@@ -27,6 +29,31 @@ class Athlete extends CI_Controller{
 	}
 	function beFriend($id){
 		if ($this->session->userdata('id')){
+			// get this users id
+			$user = $this->session->userdata('id');
+			// create db record
+			$request = $this->members->setFriendRequest($id,$user);
+			if ($request > 0){
+				// send notification
+				// get the member details for the requestee
+				$requestee = $this->members->getMember($user);
+				$requested = $this->members->getMember($id);
+				// build message
+				$message =  "The user $requestee->first_name $requestee->last_name has requested friendship.";
+				$message .= "<a href='athlete/acceptFriend/$user'>Accept</a><a href='athlete/declineFriend/$user'>Decline</a> ";
+				// get the member details for the requester
+				$this->notify->createNotifications(array(
+					'from_table'=>'member',
+					'from_key'=>$user,
+					'to_table'=>'member',
+					'to_key'=>$id,
+					'notification'=>'',						
+				));
+				// send email
+				//TODO : Send email
+			} else {
+				//TODO: Send error message
+			}
 		} else {
 			redirect('signin/login');
 			die();

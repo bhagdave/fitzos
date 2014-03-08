@@ -18,6 +18,15 @@ class Members_model extends Fitzos_model {
     		return null;
     	}
     }
+    function setFriendRequest($to,$from){
+    	$this->db->insert('friend',array(
+    		'member_id_requested'=>$to,
+    		'member_id_requestee'=>$from,
+    		'status'=>'requested',
+    		'requested'=>date('Y-m-d')
+    	));
+    	return $this->db->insert_id();
+    }
     function getMemberType($id){
     	$this->db->select('athlete.id as athlete, trainer.id as trainer');
     	$this->db->from('member');
