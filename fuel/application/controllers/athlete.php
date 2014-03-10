@@ -50,7 +50,8 @@ class Athlete extends CI_Controller{
 					'notification'=>'',						
 				));
 				// send email
-				//TODO : Send email
+				$this->load->library('Fitzos_email',null,'Femail');
+				$this->Femail->sendFriendRequest($requested,$requestee->email,$request);
 			} else {
 				//TODO: Send error message
 			}
@@ -58,6 +59,9 @@ class Athlete extends CI_Controller{
 			redirect('signin/login');
 			die();
 		}
+	}
+	function friendRequest($id){
+		// TODO: Page from email to accept/reject
 	}
 	function index(){
 		$this->benchmark->mark('code_start');

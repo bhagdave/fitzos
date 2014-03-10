@@ -38,4 +38,9 @@ class Fitzos_email {
 		$message = $this->CI->load->view('email/memberInvite',array('member'=>$member),TRUE);
 		$this->_sendMail($email, 'member_services@reach-your-peak.com', 'Reach Your Peak Membership Invite', $message);
 	}
+	function sendFriendRequest($member,$email,$request){
+		$this->CI =& get_instance();
+		$message = $this->CI->load->view('email/friendRequest',array('member'=>$member,'request'=>$request),TRUE);
+		$this->_sendMail($email, 'member_services@reach-your-peak.com', 'Reach Your Peak Friendship Request', $message);
+	}
 }
