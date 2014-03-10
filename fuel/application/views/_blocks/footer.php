@@ -8,7 +8,7 @@
 	$ci = &get_instance();
 	$session = $ci->load->library("session");
 	$userId  = $session->userdata('id');
-	if (isset($userId)){
+	if ($userId){
 		if ($uri != '/athlete/sports'){
 		?>
 			<div class="row">
