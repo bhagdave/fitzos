@@ -40,7 +40,7 @@ class Athlete extends CI_Controller{
 				$requested = $this->members->getMember($id);
 				// build message
 				$message =  "The user $requestee->first_name $requestee->last_name has requested friendship.";
-				$message .= "<a href='athlete/acceptFriend/$user'>Accept</a><a href='athlete/declineFriend/$user'>Decline</a> ";
+				$message .= "<a href='athlete/acceptFriend/$request'>Accept</a><a href='athlete/declineFriend/$request'>Decline</a> ";
 				// get the member details for the requester
 				$this->notify->createNotifications(array(
 					'from_table'=>'member',
@@ -61,7 +61,52 @@ class Athlete extends CI_Controller{
 		}
 	}
 	function friendRequest($id){
-		// TODO: Page from email to accept/reject
+		if ($this->session->userdata('id')){
+			// get the request
+			$request = $this->members->getFriendRequest($id);
+			// get the relevant member
+			$member = $this->members->getMember($requets->member_id_requested);
+			// display page with ability to accept/reject
+			$vars = array('request'=>$request,'member'=>$member);
+			$this->fuel->pages->render('athlete/friendRequest',$vars);
+		} else {
+			redirect('signin/login');
+			die();
+		}
+	}
+	function acceptFriend($request){
+		if ($this->session->userdata('id')){
+			//set the friendship as accepted
+			$result = $this->members->acceptFriendRequest($request);
+			// set the flash data
+			if ($result){
+				$this->session->set_flashdata('message', 'Frienship request accepted');
+			} else {
+				$this->session->set_flashdata('message', 'Error accessing frindshipt request');
+			}
+			redirect('athlete/index');
+			die();
+		} else {
+			redirect('signin/login');
+			die();
+		}
+	}
+	function declineFriend($request){
+		if ($this->session->userdata('id')){
+			//set the friendship as accepted
+			$result = $this->members->declineFriendRequest($request);
+			// set the flash data
+			if ($result){
+				$this->session->set_flashdata('message', 'Frienship request declined');
+			} else {
+				$this->session->set_flashdata('message', 'Error accessing frindshipt request');
+			}
+			redirect('athlete/index');
+			die();
+		} else {
+			redirect('signin/login');
+			die();
+		}
 	}
 	function index(){
 		$this->benchmark->mark('code_start');

@@ -1,6 +1,8 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Members_model extends Fitzos_model { 
+	// todo : accepFriendRequest
+	// todo : declineFriendRequest
     function __construct()
     {
         parent::__construct('member');
@@ -17,6 +19,20 @@ class Members_model extends Fitzos_model {
     	} else {
     		return null;
     	}
+    }
+    function acceptFriendRequest(){
+    	$this->db->where('friend_id');
+    	$this->db->update('friend',array(
+    		'status'=>'accepted'
+    	));
+    	return ($this->db->affected_rows > 0);
+    }
+    function declineFriendRequest(){
+    	$this->db->where('friend_id');
+    	$this->db->update('friend',array(
+    			'status'=>'rejected'
+    	));
+    	return ($this->db->affected_rows > 0);
     }
     function setFriendRequest($to,$from){
     	$this->db->insert('friend',array(
