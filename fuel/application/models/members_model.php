@@ -156,6 +156,15 @@ class Members_model extends Fitzos_model {
 		$this->db->where("$id in (member_id_requested,member_id_requestee)",null,false);
 		$result = $this->db->get('friend');
 //		echo($this->db->last_query());
+		$friends = $result->result_array();
+		$friendList = array();
+		foreach($friends as $friend){
+			foreach($friend as $key => $value){
+				$friendList[] = $value;
+			}
+		}
+		$this->db->where_in('id',$friendList);
+		$result = $this->db->get('member');
 		$data = $result->result();
 		return $data;	
 	}
