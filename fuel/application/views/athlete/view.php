@@ -5,6 +5,12 @@
 		$isMember = False;
 	}
 ?>
+<div class="row>
+	<div class="col-md-12">
+		<?= isset($message) ? $message :'' ; ?>
+	</div>
+</div>
+
 <div class="row">
 	<div class="col-md-4">
 		<h2><?=isset($member) ? $member->first_name . ' ' . $member->last_name : '' ; ?></h2>

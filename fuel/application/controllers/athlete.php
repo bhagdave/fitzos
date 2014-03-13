@@ -52,6 +52,8 @@ class Athlete extends CI_Controller{
 				// send email
 				$this->load->library('Fitzos_email',null,'Femail');
 				$this->Femail->sendFriendRequest($requested,$requestee->email,$request);
+				$this->session->set_flashdata('message','Friend request sent!');
+				redirect("athlete/view/$id");
 			} else {
 				//TODO: Send error message
 			}
@@ -358,11 +360,12 @@ class Athlete extends CI_Controller{
 			$sports  = $this->members->getSports($id);
 			$athlete = $this->athletes->loadProfile($id);
 			$member  = $this->members->getMember($id);
+			$message = $this->session->flashdata('message');
 		} else {
 			redirect('signin/login');
 			die();
 		}
-		$vars = array('id'=>$this->session->userdata('id'),'athlete'=>$athlete,'member'=>$member,'sports'=>$sports);
+		$vars = array('id'=>$this->session->userdata('id'),'message'=>$message,'athlete'=>$athlete,'member'=>$member,'sports'=>$sports);
 		$this->fuel->pages->render('athlete/view',$vars);
 	}
 }
