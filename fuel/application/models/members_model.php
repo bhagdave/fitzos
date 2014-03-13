@@ -21,18 +21,17 @@ class Members_model extends Fitzos_model {
     	}
     }
     function acceptFriendRequest($id){
+    	return ($this->setFriendStatus($id,'accepted'));
+    }
+    private function setFriendStatus($id,$status){
     	$this->db->where('friend_id',$id);
     	$this->db->update('friend',array(
-    		'status'=>'accepted'
+    			'status'=>$status
     	));
     	return ($this->db->affected_rows() > 0);
     }
     function declineFriendRequest($id){
-    	$this->db->where('friend_id',$id);
-    	$this->db->update('friend',array(
-    			'status'=>'rejected'
-    	));
-    	return ($this->db->affected_rows() > 0);
+    	return ($this->setFriendStatus($id,'rejected'));
     }
     function setFriendRequest($to,$from){
     	$this->db->insert('friend',array(
@@ -148,6 +147,17 @@ class Members_model extends Fitzos_model {
 			$this->db->insert('member_sports',$data);
 			return $this->db->insert_id();
 		}
+	}
+	function getFriends($id){
+		$id = mysql_real_escape_string($id);
+		$this->db->select("CASE $id when member_id_requested then member_id_requestee else member_id_requested end 'friend'",false);
+		$this->db->distinct();
+		$this->db->where('status','accepted');
+		$this->db->where("$id in (member_id_requested,member_id_requestee)",null,false);
+		$result = $this->db->get('friend');
+//		echo($this->db->last_query());
+		$data = $result->result();
+		return $data;	
 	}
 	function saveMember($data){
 		// check if they exist..
