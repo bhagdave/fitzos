@@ -20,19 +20,19 @@ class Members_model extends Fitzos_model {
     		return null;
     	}
     }
-    function acceptFriendRequest(){
-    	$this->db->where('friend_id');
+    function acceptFriendRequest($id){
+    	$this->db->where('friend_id',$id);
     	$this->db->update('friend',array(
     		'status'=>'accepted'
     	));
-    	return ($this->db->affected_rows > 0);
+    	return ($this->db->affected_rows() > 0);
     }
-    function declineFriendRequest(){
-    	$this->db->where('friend_id');
+    function declineFriendRequest($id){
+    	$this->db->where('friend_id',$id);
     	$this->db->update('friend',array(
     			'status'=>'rejected'
     	));
-    	return ($this->db->affected_rows > 0);
+    	return ($this->db->affected_rows() > 0);
     }
     function setFriendRequest($to,$from){
     	$this->db->insert('friend',array(
