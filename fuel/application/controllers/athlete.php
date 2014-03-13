@@ -42,7 +42,7 @@ class Athlete extends CI_Controller{
 				$message =  "The user $requestee->first_name $requestee->last_name has requested friendship.";
 				$message .= "<a href='athlete/acceptFriend/$request'>Accept</a><a href='athlete/declineFriend/$request'>Decline</a> ";
 				// get the member details for the requester
-				$this->notify->createNotifications(array(
+				$this->notify->createNotification(array(
 					'from_table'=>'member',
 					'from_key'=>$user,
 					'to_table'=>'member',
