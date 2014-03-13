@@ -47,7 +47,7 @@ class Athlete extends CI_Controller{
 					'from_key'=>$user,
 					'to_table'=>'member',
 					'to_key'=>$id,
-					'notification'=>'',						
+					'notification'=>$message,						
 				));
 				// send email
 				$this->load->library('Fitzos_email',null,'Femail');
