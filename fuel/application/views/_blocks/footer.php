@@ -5,41 +5,46 @@
 </div>
 <?php 
 	$uri = $_SERVER["REQUEST_URI"];
-	if ($uri != '/athlete/sports'){
-	?>
-		<div class="row">
-			<div class="col-md-2 col-md-offset-5">
-				<a href="/athlete/sports" class="btn btn-success btn-block">Sports</a>
+	$ci = &get_instance();
+	$session = $ci->load->library("session");
+	$userId  = $session->userdata('id');
+	if ($userId){
+		if ($uri != '/athlete/sports'){
+		?>
+			<div class="row">
+				<div class="col-md-2 col-md-offset-5">
+					<a href="/athlete/sports" class="btn btn-success btn-block">Sports</a>
+				</div>
 			</div>
-		</div>
-	<?php 
-	}
-	if ($uri != '/athlete/teams'){
-	?>
-		<div class="row">
-			<div class="col-md-2 col-md-offset-5">
-				<a href="/athlete/teams" class="btn btn-success btn-block">Teams</a>
+		<?php 
+		}
+		if ($uri != '/athlete/teams'){
+		?>
+			<div class="row">
+				<div class="col-md-2 col-md-offset-5">
+					<a href="/athlete/teams" class="btn btn-success btn-block">Teams</a>
+				</div>
 			</div>
-		</div>
-	<?php 
-	}
-	if ($uri != '/athlete/notifications'){
-	?>
-		<div class="row">
-			<div class="col-md-2 col-md-offset-5">
-				<a href="/athlete/notifications" class="btn btn-success btn-block">Notifications</a>
+		<?php 
+		}
+		if ($uri != '/athlete/notifications'){
+		?>
+			<div class="row">
+				<div class="col-md-2 col-md-offset-5">
+					<a href="/athlete/notifications" class="btn btn-success btn-block">Notifications</a>
+				</div>
 			</div>
-		</div>
-	<?php 
-	}
-	if ($uri != '/find/search'){
-	?>
-		<div class="row">
-			<div class="col-md-2 col-md-offset-5">
-				<a href="/find/search" class="btn btn-success btn-block">Find a Friend</a>
+		<?php 
+		}
+		if ($uri != '/find/search'){
+		?>
+			<div class="row">
+				<div class="col-md-2 col-md-offset-5">
+					<a href="/find/search" class="btn btn-success btn-block">Find a Friend</a>
+				</div>
 			</div>
-		</div>
-	<?php 
+		<?php 
+		}
 	}
 ?>
 <div class="col-md-12">
