@@ -43,6 +43,12 @@
 	?>
 	</div>
 </div>
+<div class="row">
+	<div class="col-md-3">
+		<h2>Friends</h2>
+		<?php $this->load->view('athlete/friendList'); ?>
+	</div>
+</div>
 <div>
 <?php
 	if ($isMember){
