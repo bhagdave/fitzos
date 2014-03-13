@@ -40,7 +40,7 @@ class Athlete extends CI_Controller{
 				$requested = $this->members->getMember($id);
 				// build message
 				$message =  "The user $requestee->first_name $requestee->last_name has requested friendship.";
-				$message .= "<a href='athlete/acceptFriend/$request'>Accept</a><a href='athlete/declineFriend/$request'>Decline</a> ";
+				$message .= "<a href='/athlete/acceptFriend/$request'>Accept</a><a href='/athlete/declineFriend/$request'>Decline</a> ";
 				// get the member details for the requester
 				$this->notify->createNotification(array(
 					'from_table'=>'member',
@@ -84,7 +84,7 @@ class Athlete extends CI_Controller{
 			if ($result){
 				$this->session->set_flashdata('message', 'Frienship request accepted');
 			} else {
-				$this->session->set_flashdata('message', 'Error accessing frindshipt request');
+				$this->session->set_flashdata('message', 'Error accessing frindship request');
 			}
 			redirect('athlete/index');
 			die();
