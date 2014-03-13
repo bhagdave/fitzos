@@ -1,7 +1,5 @@
 <?php 
 class Athlete extends CI_Controller{
-	//TODO : Code for accept friend
-	//TODO : Code for deny friend
 	function __construct()
 	{
 		parent::__construct();
