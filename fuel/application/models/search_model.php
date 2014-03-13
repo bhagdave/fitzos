@@ -9,10 +9,19 @@ class Search_model extends Base_module_model {
 		$this->load->model('athletes_model');
 		$athlete = $this->athletes_model->getAthlete($id);
 		$sports = $this->members_model->getSports($id,false);
-		// People in same location
-		$sameLocation = $this->getMembersWithLocation($athlete->location,$id);
-		// people with same sports
-		$sameSports = $this->getMembersWithSports($sports,$id);
+		// check if they have a location
+		if (isset($athlete->location)){
+			// People in same location
+			$sameLocation = $this->getMembersWithLocation($athlete->location,$id);
+		} else {
+			$sameLocation = null;
+		}
+		if (isset($sports[0])){
+			// people with same sports
+			$sameSports = $this->getMembersWithSports($sports,$id);
+		} else {
+			$sameSports = null;
+		}
 		return array(
 			'locations'=>$sameLocation,
 			'sports'=>$sameSports
