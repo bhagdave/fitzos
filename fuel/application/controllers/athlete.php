@@ -74,7 +74,7 @@ class Athlete extends CI_Controller{
 			} else {
 				$request = null;
 				$member = null;
-				$this->seession->set_flashdata('message','The friend request you attempted to access was invalid!');
+				$this->session->set_flashdata('message','The friend request you attempted to access was invalid!');
 			}
 			$this->fuel->pages->render('athlete/friendRequest',$vars);
 		} else {
