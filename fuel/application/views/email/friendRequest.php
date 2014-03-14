@@ -14,7 +14,7 @@
 <body>
 	<p>Some stuff here about how wonderful it is to have joined ReachYourPeak...</p>
 	<p>You have a friend request from <?=$member->first_name ?> <?=$member->last_name ?> over here at Reach Your Peak.</p>
-	<p>Please click on this <a href="http://www.reach-your-peak.com/athlete/friendRequest/<?=$request ?>">link to create your account</a>....</p>
+	<p>Please click on this <a href="http://www.reach-your-peak.com/athlete/friendRequest/<?=$request ?>">link to see the request</a>....</p>
 	<div id="footer">
 		<p>Copyright &copy; PROformance 2014 </p>
 	</div>

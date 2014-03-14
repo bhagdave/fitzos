@@ -62,12 +62,20 @@ class Athlete extends CI_Controller{
 	}
 	function friendRequest($id){
 		if ($this->session->userdata('id')){
+			//check the user is who the request is for
+			$user = $this->session->userdata('id');
 			// get the request
 			$request = $this->members->getFriendRequest($id);
-			// get the relevant member
-			$member = $this->members->getMember($requets->member_id_requested);
-			// display page with ability to accept/reject
-			$vars = array('request'=>$request,'member'=>$member);
+			if ($request->member_id_requestee == $user){
+				// get the relevant member
+				$member = $this->members->getMember($request->member_id_requested);
+				// display page with ability to accept/reject
+				$vars = array('request'=>$request,'member'=>$member);
+			} else {
+				$request = null;
+				$member = null;
+				$this->seession->set_flashdata('message','The friend request you attempted to access was invalid!');
+			}
 			$this->fuel->pages->render('athlete/friendRequest',$vars);
 		} else {
 			redirect('signin/login');
