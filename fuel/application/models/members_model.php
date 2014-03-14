@@ -42,6 +42,16 @@ class Members_model extends Fitzos_model {
     	));
     	return $this->db->insert_id();
     }
+    function getFriendRequest($id){
+    	$this->db->where('friend_id',$id);
+    	$result = $this->db->get('friend');
+    	$data = $result->result();
+    	if (isset($data[0])){
+    		return $data[0];
+    	} else {
+    		return null;
+    	}
+    }
     function getMemberType($id){
     	$this->db->select('athlete.id as athlete, trainer.id as trainer');
     	$this->db->from('member');
