@@ -163,10 +163,14 @@ class Members_model extends Fitzos_model {
 				$friendList[] = $value;
 			}
 		}
-		$this->db->where_in('id',$friendList);
-		$result = $this->db->get('member');
-		$data = $result->result();
-		return $data;	
+		if (isset($friendList) && count($friendList) > 0){
+			$this->db->where_in('id',$friendList);
+			$result = $this->db->get('member');
+			$data = $result->result();
+			return $data;
+		} else {
+			return null;
+		}
 	}
 	function saveMember($data){
 		// check if they exist..
