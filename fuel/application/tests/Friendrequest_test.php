@@ -49,7 +49,6 @@ class FriendController {
 			// get the member details for the requestee
 			$requestee = $this->members->getMember(1);
 			$requested = $this->members->getMember($id);
-			// build message
 			$message =  "The user $requestee->first_name $requestee->last_name has requested friendship.";
 			$message .= "<a href='athlete/acceptFriend/$request'>Accept</a><a href='athlete/declineFriend/$request'>Decline</a> ";
 			// get the member details for the requester
