@@ -13,22 +13,18 @@ class Friendrequest_test extends Tester_base {
 	public function setup()
 	{
 		$this->load_sql('fitzos_test.sql', NULL);
-	}
-	public function test_Initialised(){
-		$test = 'TEST';
-		$expected = "TEST";
-		$this->run($test,$expected,"Initialised","Testing friends tests!!");
-	}
-  	public function test_loadController(){
 		$this->MyController = new FriendController();
-  		$this->run($this->MyController->done,'DONE',"LoadController","Trying to load controller!");
-  	}
+	}
   	public function test_befriend(){
   		$request = $this->MyController->befriend(2);
   		$this->run($request['request'],true,'Befriend','Request set');
   		$this->run(isset($request['requestee']),true,'Befriend','Requestee set');
   		$this->run(isset($request['requested']),true,'Befriend','Requested set');
   		$this->run($request['notification']>0,true,'Befriend','Notification set');
+  	}
+  	public function test_acceptFriend(){
+ 		$result = $this->MyController->acceptFriend(1);		
+  		$this->run($result,true,'Accept friend','Accept set');
   	}
 }
 class FriendController {
@@ -41,6 +37,10 @@ class FriendController {
 		$this->members = $this->CI->load->model('members_model');
 		$this->notify = $this->CI->load->model('notifications_model');
 		$this->done = 'DONE'; 
+	}
+	function acceptFriend($id){
+		$result = $this->members->acceptFriendRequest($id);
+		return $result;
 	}
 	function befriend($id){
 		$request = $this->members->setFriendRequest($id,1);
