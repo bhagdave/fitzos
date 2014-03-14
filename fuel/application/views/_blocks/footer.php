@@ -56,7 +56,6 @@
 </div>
 <a href="http://reachyourpeak.spreadshirt.com/">Reach Your Peak Shop</a>
 </div>
-<?php echo js('main').js($js); ?>
 <!-- AddThis Smart Layers BEGIN -->
 <!-- Go to http://www.addthis.com/get/smart-layers to customize -->
 <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=xa-52d44f4a5cedc019"></script>
