@@ -26,6 +26,10 @@ class Friendrequest_test extends Tester_base {
  		$result = $this->MyController->acceptFriend(1);		
   		$this->run($result,true,'Accept friend','Accept set');
   	}
+  	public function test_declineFriend(){
+  		$result = $this->MyController->declineFriend(1);
+  		$this->run($result,true,'Decline friend','Decline set');
+  	}
 }
 class FriendController {
 	private $CI;
@@ -40,6 +44,10 @@ class FriendController {
 	}
 	function acceptFriend($id){
 		$result = $this->members->acceptFriendRequest($id);
+		return $result;
+	}
+	function declineFriend($id){
+		$result = $this->members->declineFriendRequest($id);
 		return $result;
 	}
 	function befriend($id){
