@@ -14,7 +14,6 @@ class Friendrequest_test extends Tester_base {
 	{
 		$this->load_sql('fitzos_test.sql', NULL);
 		$this->MyController = new FriendController();
-		$this->session = $this->CI->load->library("session");
 	}
   	public function test_befriend(){
   		$request = $this->MyController->befriend(2);
@@ -32,11 +31,21 @@ class Friendrequest_test extends Tester_base {
   		$this->run($result,true,'Decline friend','Decline set');
   	}
   	public function test_AthleteIndex(){
-  		$this->session->set_userdata("id",1);
+		$this->_login();
   		$page = $this->load_page("athlete/index");
-  		var_dump($page);
   		$this->run(pq('.welcome')->size() > 0,true,'Testing index page','PQ statement');
   	}
+  	private function _login(){
+  		$username = 'dave.gill@blueyonder.co.uk';
+  		$password = 'sddsdds';
+  		$post = array(
+  				'username' => $username,
+  				'password' => $password
+  		);
+  		$result = $this->load_page('signin/login',$post);
+  		return $result;
+  	}
+  	
 }
 class FriendController {
 	private $CI;
