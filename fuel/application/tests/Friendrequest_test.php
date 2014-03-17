@@ -1,5 +1,6 @@
 <?php
-class Friendrequest_test extends Tester_base {
+require_once('fitzos_testbase.php');
+class Friendrequest_test extends fitzos_testbase {
 
 	public $init = array();
 
@@ -32,19 +33,17 @@ class Friendrequest_test extends Tester_base {
   	}
   	public function test_AthleteIndex(){
 		$login = $this->_login();
-		var_dump($login);
   		$page = $this->load_page("athlete/index");
+  		// check welcome is there
   		$this->run(pq('.welcome')->size() > 0,true,'Testing index page','PQ statement');
+  		//check calendar exist on index page
+  		$this->run(pq('.calendar-small')->size() > 0,true,'Testing index page has calendar','PQ statement');
   	}
-  	private function _login(){
-  		$username = 'dave_gill@blueyonder.co.uk';
-  		$password = 'sddsdds';
-  		$post = array(
-  				'username' => $username,
-  				'password' => $password
-  		);
-  		$result = $this->load_page('signin/login',$post);
-  		return $result;
+  	
+  	public function test_calendarpage(){
+  		$this->_login();
+  		$this->load_page('athlete/calendar');
+  		$this->run($this->page_contains(".calendar"),true,"Calendar page loads","Page contains");
   	}
   	
 }

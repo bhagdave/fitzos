@@ -6,7 +6,7 @@
 	}
 ?>
 <div class="row">
-	<div class="col-md-4">
+	<div class="col-md-2">
 		<h2><?=isset($member) ? $member->first_name . ' ' . $member->last_name : '' ; ?></h2>
 		<p>Nickname:<?= isset($athlete->nickname) ? $athlete->nickname :'' ?></p>
 		<p>DOB:<?= isset($athlete->dob) ? $athlete->dob :'' ?></p>
@@ -41,6 +41,10 @@
 			}
 		}
 	?>
+	</div>
+	<div class="col-md-2">
+		<div class="calendar-small">
+		</div>
 	</div>
 </div>
 <div class="row">

@@ -149,7 +149,7 @@ class Athlete extends CI_Controller{
 	function calendar(){
 		// check for login???
 		$vars = array();
-		$this->fuel->pages->render('athlete/welcome',$vars);
+		$this->fuel->pages->render('athlete/calendar',$vars);
 		
 	}
 	function profile(){
