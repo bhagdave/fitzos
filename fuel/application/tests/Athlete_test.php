@@ -1,6 +1,6 @@
 <?php
 require_once('fitzos_testbase.php');
-class Friendrequest_test extends fitzos_testbase {
+class Athlete_test extends fitzos_testbase {
 
 	public $init = array();
 
@@ -14,7 +14,7 @@ class Friendrequest_test extends fitzos_testbase {
 	public function setup()
 	{
 		$this->load_sql('fitzos_test.sql', NULL);
-		$this->MyController = new FriendController();
+		$this->MyController = new AthleteController();
 	}
   	public function test_befriend(){
   		$request = $this->MyController->befriend(2);
@@ -47,7 +47,7 @@ class Friendrequest_test extends fitzos_testbase {
   	}
   	
 }
-class FriendController {
+class AthleteController {
 	private $CI;
 	private $members;
 	private $notify;
