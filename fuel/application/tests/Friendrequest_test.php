@@ -31,7 +31,8 @@ class Friendrequest_test extends Tester_base {
   		$this->run($result,true,'Decline friend','Decline set');
   	}
   	public function test_AthleteIndex(){
-		$this->_login();
+		$login = $this->_login();
+		var_dump($login);
   		$page = $this->load_page("athlete/index");
   		$this->run(pq('.welcome')->size() > 0,true,'Testing index page','PQ statement');
   	}
