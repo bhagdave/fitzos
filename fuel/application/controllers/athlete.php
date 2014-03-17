@@ -376,4 +376,11 @@ class Athlete extends CI_Controller{
 		$this->fuel->pages->render('athlete/view',$vars);
 	}
 }
+
+class TestAthlete extends PHPUnit_Framework_TestCase{
+	function testCanCreateABranchController(){
+		$Athlete = new Athlete();
+	}
+}
+
 ?>

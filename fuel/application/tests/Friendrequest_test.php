@@ -37,7 +37,7 @@ class Friendrequest_test extends Tester_base {
   		$this->run(pq('.welcome')->size() > 0,true,'Testing index page','PQ statement');
   	}
   	private function _login(){
-  		$username = 'dave.gill@blueyonder.co.uk';
+  		$username = 'dave_gill@blueyonder.co.uk';
   		$password = 'sddsdds';
   		$post = array(
   				'username' => $username,
