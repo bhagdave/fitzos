@@ -33,10 +33,13 @@ class Events_model extends Base_module_model {
     	}
     }
     function getPublicEvents(){
+    	$this->db->select('event.id,event.name,sport.name as sport');
     	$this->db->where('event.public','PUBLIC');
     	$this->db->where('published','yes');
     	$this->db->where('team.public','yes');
     	$this->db->join('team','team.id = event.team_id');
+    	$this->db->join('sport','sport.id = team.sport_id');
+    	$this->db->group_by('sport.name');
     	$result = $this->db->get('event');
     	return $result->result();
     }
