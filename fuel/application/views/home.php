@@ -19,4 +19,9 @@
 		</div>
 	</div>
 </div>
-
+<?php 
+// load the calendar bit..
+	$events_model = $ci->load->model('events_model');
+	$public = $events_model->getPublicEvents();
+	$this->load->view('calendar/public',array('public'=>$public));
+?>

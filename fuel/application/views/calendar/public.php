@@ -1,10 +1,10 @@
-<div class="calendar-small">
+<section class="calendar-small">
 	<h2>Public events</h2>
 <?php 
 	if (isset($public)){
 		foreach($public as $post){
 			echo("<div class='athleteEvents' style='border:1px solid;border-radius:10px;'>");
-			echo("<h4><a href='/event/view/".$post->id."'>".$post->name."</a></h4>");
+ 			echo("<h4><a href='/event/view/".$post->id."'>".$post->name."</a></h4>");
 			if (!empty($post->content)){
 				echo($post->content. "<br>");
 			}
@@ -15,9 +15,9 @@
 			if (isset($post->image)){
 				echo("<a href='/event/view/".$post->id."'><img height=320px src='/".$post->image."' alt='".$post->name."' title='".$post->name."'></a>");
 			}
-			echo("</div>");
+ 			echo("</div>");
 			
 		}
 	}
 ?>
-</div>
+</section>
