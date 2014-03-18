@@ -26,6 +26,7 @@ class Calendar_test extends fitzos_testbase {
 	public function test_calendarPageLoadsEvents(){
 		$this->load_page('calendar/publicEvents');
 		$this->run(pq('.calendar-small')->size() > 0,true,'Testing calendar/public has view','PQ statement');		
+		$this->run(pq('.event')->size() > 0,true,'Testing calendar has event','PQ statement');		
 	}
 }
 class CalendarController {

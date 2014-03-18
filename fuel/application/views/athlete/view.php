@@ -43,8 +43,7 @@
 	?>
 	</div>
 	<div class="col-md-2">
-		<div class="calendar-small">
-		</div>
+		<?php $this->load->view('calendar/public'); ?>
 	</div>
 </div>
 <div class="row">

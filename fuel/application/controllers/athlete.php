@@ -128,11 +128,12 @@ class Athlete extends CI_Controller{
 			$events  = $this->events->getEventsForMember($id);
 			$notifications = $this->notify->getNotifications('member',$id);
 			$friends = $this->members->getFriends($id);
+			$public  = $this->events->getPublicEvents();
 		} else {
 			redirect('signin/login');
 			die();
 		}
-		$vars = array('id'=>$id,'athlete'=>$athlete,'friends'=>$friends,'member'=>$member,'notes'=>$notifications,'events'=>$events,'sports'=>$sports);
+		$vars = array('id'=>$id,'public'=>$public,'athlete'=>$athlete,'friends'=>$friends,'member'=>$member,'notes'=>$notifications,'events'=>$events,'sports'=>$sports);
 		$this->benchmark->mark('code_end');
 		echo $this->benchmark->elapsed_time('code_start', 'code_end');
 		$this->fuel->pages->render('athlete/view',$vars);

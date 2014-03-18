@@ -7,7 +7,7 @@ class Calendar extends CI_Controller{
 		$this->load->model('events_model');
 	}
 	function publicEvents(){
-		$vars['events'] = $this->events_model->getPublicEvents();
+		$vars['public'] = $this->events_model->getPublicEvents();
 		$this->fuel->pages->render('calendar/public',$vars);
 	}
 }
