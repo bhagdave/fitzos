@@ -50,7 +50,11 @@ class Event extends CI_Controller{
 	function attendEvent($event,$member){
 		if ($this->session->userdata('id')){
 			$user = $this->session->userdata('id');
-			$this->events_model->setAttendEvent($event,$member);
+			if ($this->events_model->setAttendEvent($event,$member)){
+				$message = 'Attendance accepted';
+			} else {
+				$message = 'Attendance rejected';
+			}
 			$attending = $this->events_model->getMembersAttending($event);
 			$event = $this->events_model->getEvent($event);
 			if ($event->member_id == $user){
@@ -58,7 +62,7 @@ class Event extends CI_Controller{
 			}else {
 				$edit = false;
 			}
-			$vars = array('attending'=>$attending,'event'=>$event,'layout'=>'none','edit'=>$edit);
+			$vars = array('message'=>$message,'attending'=>$attending,'event'=>$event,'layout'=>'none','edit'=>$edit);
 			$this->fuel->pages->render('event/attending',$vars);
 		} else {
 			redirect('signin/login');

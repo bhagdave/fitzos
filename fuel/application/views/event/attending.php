@@ -1,5 +1,6 @@
 		<div class="js-attending">
 		<?php 
+		echo($message);
 		if (isset($attending) && !empty($attending)){
 			echo("<h4>Members Attending</h4>");
 			foreach($attending as $member){
