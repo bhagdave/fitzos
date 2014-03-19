@@ -32,9 +32,9 @@ class Event_test extends fitzos_testbase {
 		$events = $this->MyController->getEventsbyCategory();
 		$this->run(is_array($events),true,'Get events by category for side bar');	
 	}
-	public function test_displayEventBySport(){
-		$this->load_page('calendar/bysports');
-		$this->run(pq('sportsEvents')->size() > 0,true,'Calendar has events on side');
+	public function test_displayView(){
+		$page = $this->MyController->loadCalendarView();
+		$this->run(isset($page),true,'Display calendar view');
 	}
 }
 class EventController {
@@ -56,5 +56,10 @@ class EventController {
 	}
 	function getEventsbyCategory(){
 		return $this->events->getEventsBySport();
+	}
+	function loadCalendarView(){
+		$sports = $this->events->getEventsBySport();
+		$page = $this->CI->load->view('calendar/bySport',array('events'=>$sports),true);
+		return $page;
 	}
 }
