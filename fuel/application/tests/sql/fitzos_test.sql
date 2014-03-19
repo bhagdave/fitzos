@@ -276,7 +276,8 @@ CREATE TABLE `event` (
 
 LOCK TABLES `event` WRITE;
 /*!40000 ALTER TABLE `event` DISABLE KEYS */;
-INSERT INTO `event` VALUES (2,'Member Leaving','Dave Gill has left the team!','2014-02-22 00:00:00','yes',NULL,NULL,NULL,NULL,NULL,'PUBLIC',2,NULL,NULL,NULL,NULL),(4,'deerr','e3ddd','2014-01-16 00:00:00','yes',NULL,NULL,'assets/images/events/IMG_0744.jpg','LIVE','FREE',NULL,1,NULL,1,NULL,NULL);
+INSERT INTO `event` VALUES (2,'Member Leaving','Dave Gill has left the team!','2014-02-22 00:00:00','yes',NULL,NULL,NULL,NULL,NULL,'PRIVATE',2,NULL,NULL,NULL,NULL),(4,'deerr','e3ddd','2014-01-16 00:00:00','yes',NULL,NULL,'assets/images/events/IMG_0744.jpg','LIVE','FREE',NULL,1,NULL,1,NULL,NULL),(5,'Testing','e3ddd','2014-01-16 00:00:00','yes',NULL,NULL,'assets/images/events/IMG_0744.jpg','LIVE','FREE','PUBLIC',1,NULL,1,NULL,NULL);
+/*!40000 ALTER TABLE `event` ENABLE KEYS */;
 /*!40000 ALTER TABLE `event` ENABLE KEYS */;
 UNLOCK TABLES;
 
