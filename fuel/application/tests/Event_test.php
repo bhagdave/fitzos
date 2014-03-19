@@ -32,6 +32,10 @@ class Event_test extends fitzos_testbase {
 		$events = $this->MyController->getEventsbyCategory();
 		$this->run(is_array($events),true,'Get events by category for side bar');	
 	}
+	public function test_displayEventBySport(){
+		$this->load_page('calendar/bysports');
+		$this->run(pq('sportsEvents')->size() > 0,true,'Calendar has events on side');
+	}
 }
 class EventController {
 	private $CI;
