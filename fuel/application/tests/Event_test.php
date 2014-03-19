@@ -22,6 +22,10 @@ class Event_test extends fitzos_testbase {
 		$this->run($this->MyController->canAttend(4, 1),true,'None public event team owner');
 		$this->run($this->MyController->canAttend(4, 2),true,'None public event team member');
 	}
+	public function test_attendEvent(){
+		$attending = $this->MyController->setAttend(2, 5); 
+		$this->run(true,$attending === false,'None public event none team member');
+	}
 }
 class EventController {
 	private $CI;
@@ -36,5 +40,8 @@ class EventController {
 	}
 	function canAttend($event,$user){
 		return $this->events->_canAttend($event,$user);
+	}
+	function setAttend($event,$user){
+		return $this->events->setAttendEvent($event,$user);
 	}
 }

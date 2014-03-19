@@ -74,13 +74,17 @@ class Events_model extends Base_module_model {
     }
     function setAttendEvent($event,$user){
     	// check if they can attend...
-    	// update the attending table..
-    	$data = array('member_id'=>$user,'event_id'=>$event,'paid'=>'NO','cancelled'=>'NO');
-    	$this->db->insert('event_attendance',$data);
-    	// see if they are on the list of invites and update
-    	$this->db->where('event_id',$event);
-    	$this->db->where('member_id',$user);
-    	$this->db->update('event_invites',array('status'=>'accepted'));
+    	if ($this->_canAttend($event, $user)){
+    		// update the attending table..
+    		$data = array('member_id'=>$user,'event_id'=>$event,'paid'=>'NO','cancelled'=>'NO');
+    		$this->db->insert('event_attendance',$data);
+    		// see if they are on the list of invites and update
+    		$this->db->where('event_id',$event);
+    		$this->db->where('member_id',$user);
+    		$this->db->update('event_invites',array('status'=>'accepted'));
+    	} else {
+    		return false;
+    	}
     }
     function deleteEvent($id){
     	$this->db->delete('event',array('id'=>$id));
