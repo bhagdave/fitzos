@@ -166,6 +166,15 @@ class Teams_model extends Base_module_model {
 			return false;
 		}
 	}
+	function isMember($team,$user){
+		if (isset($team) && isset($user)){
+			$this->db->where('team_id',$team);
+			$this->db->where('member_id',$user);
+			$member = $this->db->count_all_results('team_membership') > 0;
+			return $member OR $this->isOwner($team,$user);
+		}
+		return false;
+	}
 	function deletePost($team,$id){
 		$this->db->where('team_id',$team);
 		$this->db->where('id',$id);
