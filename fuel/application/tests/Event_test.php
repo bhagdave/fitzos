@@ -25,6 +25,8 @@ class Event_test extends fitzos_testbase {
 	public function test_attendEvent(){
 		$attending = $this->MyController->setAttend(2, 5); 
 		$this->run(true,$attending === false,'None public event none team member');
+		$attending = $this->MyController->setAttend(4, 1); 
+		$this->run(true,$attending === true,'None public event team owner');
 	}
 }
 class EventController {

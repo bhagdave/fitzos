@@ -78,10 +78,12 @@ class Events_model extends Base_module_model {
     		// update the attending table..
     		$data = array('member_id'=>$user,'event_id'=>$event,'paid'=>'NO','cancelled'=>'NO');
     		$this->db->insert('event_attendance',$data);
+    		$num = $this->db->affected_rows();
     		// see if they are on the list of invites and update
     		$this->db->where('event_id',$event);
     		$this->db->where('member_id',$user);
     		$this->db->update('event_invites',array('status'=>'accepted'));
+    		return ($num > 0);
     	} else {
     		return false;
     	}
