@@ -6,7 +6,7 @@
 		<form action="/teams/create/<?=$member->id ?>" method="post">
 			<input type="hidden" name="owner" value="<?=$member->id ?>" />
 			<fieldset>
-				<input type="text" name="name" value="" placeholder="Name" />
+				<input type="text" required name="name" value="" placeholder="Name" />
 				<label>Active</label>
 				<input type="radio" name="active" value="yes">Yes<br>
 				<input type="radio" name="active" value="no">No
@@ -15,7 +15,7 @@
 				<input type="radio" name="public" value="no">No
 				<div class="ui-widget">
 					<label>Sport</label>
-					<select id="sportsbox" name="sport_id">
+					<select required id="sportsbox" name="sport_id">
 	    				<option value="">Select a sport</option>
 						<?php
 							foreach($sports as $sport){
