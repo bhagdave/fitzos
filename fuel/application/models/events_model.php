@@ -39,7 +39,7 @@ class Events_model extends Base_module_model {
     	$this->db->where('team.public','yes');
     	$this->db->join('team','team.id = event.team_id');
     	$this->db->join('sport','sport.id = team.sport_id');
-    	$this->db->group_by('sport.name');
+    	$this->db->order_by('event.date');
     	$result = $this->db->get('event');
     	return $result->result();
     }
@@ -54,7 +54,26 @@ class Events_model extends Base_module_model {
     	$this->db->where('id',$data['id']);
     	$this->db->update('event',$data);	
     }
+    function _canAttend($event,$user){
+    	// if event is public and published then allow
+    	$this->db->where('id',$event);
+    	$result = $this->db->get('event');
+    	$data = $result->result();
+    	if (isset($data[0])){
+    		if ($data[0]->public == 'PUBLIC'){
+    			return true;
+    		} else {
+    			// if member is member of team then allow
+    			$this->load->model('teams_model');
+    			$test = $this->teams_model->isMember($data[0]->team_id,$user);
+    			return $test;
+    		}
+    	} else {
+    		return false;
+    	}
+    }
     function setAttendEvent($event,$user){
+    	// check if they can attend...
     	// update the attending table..
     	$data = array('member_id'=>$user,'event_id'=>$event,'paid'=>'NO','cancelled'=>'NO');
     	$this->db->insert('event_attendance',$data);
