@@ -28,6 +28,10 @@ class Event_test extends fitzos_testbase {
 		$attending = $this->MyController->setAttend(4, 1); 
 		$this->run(true,$attending === true,'None public event team owner');
 	}
+	public function test_getEventsBySport(){
+		$events = $this->MyController->getEventsbyCategory();
+		$this->run(is_array($events),true,'Get events by category for side bar');	
+	}
 }
 class EventController {
 	private $CI;
@@ -45,5 +49,8 @@ class EventController {
 	}
 	function setAttend($event,$user){
 		return $this->events->setAttendEvent($event,$user);
+	}
+	function getEventsbyCategory(){
+		return $this->events->getEventsBySport();
 	}
 }
