@@ -22,6 +22,23 @@ class Team_test extends fitzos_testbase {
 		$this->run($this->MyController->isMember(2, 5),false,'None Team member is not Member');
 		$this->run($this->MyController->isMember(2, 2),true,'Team owner isMember');
 	}
+	public function test_createNewEvent(){
+		$this->_login();
+		$post = array(
+			'name'=>'Just Testing',
+			'content'=>'Just Testing',
+			'location'=>'Here',
+			'date'=>'2014-03-29',
+			'published'=>'yes',
+			'public'=>'PUBLIC',
+			'type'=>'VIRTUAL',
+			'sub_type'=>'FREE',
+			'team_id'=>1
+		);
+		$this->load_page('teams/newEvent/1',$post);
+		$this->run($this->page_contains('Event added',false),true,'Adding a new team event');
+		
+	}
 }
 class TeamController {
 	private $CI;
