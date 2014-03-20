@@ -43,7 +43,7 @@
 	?>
 	</div>
 	<div class="col-md-2">
-		<?php $this->load->view('calendar/public'); ?>
+		<?php $this->load->view('calendar/bySport'); ?>
 	</div>
 </div>
 <div class="row">

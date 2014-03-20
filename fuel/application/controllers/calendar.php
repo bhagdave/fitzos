@@ -12,6 +12,6 @@ class Calendar extends CI_Controller{
 	}
 	function eventsForMonth(){
 		$sports = $this->events_model->getPublicEventsForMonthBySport();
-		$this->fuel->pages->render('calendar/bySport',array('sports'=>$sports,'layout'=>'none'));
+		$this->fuel->pages->render('calendar/bySport',array('sportsForThisMonth'=>$sports,'layout'=>'none'));
 	}
 }

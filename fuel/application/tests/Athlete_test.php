@@ -37,7 +37,7 @@ class Athlete_test extends fitzos_testbase {
   		// check welcome is there
   		$this->run(pq('.welcome')->size() > 0,true,'Testing index page','PQ statement');
   		//check calendar exist on index page
-  		$this->run(pq('.calendar-small')->size() > 0,true,'Testing index page has calendar','PQ statement');
+  		$this->run(pq('.SportsForThisMonth')->size() > 0,true,'Testing index page has calendar','PQ statement');
   	}
   	
   	public function test_calendarpage(){
