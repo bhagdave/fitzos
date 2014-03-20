@@ -36,6 +36,11 @@ class Event_test extends fitzos_testbase {
 		$page = $this->MyController->loadCalendarView();
 		$this->run(isset($page),true,'Display calendar view');
 	}
+	public function test_loadSideCalendar(){
+		$this->load_page("calendar/eventsForMonth");
+		$this->run(pq('.SportsForThisMonth')->size() > 0,true,'Display of events by month');
+		$this->run($this->page_contains('Cross Country Skiing',false),true,'Showing skiing');
+	}
 }
 class EventController {
 	private $CI;

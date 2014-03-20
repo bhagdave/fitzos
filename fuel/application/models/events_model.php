@@ -44,7 +44,7 @@ class Events_model extends Base_module_model {
     	return $result->result();
     }
     function getEventsBySport(){
-    	$this->db->select('count(*),sport.name');
+    	$this->db->select('count(*) as count,sport.name');
     	$this->db->where('event.date BETWEEN NOW() AND NOW() + INTERVAL 30 DAY');
     	$this->db->join('team','team.id = event.team_id');
     	$this->db->join('sport','sport.id = team.sport_id');
