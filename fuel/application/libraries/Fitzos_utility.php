@@ -27,5 +27,20 @@ class Fitzos_utility{
 		}
 		return $mesg;
 	}
-	
+	function saveFile($file){
+		if ($file["file"]["error"] > 0){
+			return null;
+		} else {
+			$path = 'assets/images/events/' . $file["file"]["name"];
+			if (file_exists($path)){
+				// update member image to point here...
+			} else {
+				// save file...
+				move_uploaded_file($file["file"]["tmp_name"],$path);
+			}
+			// update the member
+			return $path;
+		}
+		return null;
+	}
 }
