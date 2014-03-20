@@ -42,12 +42,6 @@ class Event_test extends fitzos_testbase {
 //		var_dump(pq('.SportsForThisMonth')->text());die();
 		$this->run($this->page_contains('Kayaking',false),true,'Showing kayakking');
 	}
-	public function test_calendarOnIndexPage(){
-		$this->_login();
-		$this->load_page('athlete/index');
-		$this->run(pq('.SportsForThisMonth')->size() > 0,true,'Display of events by month on index');
-	}
-	
 }
 class EventController {
 	private $CI;
