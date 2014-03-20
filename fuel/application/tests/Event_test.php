@@ -39,8 +39,15 @@ class Event_test extends fitzos_testbase {
 	public function test_loadSideCalendar(){
 		$this->load_page("calendar/eventsForMonth");
 		$this->run(pq('.SportsForThisMonth')->size() > 0,true,'Display of events by month');
-		$this->run($this->page_contains('Cross Country Skiing',false),true,'Showing skiing');
+//		var_dump(pq('.SportsForThisMonth')->text());die();
+		$this->run($this->page_contains('Kayaking',false),true,'Showing kayakking');
 	}
+	public function test_calendarOnIndexPage(){
+		$this->_login();
+		$this->load_page('athlete/index');
+		$this->run(pq('.SportsForThisMonth')->size() > 0,true,'Display of events by month on index');
+	}
+	
 }
 class EventController {
 	private $CI;
@@ -60,10 +67,10 @@ class EventController {
 		return $this->events->setAttendEvent($event,$user);
 	}
 	function getEventsbyCategory(){
-		return $this->events->getEventsBySport();
+		return $this->events->getPublicEventsForMonthBySport();
 	}
 	function loadCalendarView(){
-		$sports = $this->events->getEventsBySport();
+		$sports = $this->events->getPublicEventsForMonthBySport();
 		$page = $this->CI->load->view('calendar/bySport',array('events'=>$sports),true);
 		return $page;
 	}
