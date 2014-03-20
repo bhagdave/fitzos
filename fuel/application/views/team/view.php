@@ -4,6 +4,11 @@
 			<?= isset($message) ? $message :'' ; ?>
 		</div>
 	</div>
+	<div class="row>
+		<div class="col-md-8 col-md-offset-2">
+			<h1><?= isset($team->name) ? $team->name :'' ; ?></h1>
+		</div>
+	</div>
 	<div class="row">
 		<div class="col-md-4">
 			<div class="js-Members">
