@@ -216,8 +216,10 @@ class Teams extends CI_Controller{
 				$id = $this->teams->addTeamEvent($data);
 				if (isset($id)){
 					$this->session->set_flashdata('message', 'Event added');
+				} else {
+					$this->session->set_flashdata('message', 'Unable to add event');
 				}
-				redirect('teams/manage/' . $data['team_id']);
+				redirect('/teams/manage/' . $team);
 			}
 			$data = $this->teams->getTeam($team);
 			$vars = array('team'=>$data);
