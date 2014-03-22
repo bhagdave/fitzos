@@ -55,6 +55,13 @@
 					</div>
 				</div>
 				<div class="control-group">
+					<label class="control-label">Private to team or Public?</label>
+					<div class="controls">	
+						<label class="radio">Public<input id="yes" name="public" value="PUBLIC" type="radio" <?= isset($event->public) && $event->public == 'PUBLIC' ? 'checked' : '' ?>></label>					
+						<label class="radio">Private<input id="no" name="public" value="PRIVATE" type="radio" <?= isset($event->public) && $event->public == 'PRIVATE' ? 'checked' : '' ?>></label>
+					</div>
+				</div>
+				<div class="control-group">
 					<label class="control-label">Type?</label>
 					<div class="controls">	
 						<label class="radio">Live<input id="yes" name="type" value="LIVE" type="radio" <?= isset($event->type) && $event->type == 'LIVE' ? 'checked' : '' ?>></label>					

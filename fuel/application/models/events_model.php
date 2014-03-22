@@ -21,7 +21,9 @@ class Events_model extends Base_module_model {
 		return $data;
     }
     function getEvent($id){
-    	$this->db->where('id',$id);
+    	$this->db->select('event.*,member.first_name,member.last_name');
+    	$this->db->where('event.id',$id);
+    	$this->db->join('member','member.id = member_id');
     	$result = $this->db->get('event');
     	$data = $result->result();
     	if (isset($data[0])){
@@ -29,6 +31,29 @@ class Events_model extends Base_module_model {
     	} else {
     		return null;
     	}
+    }
+    function getPublicEvents(){
+    	$this->db->select('event.id,event.name,sport.name as sport');
+    	$this->db->where('event.public','PUBLIC');
+    	$this->db->where('published','yes');
+    	$this->db->where('team.public','yes');
+    	$this->db->join('team','team.id = event.team_id');
+    	$this->db->join('sport','sport.id = team.sport_id');
+    	$this->db->order_by('event.date');
+    	$result = $this->db->get('event');
+    	return $result->result();
+    }
+    function getPublicEventsForMonthBySport(){
+    	$this->db->select('count(*) as count,sport.name');
+    	$this->db->where('event.date BETWEEN NOW() AND NOW() + INTERVAL 30 DAY');
+    	$this->db->where('event.public','PUBLIC');
+    	$this->db->where('published','yes');
+    	$this->db->where('team.public','yes');
+    	$this->db->join('team','team.id = event.team_id');
+    	$this->db->join('sport','sport.id = team.sport_id');
+    	$this->db->group_by('sport.name');
+    	$result = $this->db->get('event');
+    	return $result->result();
     }
     function getMembersAttending($id){
 		$this->db->where('event_id',$id);
@@ -41,14 +66,39 @@ class Events_model extends Base_module_model {
     	$this->db->where('id',$data['id']);
     	$this->db->update('event',$data);	
     }
+    function _canAttend($event,$user){
+    	// if event is public and published then allow
+    	$this->db->where('id',$event);
+    	$result = $this->db->get('event');
+    	$data = $result->result();
+    	if (isset($data[0])){
+    		if ($data[0]->public == 'PUBLIC'){
+    			return true;
+    		} else {
+    			// if member is member of team then allow
+    			$this->load->model('teams_model');
+    			$test = $this->teams_model->isMember($data[0]->team_id,$user);
+    			return $test;
+    		}
+    	} else {
+    		return false;
+    	}
+    }
     function setAttendEvent($event,$user){
-    	// update the attending table..
-    	$data = array('member_id'=>$user,'event_id'=>$event,'paid'=>'NO','cancelled'=>'NO');
-    	$this->db->insert('event_attendance',$data);
-    	// see if they are on the list of invites and update
-    	$this->db->where('event_id',$event);
-    	$this->db->where('member_id',$user);
-    	$this->db->update('event_invites',array('status'=>'accepted'));
+    	// check if they can attend...
+    	if ($this->_canAttend($event, $user)){
+    		// update the attending table..
+    		$data = array('member_id'=>$user,'event_id'=>$event,'paid'=>'NO','cancelled'=>'NO');
+    		$this->db->insert('event_attendance',$data);
+    		$num = $this->db->affected_rows();
+    		// see if they are on the list of invites and update
+    		$this->db->where('event_id',$event);
+    		$this->db->where('member_id',$user);
+    		$this->db->update('event_invites',array('status'=>'accepted'));
+    		return ($num > 0);
+    	} else {
+    		return false;
+    	}
     }
     function deleteEvent($id){
     	$this->db->delete('event',array('id'=>$id));
@@ -110,8 +160,10 @@ class Events_model extends Base_module_model {
 		);
 		$this->notifications_model->createNotification($data);
 		// do enmails
+		$this->load->model('members_model');
+		$memberData = $this->members_model->getMember($member);
 		$this->load->library('Fitzos_email',null,'Femail');
-		$this->Femail->sendEventInvite($member,$eventId);
+		$this->Femail->sendEventInvite($memberData,$event);
 		// record invite
 		$invite = array(
 			'event_id'=>$eventId,
@@ -121,6 +173,44 @@ class Events_model extends Base_module_model {
 		);
 		$this->db->insert('event_invites',$invite);
 	}
+	function getWall($event){
+		$this->db->select('event_wall.*,member.first_name,member.last_name');
+		$this->db->where('event_id',$event);
+		$this->db->join('member','member.id = member_id','left');
+		$this->db->order_by('id','desc');
+		$this->db->where('deleted','no');
+		$result = $this->db->get('event_wall');
+		return $result->result();
+	}
+	function isOwner($event,$id){
+		if (isset($event) && isset($id)){
+			$this->db->where('event.id',$event);
+			$this->db->where("(member_id = $id or team.owner = $id)");
+			$this->db->join('team','team.id = team_id');
+			$result = $this->db->get('event');
+			return $result->num_rows() > 0;
+		} else {
+			return false;
+		}
+	}
+	function addWallPost($data){
+		if (is_array($data)){
+			if (!isset($data['date'])){
+				$data['date'] = date('Y-m-d');
+			}
+			$this->db->insert('event_wall',$data);
+			return $this->db->insert_id();
+		} else {
+			return null;
+		}
+	}
+	function deletePost($event,$id){
+		$this->db->where('event_id',$event);
+		$this->db->where('id',$id);
+		$this->db->set('deleted','yes');
+		$this->db->update('event_wall');
+	}
+	
 }
  
 class Event_model extends Base_module_record {

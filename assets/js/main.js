@@ -158,11 +158,49 @@ $(function() {
     		type:'POST',
     		data:data})
     		.done(function( data ) {
+    			$('.js-wallPostAdd, textarea').val('');
     			$('.js-teamWall').html(data);
     		}) 
     		.fail(function() {
     			alert( "error" );
     		});    	
+    });
+    $( ".js-eventWallPostAdd" ).submit(function( event ) {
+    	event.preventDefault();
+    	data = $('.js-eventWallPostAdd').serialize();
+    	$.ajax({
+    		url: "/event/addWallPost",
+    		type:'POST',
+    		data:data})
+    		.done(function( data ) {
+    			$('.js-eventWallPostAdd, textarea').val('');
+    			$('.js-eventWall').html(data);
+    		}) 
+    		.fail(function() {
+    			alert( "error" );
+    		});    	
+    });
+    $( ".js-InviteFriend" ).submit(function( event ) {
+    	event.preventDefault();
+    	data = $('.js-InviteFriend').serialize();
+    	$.ajax({
+    		url: "/signin/invite",
+    		type:'POST',
+    		data:data})
+    		.done(function( data ) {
+    			$('#inviteFriendDialog, input').val('');
+    			$('#inviteFriendDialog').dialog('close');
+    		}) 
+    		.fail(function() {
+    			alert( "error" );
+    		});    	
+    });
+    
+    $('.js-emailFriend').bind('click',function(){
+    	event.preventDefault();
+    	$('#inviteFriendDialog').dialog({
+  	      modal: true
+  	    });
     });
 });
 function getMembers(team){
@@ -202,16 +240,32 @@ function declineMember(team,member){
 	});    	
 }
 function deletePost(team,id){
-	event.preventDefault();
-	$.ajax({
-		url: "/teams/deleteWallPost/" + team + "/" + id,
-		type:'POST'})
-		.done(function( data ) {
-			$(".js-teamWall").html(data);
-		}) 
-		.fail(function() {
-			alert( "error" );
-	});    		
+	if (confirm("Are you sure?")){
+		event.preventDefault();
+		$.ajax({
+			url: "/teams/deleteWallPost/" + team + "/" + id,
+			type:'POST'})
+			.done(function( data ) {
+				$(".js-teamWall").html(data);
+			}) 
+			.fail(function() {
+				alert( "error" );
+		});
+	}
+}
+function deleteEventPost(eventId,id){
+	if (confirm("Are you sure?")){
+		event.preventDefault();
+		$.ajax({
+			url: "/event/deleteWallPost/" + eventId + "/" + id,
+			type:'POST'})
+			.done(function( data ) {
+				$(".js-eventWall").html(data);
+			}) 
+			.fail(function() {
+				alert( "error" );
+		});
+	}
 }
 function deleteEvent(team,event){
 	if (confirm("Are you sure?")){
@@ -262,7 +316,6 @@ function removeAttendee(eventId,user){
 			alert( "error" );
 	});    					
 }
-
 function getTeamWall($team){
 	event.preventDefault();
 	$.ajax({

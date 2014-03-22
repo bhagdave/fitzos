@@ -10,6 +10,7 @@ class Teams_model extends Base_module_model {
     	$this->db->select('team.*');
     	$this->db->where('public','yes');
     	$this->db->join('team_membership',"team_id = team.id and member_id not in ($id)");
+		$this->db->distinct();
     	$this->db->where_not_in('owner',$id);
     	$result = $this->db->get('team');
     	return $result->result();
@@ -45,7 +46,7 @@ class Teams_model extends Base_module_model {
 		$this->db->select('team_wall.*,member.first_name,member.last_name');
 		$this->db->where('team_id',$id);
 		$this->db->join('member','member.id = member_id','left');
-		$this->db->order_by('date','desc');
+		$this->db->order_by('id','desc');
 		$this->db->where('deleted','no');
 		$result = $this->db->get('team_wall');
 		return $result->result();
@@ -157,7 +158,6 @@ class Teams_model extends Base_module_model {
 	}
 	function isOwner($team = null,$user = null){
 		if (isset($team) && isset($user)){
-			echo("Team:" . $team . " User" . $user);
 			$this->db->where('id',$team);
 			$this->db->where('owner',$user);
 			$result = $this->db->get('team');
@@ -165,6 +165,15 @@ class Teams_model extends Base_module_model {
 		} else {
 			return false;
 		}
+	}
+	function isMember($team,$user){
+		if (isset($team) && isset($user)){
+			$this->db->where('team_id',$team);
+			$this->db->where('member_id',$user);
+			$member = $this->db->count_all_results('team_membership') > 0;
+			return $member OR $this->isOwner($team,$user);
+		}
+		return false;
 	}
 	function deletePost($team,$id){
 		$this->db->where('team_id',$team);

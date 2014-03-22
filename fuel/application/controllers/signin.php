@@ -5,25 +5,26 @@ class Signin extends CI_Controller{
 		parent::__construct();
 		$this->load->library('Fitzos_utility',null,'Futility');
 		$this->load->library('session');
+		$this->load->model("members_model","members");
 	}
 	
 	function start(){
-		$mesg = $this->Futility->checkSignin($_REQUEST);
+		$mesg = $this->Futility->checkSignin($this->input->post());
 		if (count($mesg)> 0){
 			// show error
-			$vars = array('messages'=>$mesg, 'request'=>$_REQUEST);
+			$vars = array('messages'=>$mesg, 'request'=>$this->input->post());
 			$this->fuel->pages->render('signin/error',$vars);
 		} else {
 			// Put the stuff into the database
-			$this->load->model("members_model","members");
-			if ($this->members->checkIfMemberExists($_REQUEST)){
+			if ($this->members->checkIfMemberExists($this->input->post())){
 				$mesg[] = 'That username is already taken.';
 				redirect('/');
 			} else {
-				$id = $this->members->createMember($_REQUEST);
+				$id = $this->members->createMember($this->input->post());
+				$member = $this->members->getMember($id);
 				// Send email to user to activate account...
 				$this->load->library('Fitzos_email',null,'Femail');
-				$this->Femail->sendMemberActivation($id);
+				$this->Femail->sendMemberActivation($member);
 				$this->fuel->pages->render("signin/activationPending" );
 			}
 		}
@@ -33,10 +34,9 @@ class Signin extends CI_Controller{
 		redirect('/');
 	}
 	function login(){
-		$this->load->model("members_model","members");
-		if (isset($_REQUEST['username']) && isset($_REQUEST['password'])){
-			$username = $_REQUEST['username'];
-			$password = md5($_REQUEST['password']);
+		if ($this->input->post('username') && $this->input->post('password')){
+			$username = $this->input->post('username');
+			$password = md5($this->input->post('password'));
 			$login    = $this->members->checkLogin($username, $password);
 			if (isset($login)){
 				// get the member type and go the right way...
@@ -49,21 +49,29 @@ class Signin extends CI_Controller{
 				}
 				$this->fuel->pages->render("signin/athlete");
 			} else {
-				$vars = array('message'=>"Username/Password Invalid", 'request'=>$_REQUEST);
+				$vars = array('message'=>"Username/Password Invalid", 'request'=>$this->input->post());
 				$this->fuel->pages->render('signin/loginError',$vars);
 			}			
 		} else {
-			$vars = array('message'=>"", 'request'=>$_REQUEST);
+			$vars = array('message'=>"", 'request'=>$this->input->post());
 			$this->fuel->pages->render('signin/login',$vars);
 		}
 	}	
 	function activate($salt){
-		$this->load->model("members_model","members");
 		$activated = $this->members->activate($salt);
 		if ($activated){
 			$this->fuel->pages->render("signin/activationSuccess" );
 		} else {
 			$this->fuel->pages->render("signin/activationError" );
+		}
+	}
+	function invite(){
+		if ($this->inout->post('email')){
+			// let us send an invite email..
+			$user = $this->session->userdata('id');
+			$member = $this->members->getMember($user);
+			$this->load->library('Fitzos_email',null,'Femail');
+			$this->Femail->sendMemberInvite($member,$this->inout->post('email'));
 		}
 	}
 }

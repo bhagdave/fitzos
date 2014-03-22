@@ -6,7 +6,7 @@
 	}
 ?>
 <div class="row">
-	<div class="col-md-4">
+	<div class="col-md-2">
 		<h2><?=isset($member) ? $member->first_name . ' ' . $member->last_name : '' ; ?></h2>
 		<p>Nickname:<?= isset($athlete->nickname) ? $athlete->nickname :'' ?></p>
 		<p>DOB:<?= isset($athlete->dob) ? $athlete->dob :'' ?></p>
@@ -42,11 +42,21 @@
 		}
 	?>
 	</div>
+	<div class="col-md-2">
+		<?php $this->load->view('calendar/bySport'); ?>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-3">
+		<h2>Friends</h2>
+		<?php $this->load->view('athlete/friendList'); ?>
+	</div>
 </div>
 <div>
 <?php
 	if ($isMember){
-		echo("<a href='/athlete/edit/".$id."'>Edit your profile</a>");
+		echo("<a href='/athlete/profile'>Edit your profile</a><br/>");
+		echo("<a href='#' class='js-emailFriend'>Email Invite To Friend</a>");
 	?>
 		<div class="row">
 			<div class="col-md-6 col-lg-10 col-xs-12">
@@ -70,7 +80,12 @@
 		</div>
 
 	<?php
+	} else {
+		echo("<a href='/athlete/beFriend/".$member->id."'>Friend Request</a>");
 	}
 ?>
 </div>
+<?php 
+	$this->load->view('athlete/inviteFriend');
+?>
 		

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data-sources>
+	<data-source id="mysql5-1394234652617-2082402977" provider="mysql" driver="mysql5" name="MySQL - fitzos" create-date="1394234652617" save-password="true" show-system-objects="true" read-only="false">
+		<connection host="localhost" port="3306" server="" database="fitzos" url="jdbc:mysql://localhost:3306/fitzos" user="root" type="dev"/>
+	</data-source>
+</data-sources>

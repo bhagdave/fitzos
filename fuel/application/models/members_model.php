@@ -1,6 +1,8 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Members_model extends Fitzos_model { 
+	// todo : accepFriendRequest
+	// todo : declineFriendRequest
     function __construct()
     {
         parent::__construct('member');
@@ -11,6 +13,38 @@ class Members_model extends Fitzos_model {
 //    	$this->db->where('password',$password);
 //    	$this->db->where('active','yes');
     	$result = $this->db->get('member');
+    	$data = $result->result();
+    	if (isset($data[0])){
+    		return $data[0];
+    	} else {
+    		return null;
+    	}
+    }
+    function acceptFriendRequest($id){
+    	return ($this->setFriendStatus($id,'accepted'));
+    }
+    private function setFriendStatus($id,$status){
+    	$this->db->where('friend_id',$id);
+    	$this->db->update('friend',array(
+    			'status'=>$status
+    	));
+    	return ($this->db->affected_rows() > 0);
+    }
+    function declineFriendRequest($id){
+    	return ($this->setFriendStatus($id,'rejected'));
+    }
+    function setFriendRequest($to,$from){
+    	$this->db->insert('friend',array(
+    		'member_id_requested'=>$to,
+    		'member_id_requestee'=>$from,
+    		'status'=>'requested',
+    		'requested'=>date('Y-m-d')
+    	));
+    	return $this->db->insert_id();
+    }
+    function getFriendRequest($id){
+    	$this->db->where('friend_id',$id);
+    	$result = $this->db->get('friend');
     	$data = $result->result();
     	if (isset($data[0])){
     		return $data[0];
@@ -122,6 +156,30 @@ class Members_model extends Fitzos_model {
 			}
 			$this->db->insert('member_sports',$data);
 			return $this->db->insert_id();
+		}
+	}
+	function getFriends($id){
+		$id = mysql_real_escape_string($id);
+		$this->db->select("CASE $id when member_id_requested then member_id_requestee else member_id_requested end 'friend'",false);
+		$this->db->distinct();
+		$this->db->where('status','accepted');
+		$this->db->where("$id in (member_id_requested,member_id_requestee)",null,false);
+		$result = $this->db->get('friend');
+//		echo($this->db->last_query());
+		$friends = $result->result_array();
+		$friendList = array();
+		foreach($friends as $friend){
+			foreach($friend as $key => $value){
+				$friendList[] = $value;
+			}
+		}
+		if (isset($friendList) && count($friendList) > 0){
+			$this->db->where_in('id',$friendList);
+			$result = $this->db->get('member');
+			$data = $result->result();
+			return $data;
+		} else {
+			return null;
 		}
 	}
 	function saveMember($data){

@@ -25,7 +25,18 @@ class Event extends CI_Controller{
 				$invited = $this->events_model->getInvitedMembers($event->id);
 				// get the team members
 				$members = $this->events_model->getTeamMembersToInvite($event->team_id,$event->id);
-				$vars = array('team'=>$team,'members'=>$members, 'edit'=>$edit, 'event'=>$event,'attending'=>$attending,'user'=>$user,'invited'=>$invited);
+	 			$wall  = $this->events_model->getWall($id);
+	 			$owner = $this->events_model->isOwner($id,$user);
+				$vars = array(
+						'team'=>$team,
+						'wall'=>$wall,
+						'owner'=>$owner,
+						'members'=>$members, 
+						'edit'=>$edit, 
+						'event'=>$event,
+						'attending'=>$attending,
+						'user'=>$user,
+						'invited'=>$invited);
 				$this->fuel->pages->render('event/view',$vars);
 			} else {
 				redirect('404');
@@ -39,7 +50,11 @@ class Event extends CI_Controller{
 	function attendEvent($event,$member){
 		if ($this->session->userdata('id')){
 			$user = $this->session->userdata('id');
-			$this->events_model->setAttendEvent($event,$member);
+			if ($this->events_model->setAttendEvent($event,$member)){
+				$message = 'Attendance accepted';
+			} else {
+				$message = 'Attendance rejected';
+			}
 			$attending = $this->events_model->getMembersAttending($event);
 			$event = $this->events_model->getEvent($event);
 			if ($event->member_id == $user){
@@ -47,7 +62,7 @@ class Event extends CI_Controller{
 			}else {
 				$edit = false;
 			}
-			$vars = array('attending'=>$attending,'event'=>$event,'layout'=>'none','edit'=>$edit);
+			$vars = array('message'=>$message,'attending'=>$attending,'event'=>$event,'layout'=>'none','edit'=>$edit);
 			$this->fuel->pages->render('event/attending',$vars);
 		} else {
 			redirect('signin/login');
@@ -74,7 +89,7 @@ class Event extends CI_Controller{
 	}
 	function edit($id){
 		if ($this->session->userdata('id')){
-			if (isset($_POST['team_id'])){
+			if ($this->input->post('team_id')){
 				// ok update the beast...
 				if (isset($_FILES['file']['name'])){
 					if ($_FILES["file"]["error"] > 0){
@@ -88,14 +103,15 @@ class Event extends CI_Controller{
 							move_uploaded_file($_FILES["file"]["tmp_name"],$path);
 						}
 						// update the member
-						$_POST['image'] =$path;
+						$data = $this->input->post();
+						$data['image'] =$path;
 					}
 				}
 				// lets add the member id for the person adding the event
 				$user = $this->session->userdata('id');
-				$_POST['member_id'] = $user;
-				$this->events_model->updateEvent($_POST);
-				redirect('event/view/' . $_POST['id']);
+				$data['member_id'] = $user;
+				$this->events_model->updateEvent($data);
+				redirect('event/view/' . $data['id']);
 			} else {
 				$user = $this->session->userdata('id');
 				$event = $this->events_model->getEvent($id);
@@ -128,6 +144,45 @@ class Event extends CI_Controller{
 		} else {
 			redirect('signin/login');
 			die();
+		}
+	}
+	function getWall($event){
+		if ($this->session->userdata('id')){
+	 		$wall  = $this->events_model->getWall($event);
+	 		$owner = $this->events_model->isOwner($event,$this->session->userdata('id'));
+			$data  = $this->events_model->getEvent($event);
+	 		$vars  = array('wall'=>$wall,'owner'=>$owner,'layout'=>'none','event'=>$data);
+			$this->fuel->pages->render('event/eventWall',$vars);			
+		} else {
+			redirect('signin/login');
+			die();
+		}					
+	}
+	function deleteWallPost($event,$post){
+		if ($this->session->userdata('id')){
+			$this->events_model->deletePost($event,$post);
+			$this->getWall($event);
+		} else {
+			redirect('signin/login');
+			die();
+		}					
+	}
+	function addWallPost(){
+		$this->load->model('teams_model','teams');
+		if ($this->input->post()){
+			if ($this->session->userdata('id')){
+				$user = $this->session->userdata('id');
+				// check if owner of team..
+				$data = array(
+						'event_id'=>$this->input->get_post('event_id'), 
+						'message'=>$this->input->get_post('message'), 
+						'member_id'=>$user);
+				$id   = $this->events_model->addWallPost($data);
+				$this->getWall($this->input->get_post('event_id'));
+			} else {
+				redirect('signin/login');
+				die();
+			}
 		}
 	}
 }
