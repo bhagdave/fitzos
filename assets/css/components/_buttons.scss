@@ -1,0 +1,10 @@
+/* Buttons */
+
+.submit-btn {
+	width: 100%;
+	color: #fff;
+}
+
+.btn {
+	@include button-style;
+}

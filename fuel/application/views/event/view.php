@@ -1,4 +1,4 @@
-<?php 
+<?php
 	// lets see if the current user is attending
 	if (isset($attending) && !empty($attending)){
 		foreach($attending as $member){
@@ -10,6 +10,7 @@
 	} else {
 		$userAttending = false;
 	}
+//echo('User attending is ' . $userAttending);
 ?>
 <div class="row">
 	<div class="col-md-4">
@@ -29,18 +30,21 @@
 		if (isset($event->date)){
 			$eventDate = new DateTime($event->date);
 		} 
+		
 	?>
 		<h4><?=isset($event->location) ? $event->location : 'Location not set '; ?><?=isset($eventDate) ? ' on ' .$eventDate->format('d/m/Y') : ''; ?><?=isset($event->time) ? ' @ ' . $event->time : ''; ?></h4>
 	</div>
 	<div class="col-md-4">
 		<?php 
-			if (isset($event->image)){
+		if (isset($event->image)){
 				echo("<img height=320px src='/".$event->image."' alt='".$event->name."' title='".$event->name."'>");
 			}
-		?>
+			?>
 	</div>
 	<div class="col-md-4">
-		<?php $this->load->view('event/attending');?>
+	<?php 
+	$result = $this->load->view('event/attending');
+	?>
 	</div>
 </div>
 <div class="row">

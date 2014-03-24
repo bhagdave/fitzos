@@ -1,0 +1,84 @@
+/* Main Styles */
+
+@import "helpers/mixins";
+
+@import "layout/header";
+
+@import "layout/footer";
+
+@import "components/buttons";
+
+@import "pages/home-page";
+
+
+/* apply a natural box layout model to all elements */
+*, *:before, *:after {
+  -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+}
+
+body{
+	background: url(../../../assets/images/jumpoff.jpg) no-repeat;
+	background-size: 100%;
+}
+
+body h1,
+body h2,
+body h3,
+body h4,
+body h5,
+body h6,
+body p {
+	font-family: 'Lato', sans-serif;
+}
+
+body h1 {
+	font-weight: 900;
+}
+
+body p {
+	font-weight: 300;
+}
+
+ul li{
+	color:red;
+}
+
+.custom-combobox {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-combobox-toggle {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	margin-left: -1px;
+	padding: 0;
+	/* support: IE7 */
+	*height: 1.7em;
+	*top: 0.1em;
+}
+.custom-combobox-input {
+	margin: 0;
+	padding: 0.3em;
+}
+  
+.athleteSports{
+	border:2px;
+}
+#leaveTeam{
+	padding:10px;
+}
+#inviteDialog{
+	display:none;
+}
+#js-Invitations label{
+	color:black;
+}
+.js-Notifications .athleteNotes {
+	border: 1px solid black;
+	border-radius:9px;
+}
+.alreadyInvited h2,label{
+	color:black;
+}

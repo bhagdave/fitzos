@@ -8,21 +8,31 @@ class Athlete extends CI_Controller{
 		$this->load->model('notifications_model','notify');
 		$this->load->model('members_model','members');
 	}
+	private function _getCoreData($id){
+		$this->load->model('events_model','events');
+		// get the athlete from the database
+		$athlete = $this->athletes->loadProfile($id);
+		$member  = $this->members->getMember($id);
+		$sports  = $this->members->getSports($id);
+		$events  = $this->events->getEventsForMember($id);
+		$notifications = $this->notify->getNotifications('member',$id);
+		return array(
+				'athlete'=>$athlete,
+				'member'=>$member,
+				'notes'=>$notifications,
+				'events'=>$events,
+				'sports'=>$sports
+		);
+	}
 	function edit($id){
 		$user = $this->session->userdata('id');
 		if (isset($user) && $user == $id){
 			$this->load->model('events_model','events');
-			// get the athlete from the database
-			$athlete = $this->athletes->loadProfile($id);
-			$member  = $this->members->getMember($id);
-			$sports  = $this->members->getSports($id);
-			$events  = $this->events->getEventsForMember($id);
-			$notifications = $this->notify->getNotifications('member',$id);
+			$vars = $this->_getCoreData($id);
 		} else {
 			redirect('404');
 			die();
 		}
-		$vars = array('athlete'=>$athlete,'member'=>$member,'notes'=>$notifications,'events'=>$events,'sports'=>$sports);
 		$this->fuel->pages->render('athlete/welcome',$vars);
 	}
 	function beFriend($id){
@@ -117,24 +127,18 @@ class Athlete extends CI_Controller{
 		}
 	}
 	function index(){
-		$this->benchmark->mark('code_start');
 		if ($this->session->userdata('id')){
 			$this->load->model('events_model','events');	
 			// get the athlete from the database
 			$id      = $this->session->userdata('id');
-			$athlete = $this->athletes->loadProfile($id);
-			$member  = $this->members->getMember($id);
-			$sports  = $this->members->getSports($id);
-			$events  = $this->events->getEventsForMember($id);
-			$notifications = $this->notify->getNotifications('member',$id);
-			$friends = $this->members->getFriends($id);
+			$vars    = $this->_getCoreData($id);
+			$vars['id'] = $id;
+			$vars['friends'] = $this->members->getFriends($id);
+			$vars['sportsForThisMonth']  = $this->events->getPublicEventsForMonthBySport();
 		} else {
 			redirect('signin/login');
 			die();
 		}
-		$vars = array('id'=>$id,'athlete'=>$athlete,'friends'=>$friends,'member'=>$member,'notes'=>$notifications,'events'=>$events,'sports'=>$sports);
-		$this->benchmark->mark('code_end');
-		echo $this->benchmark->elapsed_time('code_start', 'code_end');
 		$this->fuel->pages->render('athlete/view',$vars);
 	}
 	function getAthlete(){
@@ -149,7 +153,7 @@ class Athlete extends CI_Controller{
 	function calendar(){
 		// check for login???
 		$vars = array();
-		$this->fuel->pages->render('athlete/welcome',$vars);
+		$this->fuel->pages->render('athlete/calendar',$vars);
 		
 	}
 	function profile(){
@@ -376,4 +380,6 @@ class Athlete extends CI_Controller{
 		$this->fuel->pages->render('athlete/view',$vars);
 	}
 }
+
+
 ?>

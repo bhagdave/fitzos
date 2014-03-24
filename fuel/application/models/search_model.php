@@ -46,7 +46,7 @@ class Search_model extends Base_module_model {
 		if (!empty($criteria['location']) ||
 			!empty($criteria['name']) ||
 			!empty($criteria['sport'])){
-			$combined = $this->getCombinedSearchResults($criteria);
+			$combined = $this->getCombinedSearchResults($criteria,$id);
 		}
 		return array(
 			'names'=>$names,
@@ -55,7 +55,7 @@ class Search_model extends Base_module_model {
 			'combined'=>$combined
 		);
 	}
-	function getCombinedSearchResults($criteria){
+	function getCombinedSearchResults($criteria,$id){
 		$this->db->select('member.*');
 		$this->db->distinct();
 		$this->db->join('member','member.id = athlete.member_id');
@@ -70,6 +70,7 @@ class Search_model extends Base_module_model {
 		if (isset($criteria['name']) && !empty($criteria['name'])){
 			$this->db->where("(member.first_name like '%".$criteria['name']."%' or member.last_name like '%".$criteria['name']."%')",null,true);
 		}
+		$this->db->where('member.id !=',$id);
 		$result = $this->db->get('athlete');
 		//echo($this->db->last_query());
 		return $result->result();

@@ -1,30 +1,23 @@
-	<section class="sign-in">
+	<div class="signin-splash">
+			<h1>Sign up now and start your ascent</h1>
+			<h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quam velit,</h4>
 		<form action="../signin/start" method="post">
-		<h3>Sign up</h3>
-		<label class="radio inline">
-  			<input type="radio" name="choice" id="athlete" value="athlete" checked>
-  			Athlete
-		</label>
-		<label class="radio inline">
-  			<input type="radio" name="choice" id="trainer" value="trainer">
-  			Trainer
-		</label>
-		<fieldset id="inputs">
+  			<label class="select-label">
+  				<select name="choice" id="trainer" value="trainer">
+  					<option>Athlete</option>
+  					<option>Trainer</option>
+  				</select>
+  			</label>
 			<input id="name" class="form-control" data-bind="value: name" name="name" type="text" placeholder="Name" autofocus required>   
 			<input id="email" class="form-control" data-bind="value: email" name="email" value="" type="text" placeholder="Email" required>
 			<input id="password" class="form-control" data-bind="value: password,valueUpdate: 'afterkeydown'" name="password" type="password" placeholder="Password" required>
-			<input id="confirm_password" class="form-control" data-bind="value: confirm,valueUpdate: 'afterkeydown'" name="confirm_password" type="password" placeholder="Confirm Password" required>			
-			<br>
-			<p><span data-bind="visible: matched" >Your passwords do not match</span></p>
-			
-			<label class="radio inline">
-  				<input type="radio" name="TC" id="TC" value="Accept">
-  				<small>I accept these <br clear> <a href="terms">terms and conditions</a></small>
-			</label>
-			<button data-bind="twButton:isDone()">Sign me up</button>
-		</fieldset>
+	  		<input type="radio" name="TC" id="TC" value="Accept">
+	  		<label for="TC">I accept <a href="terms">the terms and conditions</a></label>
+			<button class="submit-btn" data-bind="twButton:isDone()">Sign me up</button>
 		</form>
-	</section>
+	</div>
+
+
 <script type="text/javascript">
 	function SignupModel(){
 		var self   = this;

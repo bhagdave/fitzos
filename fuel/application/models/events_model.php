@@ -32,6 +32,29 @@ class Events_model extends Base_module_model {
     		return null;
     	}
     }
+    function getPublicEvents(){
+    	$this->db->select('event.id,event.name,sport.name as sport');
+    	$this->db->where('event.public','PUBLIC');
+    	$this->db->where('published','yes');
+    	$this->db->where('team.public','yes');
+    	$this->db->join('team','team.id = event.team_id');
+    	$this->db->join('sport','sport.id = team.sport_id');
+    	$this->db->order_by('event.date');
+    	$result = $this->db->get('event');
+    	return $result->result();
+    }
+    function getPublicEventsForMonthBySport(){
+    	$this->db->select('count(*) as count,sport.name');
+    	$this->db->where('event.date BETWEEN NOW() AND NOW() + INTERVAL 30 DAY');
+    	$this->db->where('event.public','PUBLIC');
+    	$this->db->where('published','yes');
+    	$this->db->where('team.public','yes');
+    	$this->db->join('team','team.id = event.team_id');
+    	$this->db->join('sport','sport.id = team.sport_id');
+    	$this->db->group_by('sport.name');
+    	$result = $this->db->get('event');
+    	return $result->result();
+    }
     function getMembersAttending($id){
 		$this->db->where('event_id',$id);
 		$this->db->where('cancelled','NO');
@@ -43,14 +66,39 @@ class Events_model extends Base_module_model {
     	$this->db->where('id',$data['id']);
     	$this->db->update('event',$data);	
     }
+    function _canAttend($event,$user){
+    	// if event is public and published then allow
+    	$this->db->where('id',$event);
+    	$result = $this->db->get('event');
+    	$data = $result->result();
+    	if (isset($data[0])){
+    		if ($data[0]->public == 'PUBLIC'){
+    			return true;
+    		} else {
+    			// if member is member of team then allow
+    			$this->load->model('teams_model');
+    			$test = $this->teams_model->isMember($data[0]->team_id,$user);
+    			return $test;
+    		}
+    	} else {
+    		return false;
+    	}
+    }
     function setAttendEvent($event,$user){
-    	// update the attending table..
-    	$data = array('member_id'=>$user,'event_id'=>$event,'paid'=>'NO','cancelled'=>'NO');
-    	$this->db->insert('event_attendance',$data);
-    	// see if they are on the list of invites and update
-    	$this->db->where('event_id',$event);
-    	$this->db->where('member_id',$user);
-    	$this->db->update('event_invites',array('status'=>'accepted'));
+    	// check if they can attend...
+    	if ($this->_canAttend($event, $user)){
+    		// update the attending table..
+    		$data = array('member_id'=>$user,'event_id'=>$event,'paid'=>'NO','cancelled'=>'NO');
+    		$this->db->insert('event_attendance',$data);
+    		$num = $this->db->affected_rows();
+    		// see if they are on the list of invites and update
+    		$this->db->where('event_id',$event);
+    		$this->db->where('member_id',$user);
+    		$this->db->update('event_invites',array('status'=>'accepted'));
+    		return ($num > 0);
+    	} else {
+    		return false;
+    	}
     }
     function deleteEvent($id){
     	$this->db->delete('event',array('id'=>$id));

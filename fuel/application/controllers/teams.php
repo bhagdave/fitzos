@@ -194,20 +194,14 @@ class Teams extends CI_Controller{
 			$this->load->model('teams_model','teams');
 			if ($this->input->post('team_id')){
 				// ok update the beast...
+				$data = $this->input->post();
 				if (isset($_FILES['file']['name'])){
-					if ($_FILES["file"]["error"] > 0){	
-						$this->session->set_flashdata('message', 'Unable to save image');
-					} else {
-						$path = 'assets/images/events/' . $_FILES["file"]["name"];
-						if (file_exists($path)){
-							// update member image to point here...
-						} else {
-							// save file...
-							move_uploaded_file($_FILES["file"]["tmp_name"],$path);
-						}
-						// update the member
-						$data = $this->input->post();
+					$this->load->library('Fitzos_utility',null,'Futility');
+					$path = $this->Futility->saveFile($_FILES); 
+					if (isset($path)){
 						$data['image'] =$path;
+					} else {
+						$this->session->set_flashdata('message', 'Unable to save event image');
 					}
 				}			
 				// lets add the member id for the person adding the event
@@ -216,8 +210,10 @@ class Teams extends CI_Controller{
 				$id = $this->teams->addTeamEvent($data);
 				if (isset($id)){
 					$this->session->set_flashdata('message', 'Event added');
+				} else {
+					$this->session->set_flashdata('message', 'Unable to add event');
 				}
-				redirect('teams/manage/' . $data['team_id']);
+				redirect('/teams/manage/' . $team);
 			}
 			$data = $this->teams->getTeam($team);
 			$vars = array('team'=>$data);

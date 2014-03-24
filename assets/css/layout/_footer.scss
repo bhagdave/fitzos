@@ -1,0 +1,21 @@
+/* Footer */
+
+.footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	// background: rgba(0,0,0,0.6);
+	color: #eee;
+	padding: 1em 0;
+	.btn,
+	p {
+		margin: 10px;
+	}
+	.signin {
+		float: right;
+	    width: 100px;
+	    text-align: center;
+	    padding-top: 10px;
+	}
+}
+
