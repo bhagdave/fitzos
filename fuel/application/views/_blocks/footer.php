@@ -1,3 +1,47 @@
+<?php
+	$uri = $_SERVER["REQUEST_URI"];
+	$ci = &get_instance();
+	$session = $ci->load->library("session");
+	$userId  = $session->userdata('id');
+	if ($userId){
+		if ($uri != '/athlete/sports'){
+		?>
+			<div class="row">
+				<div class="col-md-2 col-md-offset-5">
+					<a href="/athlete/sports" class="btn btn-success btn-block">Sports</a>
+				</div>
+			</div>
+		<?php 
+		}
+		if ($uri != '/athlete/teams'){
+		?>
+			<div class="row">
+				<div class="col-md-2 col-md-offset-5">
+					<a href="/athlete/teams" class="btn btn-success btn-block">Teams</a>
+				</div>
+			</div>
+		<?php 
+		}
+		if ($uri != '/athlete/notifications'){
+		?>
+			<div class="row">
+				<div class="col-md-2 col-md-offset-5">
+					<a href="/athlete/notifications" class="btn btn-success btn-block">Notifications</a>
+				</div>
+			</div>
+		<?php 
+		}
+		if ($uri != '/find/search'){
+		?>
+			<div class="row">
+				<div class="col-md-2 col-md-offset-5">
+					<a href="/find/search" class="btn btn-success btn-block">Find a Friend</a>
+				</div>
+			</div>
+		<?php 
+		}
+	}
+?>
 <footer class="footer">
 	<a class="btn" href="http://reachyourpeak.spreadshirt.com/">Reach Your Peak Shop</a>
 	<?php
