@@ -31,6 +31,7 @@ class Calendar_test extends fitzos_testbase {
 	public function test_calendarForMonth(){
 		$this->load_page('calendar/view');
 		$this->run(pq('.calendar-header')->size() > 0,true,'Calendar View display something');
+		$this->run(pq('.calendar-event')->size() > 0,true,'Event appears on calendar');
 	}
 }
 class CalendarController {
