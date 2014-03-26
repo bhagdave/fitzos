@@ -9,7 +9,10 @@
 	<div class="col-md-2">
 		<h2><?=isset($member) ? $member->first_name . ' ' . $member->last_name : '' ; ?></h2>
 		<p>Nickname:<?= isset($athlete->nickname) ? $athlete->nickname :'' ?></p>
-		<p>DOB:<?= isset($athlete->dob) ? $athlete->dob :'' ?></p>
+		<?php 
+			$dob = new DateTime($athlete->dob);
+		?>
+		<p>DOB:<?= isset($athlete->dob) ? $dob->format('m/d/Y') :'' ?></p>
 		<p>Gender:<?= isset($athlete->gender) ? $athlete->gender :'' ?></p>
 		<p>Activity:<?= isset($athlete->activity) ? $athlete->activity :'' ?></p>
 		<p>Country:<?= isset($athlete->country) ? $athlete->country :'' ?></p>
