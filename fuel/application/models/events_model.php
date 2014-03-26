@@ -210,7 +210,9 @@ class Events_model extends Base_module_model {
 		$this->db->set('deleted','yes');
 		$this->db->update('event_wall');
 	}
-	
+	function getCalendarEvents($sport =null){
+		return $this->getPublicEventsForMonthBySport();
+	}
 }
  
 class Event_model extends Base_module_record {
