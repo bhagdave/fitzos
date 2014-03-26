@@ -211,7 +211,16 @@ class Events_model extends Base_module_model {
 		$this->db->update('event_wall');
 	}
 	function getCalendarEvents($sport =null){
-		return $this->getPublicEventsForMonthBySport();
+		$this->db->select("event.*,sport.name as sport");
+    	$this->db->where('event.date BETWEEN NOW() AND NOW() + INTERVAL 30 DAY');
+    	$this->db->where('event.public','PUBLIC');
+    	$this->db->where('published','yes');
+    	$this->db->where('team.public','yes');
+    	$this->db->join('team','team.id = event.team_id');
+    	$this->db->join('sport','sport.id = team.sport_id');
+    	$this->db->group_by('sport.name');
+    	$result = $this->db->get('event');
+    	return $result->result();
 	}
 }
  
