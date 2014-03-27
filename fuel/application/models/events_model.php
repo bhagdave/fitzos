@@ -211,7 +211,7 @@ class Events_model extends Base_module_model {
 		$this->db->update('event_wall');
 	}
 	function getCalendarEvents($sport =null){
-		$this->db->select("event.*,sport.name as sport");
+		$this->db->select("event.*,sport.name as sport, team.name as team, team.id as teamId");
     	$this->db->where('event.date BETWEEN NOW() AND NOW() + INTERVAL 30 DAY');
     	$this->db->where('event.public','PUBLIC');
     	$this->db->where('published','yes');
