@@ -1,24 +1,28 @@
-/* Main Styles */
+// Main Styles
 
-@import "helpers/mixins";
+@import 'helpers/mixins';
 
-@import "layout/header";
+@import 'layout/header';
 
-@import "layout/footer";
+@import 'layout/footer';
 
-@import "components/buttons";
+@import 'components/buttons';
 
-@import "pages/home-page";
+@import 'pages/home-page';
 
 
-/* apply a natural box layout model to all elements */
-*, *:before, *:after {
-  -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+// apply a natural box layout model to all elements
+*, 
+*:before, 
+*:after {
+  -moz-box-sizing: border-box; 
+  -webkit-box-sizing: border-box; 
+  box-sizing: border-box;
 }
 
-body{
-	background: url(../../../assets/images/jumpoff.jpg) no-repeat;
-	background-size: 100%;
+body {
+  background: "url(../../../assets/images/jumpoff.jpg)" no-repeat;
+  background-size: 100%;
 }
 
 body h1,
@@ -28,57 +32,60 @@ body h4,
 body h5,
 body h6,
 body p {
-	font-family: 'Lato', sans-serif;
+  font-family: 'Lato', sans-serif;
 }
 
 body h1 {
-	font-weight: 900;
+  font-weight: 900;
 }
 
 body p {
-	font-weight: 300;
+  font-weight: 300;
 }
 
-ul li{
-	color:red;
+ul li {
+  color: #ff2518;
 }
 
 .custom-combobox {
-    position: relative;
-    display: inline-block;
+ 	display: inline-block;	
+  position: relative;
 }
 
 .custom-combobox-toggle {
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	margin-left: -1px;
-	padding: 0;
-	/* support: IE7 */
-	*height: 1.7em;
-	*top: 0.1em;
+  margin-left: -1px;
+  padding: 0;  
+  position: absolute;
+  top: 0;
+  bottom: 0;
 }
+
 .custom-combobox-input {
-	margin: 0;
-	padding: 0.3em;
+  margin: 0;
+  padding: .3em;
 }
   
-.athleteSports{
-	border:2px;
+.athleteSports {
+  border: 2px;
 }
-#leaveTeam{
-	padding:10px;
+
+#leaveTeam {
+  padding: 10px;
 }
-#inviteDialog{
-	display:none;
+
+#inviteDialog {
+  display: none;
 }
-#js-Invitations label{
-	color:black;
+
+#js-Invitations label {
+  color:black;
 }
+
 .js-Notifications .athleteNotes {
 	border: 1px solid black;
 	border-radius:9px;
 }
+
 .alreadyInvited h2,label{
 	color:black;
 }
