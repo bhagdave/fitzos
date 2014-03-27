@@ -16,6 +16,11 @@ class Calendar extends CI_Controller{
 	}
 	function view($sport = null){
 		$events = $this->events_model->getCalendarEvents($sport);
-		$this->fuel->pages->render('calendar/view',array('events'=>$events));
+		if ($this->session->userdata('id')){
+			$user = $this->session->userdata('id');
+		}else {
+			$user = null;
+		}
+		$this->fuel->pages->render('calendar/view',array('events'=>$events,'user'=>$user));
 	}
 }
