@@ -67,6 +67,13 @@ class Events_model extends Base_module_model {
     	$this->db->update('event',$data);	
     }
     function _canAttend($event,$user){
+    	// alreadt attending??
+		$this->db->where('event_id',$event);
+		$this->db->where('member_id',$user);
+		$num = $this->db->count_all_results('event_attendance');
+		if ($num > 0){
+			return false;
+		}    	
     	// if event is public and published then allow
     	$this->db->where('id',$event);
     	$result = $this->db->get('event');
