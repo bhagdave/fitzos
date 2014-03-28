@@ -39,31 +39,38 @@ class Athlete extends CI_Controller{
 		if ($this->session->userdata('id')){
 			// get this users id
 			$user = $this->session->userdata('id');
-			// create db record
-			$request = $this->members->setFriendRequest($id,$user);
-			if ($request > 0){
-				// send notification
-				// get the member details for the requestee
-				$requestee = $this->members->getMember($user);
-				$requested = $this->members->getMember($id);
-				// build message
-				$message =  "The user $requestee->first_name $requestee->last_name has requested friendship.";
-				$message .= "<a href='/athlete/acceptFriend/$request'>Accept</a><a href='/athlete/declineFriend/$request'>Decline</a> ";
-				// get the member details for the requester
-				$this->notify->createNotification(array(
-					'from_table'=>'member',
-					'from_key'=>$user,
-					'to_table'=>'member',
-					'to_key'=>$id,
-					'notification'=>$message,						
-				));
-				// send email
-				$this->load->library('Fitzos_email',null,'Femail');
-				$this->Femail->sendFriendRequest($requested,$requested->email,$request);
-				$this->session->set_flashdata('message','Friend request sent!');
+			// check if they are already friends
+			$friends = $this->members->isFriends($id,$user);
+			if ($friends){
+				$this->session->set_flashdata('message','Already friends');
 				redirect("athlete/view/$id");
 			} else {
-				//TODO: Send error message
+				// create db record
+				$request = $this->members->setFriendRequest($id,$user);
+				if ($request > 0){
+					// send notification
+					// get the member details for the requestee
+					$requestee = $this->members->getMember($user);
+					$requested = $this->members->getMember($id);
+					// build message
+					$message =  "The user $requestee->first_name $requestee->last_name has requested friendship.";
+					$message .= "<a href='/athlete/acceptFriend/$request'>Accept</a><a href='/athlete/declineFriend/$request'>Decline</a> ";
+					// get the member details for the requester
+					$this->notify->createNotification(array(
+						'from_table'=>'member',
+						'from_key'=>$user,
+						'to_table'=>'member',
+						'to_key'=>$id,
+						'notification'=>$message,						
+					));
+					// send email
+					$this->load->library('Fitzos_email',null,'Femail');
+					$this->Femail->sendFriendRequest($requested,$requested->email,$request);
+					$this->session->set_flashdata('message','Friend request sent!');
+					redirect("athlete/view/$id");
+				} else {
+					//TODO: Send error message
+				}				
 			}
 		} else {
 			redirect('signin/login');
