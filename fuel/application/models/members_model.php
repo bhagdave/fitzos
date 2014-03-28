@@ -20,6 +20,15 @@ class Members_model extends Fitzos_model {
     		return null;
     	}
     }
+    function isFriends($id,$user){
+    	$this->db->where('member_id_requested',$id);
+    	$this->db->where('member_id_requestee',$user);
+    	$num = $this->db->count_all_results('friend');
+    	$this->db->where('member_id_requested',$user);
+    	$this->db->where('member_id_requestee',$id);
+    	$num += $this->db->count_all_results('friend');
+    	return ($num > 0);
+    }
     function acceptFriendRequest($id){
     	return ($this->setFriendStatus($id,'accepted'));
     }
