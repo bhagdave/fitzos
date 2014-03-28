@@ -1,17 +1,17 @@
 	<?php
 			if (isset($events) && count($events) > 0){
 				foreach($events as $post){
-					echo("<div class='athleteEvents' style='border:1px solid;border-radius:10px;'>");
-					echo("<h4><a href='/event/view/".$post->id."'>".$post->name."</a></h4>");
+					echo("<div class='event'>");
+					if (isset($post->image)){
+						echo("<a class='event__image' href='/event/view/" . $post->id . "'><img src='/".$post->image."' alt='".$post->name."' title='".$post->name."'></a>");
+					}	
+					echo("<h4><a href='/event/view/".$post->id."'>".$post->name."</a></h4>");				
 					if (!empty($post->content)){
-						echo($post->content. "<br>");
+						echo('<div class="event__content">' . $post->content . '</div>');
 					}
 					if (!empty($post->date)){
 						$date = new DateTime($post->date);
-						echo($date->format('m/d/Y'). "<br>");
-					}
-					if (isset($post->image)){
-						echo("<a href='/event/view/".$post->id."'><img height=320px src='/".$post->image."' alt='".$post->name."' title='".$post->name."'></a>");
+						echo('<div class="event__date">' . $date->format('m/d/Y'). "</div>");
 					}
 					echo("</div>");
 				}

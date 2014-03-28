@@ -220,3 +220,5 @@ pip-log.txt
 .mr.developer.cfg
 
 fuel/application/config/database.php
+assets/images/motability-content.jpg
+assets/images/norton.jpg

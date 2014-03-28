@@ -1,0 +1,84 @@
+// athlete profile
+
+.athlete-profile {
+		margin: 0 auto;		
+		width: 40%;
+	
+		.athlete-profile__goal {
+				height: 6.5em;
+
+				.goal-indicator {
+						float: right;
+						height: 35px;
+						width: 50%;
+						@include button-style;
+				}
+		}
+
+		.athlete-profile__calendar {
+				height: 6.5em;
+
+				.calendar {
+						float: right;
+						height: 35px;
+						width: 50%;
+						@include button-style;					
+				}
+		}
+
+		.athlete-profile__actions {
+				height: 6em;
+				float: left;
+				width: 65%;
+				
+				.fa {
+						margin-right: 33%;
+				}
+
+				.fa:last-child {
+						margin-right: 0;
+				}
+		}
+
+		.athlete-profile__img {
+				float: left;
+				margin-right: 5%;
+				width: 30%;
+		
+				img {
+						height: auto;
+						width: 100%;
+				}
+		}
+
+		.athlete-profile__sports {
+				clear: left;				
+				float: left;
+				width: 50%;
+		}
+
+		.athlete-profile__events {
+				float: right;
+				width: 50%;
+		}
+}
+
+.event__image {
+		display: block;
+		float: left;							
+		width: 20%;
+}
+
+.event__image img {
+		width: 100%;
+}
+
+
+
+
+
+
+
+
+
+

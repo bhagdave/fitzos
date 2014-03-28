@@ -5,89 +5,81 @@
 		$isMember = False;
 	}
 ?>
-<div class="row">
-	<div class="col-md-2">
-		<h2><?=isset($member) ? $member->first_name . ' ' . $member->last_name : '' ; ?></h2>
-		<p>Nickname:<?= isset($athlete->nickname) ? $athlete->nickname :'' ?></p>
-		<?php 
-			$dob = new DateTime($athlete->dob);
-		?>
-		<p>DOB:<?= isset($athlete->dob) ? $dob->format('m/d/Y') :'' ?></p>
-		<p>Gender:<?= isset($athlete->gender) ? $athlete->gender :'' ?></p>
-		<p>Activity:<?= isset($athlete->activity) ? $athlete->activity :'' ?></p>
-		<p>Country:<?= isset($athlete->country) ? $athlete->country :'' ?></p>
-		<p>Location:<?= isset($athlete->location) ? $athlete->location :'' ?></p>
-	</div>
-	<div class="col-md-4">
+<div class="athlete-profile">
+	<div class="athlete-profile__img">
 		<?php 
 			if (isset($member) && isset($member->image)){
 				echo("<img src='/$member->image'>");
 			}
 		?>
 	</div>
-	<div class="col-md-4">
-		<h2>Their Sports</h2>
+	<div class="athlete-profile__goal">
+		<div class="goal-indicator"></div>
+		<i class="fa fa-star fa-3x"></i>
+	</div>
+	<div class="athlete-profile__calendar">
+		<div class="calendar"></div>
+		<i class="fa fa-calendar fa-3x"></i>
+	</div>
+	<div class="athlete-profile__actions">
+		<i class="fa fa-user fa-3x js-emailFriend"></i>
+		<i class="fa fa-gift fa-3x"></i>
+		<i class="fa fa-inbox fa-3x"></i>
+	</div>
+
 	<?php
-		if (isset($sports)){
-			foreach($sports as $sport){
-				echo("<h4>$sport->sport</h4>");
-				if (isset($sport->from_date)){
-					$date = new DateTime($sport->from_date);
-					echo("From: ". $date->format('m/d/Y'));
-				}
-				if (isset($sport->to_date)){
-					$date = new DateTime($sport->to_date);
-					echo(" Until " . $date->format('m/d/Y'));
-				}
-				echo("<br>");
-				$existingSports[] = $sport->sport;
-			}
-		}
-	?>
-	</div>
-	<div class="col-md-2">
-		<?php $this->load->view('calendar/bySport'); ?>
-	</div>
-</div>
-<div class="row">
-	<div class="col-md-3">
-		<h2>Friends</h2>
-		<?php $this->load->view('athlete/friendList'); ?>
-	</div>
-</div>
-<div>
-<?php
 	if ($isMember){
-		echo("<a href='/athlete/profile'>Edit your profile</a><br/>");
-		echo("<a href='#' class='js-emailFriend'>Email Invite To Friend</a>");
+		// echo("<a href='/athlete/profile'>Edit your profile</a><br/>");
+		// echo("<a href='#' class='js-emailFriend'>Email Invite To Friend</a>");
 	?>
-		<div class="row">
-			<div class="col-md-6 col-lg-10 col-xs-12">
-					<div class="row">
-						<div class="col-md-3 col-xs-12 col-lg-6">
-							<h2>Notifications</h2>
-						</div>
-						<div class="col-md-3 col-xs-12 col-lg-6">
-							<?php $this->load->view('athlete/notifications'); ?>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-3 col-xs-12 col-lg-6">
-							<h2>Events</h2>
-						</div>
-						<div class="col-md-4 col-xs-12 col-lg-6">
-							<?php $this->load->view('athlete/events'); ?>
-						</div>
-					</div>			
-			</div>
-		</div>
+
+	<div class="athlete-profile__sports">
+		<h4>Sports</h4>
+		<?php
+			if (isset($sports)){
+				foreach($sports as $sport){
+					echo("<h5>$sport->sport</h5>");
+					if (isset($sport->from_date)){
+						$date = new DateTime($sport->from_date);
+						echo("From: ". $date->format('m/d/Y'));
+					}
+					if (isset($sport->to_date)){
+						$date = new DateTime($sport->to_date);
+						echo(" Until " . $date->format('m/d/Y'));
+					}
+					echo("<br>");
+					$existingSports[] = $sport->sport;
+				}
+			}
+		?>
+	</div>
+
+	<div class="athlete-profile__events">
+		<h4>Events</h4>
+		<?php $this->load->view('athlete/events'); ?>
+	</div>
+
+</div>
+
+<div class="athlete-calendar">
+	<?php // $this->load->view('calendar/bySport'); ?>
+</div>
+
+	<div class="athlete-friends">
+		<!-- 		<h2>Friends</h2> -->
+		<?php // $this->load->view('athlete/friendList'); ?>
+	</div>
+
+	<div class="athlete-notifications">
+		<!-- 		<h2>Notifications</h2> -->
+		<?php // $this->load->view('athlete/notifications'); ?>
+	</div>		
 
 	<?php
 	} else {
 		echo("<a href='/athlete/beFriend/".$member->id."'>Friend Request</a>");
 	}
 ?>
-</div>
 <?php 
 	$this->load->view('athlete/inviteFriend');
 ?>

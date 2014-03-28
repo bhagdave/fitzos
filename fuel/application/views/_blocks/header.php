@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="http://<?=$_SERVER['SERVER_NAME'] ?>/assets/css/style.css">
 <link rel="stylesheet" href="http://<?=$_SERVER['SERVER_NAME'] ?>/assets/css/jquery.timepicker.css">
 <link href='http://fonts.googleapis.com/css?family=Lato:300,400,900' rel='stylesheet' type='text/css'>
-
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
