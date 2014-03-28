@@ -28,6 +28,11 @@ class Calendar_test extends fitzos_testbase {
 		$this->run(pq('.calendar-small')->size() > 0,true,'Testing calendar/public has view','PQ statement');		
 		$this->run(pq('.event')->size() > 0,true,'Testing calendar has event','PQ statement');		
 	}
+	public function test_calendarForMonth(){
+		$this->load_page('calendar/view');
+		$this->run(pq('.calendar-header')->size() > 0,true,'Calendar View display something');
+		$this->run(pq('.calendar-event')->size() > 0,true,'Event appears on calendar');
+	}
 }
 class CalendarController {
 	private $CI;

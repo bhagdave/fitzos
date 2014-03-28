@@ -67,6 +67,13 @@ class Events_model extends Base_module_model {
     	$this->db->update('event',$data);	
     }
     function _canAttend($event,$user){
+    	// alreadt attending??
+		$this->db->where('event_id',$event);
+		$this->db->where('member_id',$user);
+		$num = $this->db->count_all_results('event_attendance');
+		if ($num > 0){
+			return false;
+		}    	
     	// if event is public and published then allow
     	$this->db->where('id',$event);
     	$result = $this->db->get('event');
@@ -210,7 +217,18 @@ class Events_model extends Base_module_model {
 		$this->db->set('deleted','yes');
 		$this->db->update('event_wall');
 	}
-	
+	function getCalendarEvents($sport =null){
+		$this->db->select("event.*,sport.name as sport, team.name as team, team.id as teamId");
+    	$this->db->where('event.date BETWEEN NOW() AND NOW() + INTERVAL 30 DAY');
+    	$this->db->where('event.public','PUBLIC');
+    	$this->db->where('published','yes');
+    	$this->db->where('team.public','yes');
+    	$this->db->join('team','team.id = event.team_id');
+    	$this->db->join('sport','sport.id = team.sport_id');
+    	$this->db->order_by('event.date','desc');
+    	$result = $this->db->get('event');
+    	return $result->result();
+	}
 }
  
 class Event_model extends Base_module_record {
