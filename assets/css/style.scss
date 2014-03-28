@@ -8,6 +8,8 @@
 
 @import 'components/buttons';
 
+@import 'components/athlete-profile';
+
 @import 'pages/home-page';
 
 
@@ -21,7 +23,7 @@
 }
 
 body {
-  background: "url(../../../assets/images/jumpoff.jpg)" no-repeat;
+  background: url('../../../assets/images/jumpoff.jpg') no-repeat;
   background-size: 100%;
 }
 
@@ -78,14 +80,14 @@ ul li {
 }
 
 #js-Invitations label {
-  color:black;
+  color: black;
 }
 
 .js-Notifications .athleteNotes {
 	border: 1px solid black;
-	border-radius:9px;
+	border-radius: 9px;
 }
 
 .alreadyInvited h2,label{
-	color:black;
+	color: black;
 }
