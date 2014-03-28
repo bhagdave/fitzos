@@ -59,7 +59,7 @@ class Athlete extends CI_Controller{
 				));
 				// send email
 				$this->load->library('Fitzos_email',null,'Femail');
-				$this->Femail->sendFriendRequest($requested,$requestee->email,$request);
+				$this->Femail->sendFriendRequest($requested,$requested->email,$request);
 				$this->session->set_flashdata('message','Friend request sent!');
 				redirect("athlete/view/$id");
 			} else {
