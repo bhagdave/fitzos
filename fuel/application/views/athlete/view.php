@@ -24,7 +24,7 @@
 	<div class="athlete-profile__actions">
 		<i class="fa fa-user fa-3x js-emailFriend"></i>
 		<i class="fa fa-gift fa-3x"></i>
-		<i class="fa fa-inbox fa-3x"></i>
+		<a href="/athlete/notifications"><i class="fa fa-inbox fa-3x"></i></a>
 	</div>
 
 	<?php
