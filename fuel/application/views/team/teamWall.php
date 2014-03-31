@@ -4,7 +4,7 @@
 					echo("<div class='wallPost'>");
 					echo($post->message);
 					if (isset($post->first_name)){
-						echo (" by $post->first_name $post->last_name");
+						echo (" by <a href='/athlete/view/$post->memberId'>$post->first_name $post->last_name</a>");
 					} else {
 						echo (" by Administrator!");
 					}
