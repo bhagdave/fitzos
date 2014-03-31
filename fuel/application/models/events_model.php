@@ -181,7 +181,7 @@ class Events_model extends Base_module_model {
 		$this->db->insert('event_invites',$invite);
 	}
 	function getWall($event){
-		$this->db->select('event_wall.*,member.first_name,member.last_name');
+		$this->db->select('event_wall.*,member.first_name,member.last_name,member.id as memberId');
 		$this->db->where('event_id',$event);
 		$this->db->join('member','member.id = member_id','left');
 		$this->db->order_by('id','desc');
