@@ -43,7 +43,7 @@ class Teams_model extends Base_module_model {
     	return $this->db->insert_id();
     }
 	function getTeamWall($id){
-		$this->db->select('team_wall.*,member.first_name,member.last_name');
+		$this->db->select('team_wall.*,member.first_name,member.last_name,member.id as memberId');
 		$this->db->where('team_id',$id);
 		$this->db->join('member','member.id = member_id','left');
 		$this->db->order_by('id','desc');
