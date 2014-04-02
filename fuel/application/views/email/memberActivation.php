@@ -12,8 +12,9 @@
 			</a>
 		</header>
 <body>
-	<p>Some stuff here about how wonderful it is to have joined ReachYourPeak...</p>
-	<p>Please click on this <a href="http://www.reach-your-peak.com/signin/activate/{$member->salt}"></a>link to activate your account....</p>
+	<p>Please click on this <a href="http://www.reach-your-peak.com/signin/activate/{$member->salt}"></a>link to start your ascent on Reach Your Peak</p>
+	<p>Stay Active,</p>
+	<p>Team Reach Your Peak</p>	
 	<div id="footer">
 		<p>Copyright &copy; PROformance 2014 </p>
 	</div>

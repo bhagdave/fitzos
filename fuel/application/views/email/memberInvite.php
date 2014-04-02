@@ -12,9 +12,10 @@
 			</a>
 		</header>
 <body>
-	<p>Some stuff here about how wonderful it is to have joined ReachYourPeak...</p>
-	<p>A friend of yours <?=$member->first_name ?> <?=$member->last_name ?> has invited you to join us over here at Reach Your Peak.</p>
+	<p><?=$member->first_name ?> <?=$member->last_name ?> would like to see if you have what it takes to Reach Your Peak!</p>
 	<p>Please click on this <a href="http://www.reach-your-peak.com/">link to create your account</a>....</p>
+	<p>Stay Active,</p>
+	<p>Team Reach Your Peak</p>	
 	<div id="footer">
 		<p>Copyright &copy; PROformance 2014 </p>
 	</div>
