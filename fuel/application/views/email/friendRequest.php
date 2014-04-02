@@ -12,9 +12,11 @@
 			</a>
 		</header>
 <body>
-	<p>Some stuff here about how wonderful it is to have joined ReachYourPeak...</p>
-	<p>You have a friend request from <?=$member->first_name ?> <?=$member->last_name ?> over here at Reach Your Peak.</p>
+	<p><?=$member->first_name ?> <?=$member->last_name ?></p>
+	<p><?=$requestee->first_name ?> <?=$requestee->last_name ?> would like to make an athlete connection with you.</p>
 	<p>Please click on this <a href="http://www.reach-your-peak.com/athlete/friendRequest/<?=$request ?>">link to see the request</a>....</p>
+	<p>Stay Active,</p>
+	<p>Team Reach Your Peak</p>	
 	<div id="footer">
 		<p>Copyright &copy; PROformance 2014 </p>
 	</div>
