@@ -11,7 +11,7 @@
 					if (!empty($post->image)){
 						echo("<img src='" .$post->image."'>");
 					}
-					if (isset($owner) && $owner){
+					if ((isset($owner) && $owner) || $member->id == $post->memberId){
 						echo("<button class='btn-small js-DeletePost' onclick='deletePost(".$team->id.",".$post->id .")'>Delete</button>");
 					}	
 					echo("</div>");
