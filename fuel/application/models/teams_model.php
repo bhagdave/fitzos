@@ -63,6 +63,7 @@ class Teams_model extends Base_module_model {
 	}
 	function getTeamEvents($team){
 		$this->db->where('team_id',$team);
+		$this->db->where('event.date >=' ,date('Y-m-d'));
 		$result = $this->db->get('event');
 		return $result->result();
 	}
