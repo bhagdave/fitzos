@@ -1,4 +1,3 @@
-<div id="inviteDialog" title="Invite Members" style="display:none;">
 	<form id="js-Invitations">
 	<?php 
 		$showButton = true;
@@ -31,4 +30,3 @@
 		}
 	?>
 	</div>
-</div>
