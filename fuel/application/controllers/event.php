@@ -127,6 +127,7 @@ class Event extends CI_Controller{
 		$this->events->deleteEvent($id);
 	}
 	function sendInvites($event){
+		$this->load->model('events_model');
 		if ($this->session->userdata('id')){
 			if (isset($_POST)){
 				$user = $this->session->userdata('id');
@@ -134,11 +135,14 @@ class Event extends CI_Controller{
 					$memberId = str_replace('mmbrd','',$key);
 					$this->events_model->sendInvite($memberId,$user,$event);
 				}
-				// get those already invited
-				$invited = $this->events_model->getInvitedMembers($event->id);
+				// get the event
+				$eventData = $this->events_model->getEvent($event);
+				// get those already invited/attending
+				$attending = $this->events_model->getMembersAttending($event);
+				$invited = $this->events_model->getInvitedMembers($eventData->id);
 				// get the team members
-				$members = $this->events_model->getTeamMembersToInvite($event->team_id,$event->id);
-				$vars = array('layout'=>'none','ajax'=>'yes','team'=>$team,'members'=>$members, 'edit'=>$edit, 'event'=>$event,'attending'=>$attending,'user'=>$user,'invited'=>$invited);
+				$members = $this->events_model->getTeamMembersToInvite($eventData->team_id,$eventData->id);
+				$vars = array('layout'=>'none','ajax'=>'yes','members'=>$members,'event'=>$eventData,'attending'=>$attending,'user'=>$user,'invited'=>$invited);
 				$this->fuel->pages->render('event/invitation',$vars);
 			}
 		} else {
