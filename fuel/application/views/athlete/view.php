@@ -29,8 +29,8 @@
 
 	<?php
 	if ($isMember){
-		// echo("<a href='/athlete/profile'>Edit your profile</a><br/>");
-		// echo("<a href='#' class='js-emailFriend'>Email Invite To Friend</a>");
+		 echo("<a href='/athlete/profile'>Edit your profile</a><br/>");
+		 echo("<a href='#' class='js-emailFriend'>Email Invite To Friend</a>");
 	?>
 
 	<div class="athlete-profile__sports">
@@ -62,17 +62,17 @@
 </div>
 
 <div class="athlete-calendar">
-	<?php // $this->load->view('calendar/bySport'); ?>
+	<?php  $this->load->view('calendar/bySport'); ?>
 </div>
 
 	<div class="athlete-friends">
-		<!-- 		<h2>Friends</h2> -->
-		<?php // $this->load->view('athlete/friendList'); ?>
+		<h2>Friends</h2>
+		<?php  $this->load->view('athlete/friendList'); ?>
 	</div>
 
 	<div class="athlete-notifications">
-		<!-- 		<h2>Notifications</h2> -->
-		<?php // $this->load->view('athlete/notifications'); ?>
+		<h2>Notifications</h2>
+		<?php  $this->load->view('athlete/notifications'); ?>
 	</div>		
 
 	<?php
