@@ -7,12 +7,6 @@
 			<input type="hidden" name="owner" value="<?=$member->id ?>" />
 			<fieldset>
 				<input type="text" required name="name" value="" placeholder="Name" /><br>
-				<label>Active</label>
-				<input type="radio" name="active" value="yes">Yes
-				<input type="radio" name="active" value="no">No<br>
-				<label>Public?</label>
-				<input type="radio" name="public" value="yes">Yes
-				<input type="radio" name="public" value="no">No
 				<div class="ui-widget">
 					<label>Select a Sport for your team</label>
 					<select multiple required id="sportsbox" name="sport_id">
@@ -24,6 +18,12 @@
 						?>
 					</select>
 				</div>	
+				<label>Active</label>
+				<input type="radio" name="active" value="yes">Yes
+				<input type="radio" name="active" value="no">No<br>
+				<label>Public?</label>
+				<input type="radio" name="public" value="yes">Yes
+				<input type="radio" name="public" value="no">No
 				<button class="btn btn-success">Submit</button>	
 			</fieldset>
 		</form>

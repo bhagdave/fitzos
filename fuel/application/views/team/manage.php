@@ -1,14 +1,16 @@
 <div class="col-md-12">
 	<div class="row">
-		<div class="col-md-4 col-md-offset-4">
+		<div class="col-md-4 col-md-offset-3">
 			<?= isset($message) ? $message :'' ; ?>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-4 col-md-offset-4">
+		<div class="col-md-4 col-md-offset-3">
 			<h2><?=$team->name ?>(Manage)</h2>
 		</div>
 	</div>
+</div>
+<div class="col-md-12">
 	<div class="row">
 		<div class="col-md-4">
 			<div class="js-Members">
@@ -19,6 +21,9 @@
 			<div class="js-MemberRequests">
 			<?php $this->load->view('team/memberRequests');?>
 			</div>
+		</div>
+		<div class="col-md-4">
+			<h3><?=$team->name ?> Sports</h3>
 		</div>
 	</div>
 	<div class="col-md-8 col-md-offset-1 teamWall">

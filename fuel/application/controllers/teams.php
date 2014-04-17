@@ -37,8 +37,9 @@ class Teams extends CI_Controller{
 			$data   = $this->teams->getTeam($team);
 			$events = $this->teams->getTeamEvents($team);
 			$members= $this->teams->getTeamMembers($team);
+			$sports = $this->sports->list_items();
 			$od     = $this->teams->getTeamOwner($team);
-			$vars   = array('member'=>$member, 'wall'=>$wall, 'team'=>$data, 'members'=>$members, 'events'=>$events, 'od'=>$od);
+			$vars   = array('member'=>$member,'sports'=>$sports, 'wall'=>$wall, 'team'=>$data, 'members'=>$members, 'events'=>$events, 'od'=>$od);
 			$this->fuel->pages->render('team/view',$vars);
 		} else {
 			redirect('signin/login');
@@ -51,7 +52,7 @@ class Teams extends CI_Controller{
 		$this->load->model('members_model','members');
 		if ($this->session->userdata('id')){
 			$this->teams->leaveTeam($team, $member);
-			$id     = $this->session->userdata('id');
+			$id = $this->session->userdata('id');
 			redirect('/');
 		} else {
 			redirect('signin/login');
@@ -72,8 +73,10 @@ class Teams extends CI_Controller{
 					$team   = $this->teams->getTeam($team_id);
 					$events = $this->teams->getTeamEvents($team_id);
 					$members= $this->teams->getTeamMembers($team_id);
+					$sports = $this->sports->list_items();
+					$linkedSports = $this->teams->getSportsForTeam($team_id);
 					$waiting= $this->teams->getMembersAwaiting($team_id);
-					$vars   = array('member'=>$member, 'wall'=>$wall,'owner'=>$owner, 'team'=>$team, 'members'=>$members, 'waiting'=>$waiting, 'events'=>$events);
+					$vars   = array('linkedSports'=>$linkedSports,'member'=>$member, 'wall'=>$wall,'owner'=>$owner, 'team'=>$team, 'members'=>$members, 'waiting'=>$waiting, 'events'=>$events);
 					$this->fuel->pages->render('team/manage',$vars);
 				} else {
 					redirect('signin/login');

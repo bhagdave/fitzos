@@ -40,7 +40,9 @@ class Teams_model extends Base_module_model {
     }
     function createTeam($data){
     	$this->db->insert('team',$data);
-    	return $this->db->insert_id();
+    	$team_id = $this->db->insert_id();
+    	$this->db->insert('team_sports',array('team_id'=>$team_id,'sport_id'=>$data['sport_id']));
+    	return $team_id;
     }
 	function getTeamWall($id){
 		$this->db->select('team_wall.*,member.first_name,member.last_name,member.id as memberId');
@@ -60,6 +62,13 @@ class Teams_model extends Base_module_model {
 		} else {
 			return null;
 		}
+	}
+	function getSportsForTeam($team){
+		$this->db->where('team_id',$team);
+		$this->db->join('sport','sport.id=team_sports.sport_id');
+		$result = $this->db->get('team_sports');
+		$data = $result->result();
+		return $data;
 	}
 	function getTeamEvents($team){
 		$this->db->where('team_id',$team);
