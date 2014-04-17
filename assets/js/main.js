@@ -25,6 +25,7 @@ $('#active').change(function(){
           .appendTo( this.wrapper )
           .val( value )
           .attr( "title", "" )
+          .attr("placeholder","Start typing your sport")
           .addClass( "custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left" )
           .autocomplete({
             delay: 0,
@@ -53,7 +54,7 @@ $('#active').change(function(){
  
         $( "<a>" )
           .attr( "tabIndex", -1 )
-          .attr( "title", "Show All Items" )
+          .attr( "title", "Show All Sports" )
           .tooltip()
           .appendTo( this.wrapper )
           .button({

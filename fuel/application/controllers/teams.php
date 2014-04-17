@@ -10,9 +10,7 @@ class Teams extends CI_Controller{
 		$this->load->model('sports_model','sports');
 		$this->load->model('members_model','members');
 		if ($this->input->post('owner')){
-			// posted do shit....
 			$team_id = $this->teams->createTeam($this->input->post());
-			// send them to the team management
 			$this->manage($team_id);
 			return;
 		} else {
