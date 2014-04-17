@@ -29,6 +29,7 @@ $config['modules']['forums'] = array();
 $config['modules']['members'] = array();
 $config['modules']['notifications'] = array();
 $config['modules']['sports'] = array();
+$config['modules']['sports_links'] = array();
 $config['modules']['sports_statistics'] = array();
 $config['modules']['teams'] = array();
 $config['modules']['trainers'] = array();

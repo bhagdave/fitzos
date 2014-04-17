@@ -35,8 +35,8 @@ $existingSports = array();
 				<input type="hidden" name="member_id" value="<?=$athlete->member_id ?>" />
 				<fieldset>
 				<div class="ui-widget">
-					<select id="sportsbox" name="sport_id">
-	    				<option value="">Select one...</option>
+					<select id="sportsbox" name="sport_id" placeholder="Type a sport">
+	    				<option value="">Select a sport</option>
 						<?php
 							foreach($sports as $sport){
 								if (!in_array($sport['name'],$existingSports)){

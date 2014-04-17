@@ -19,3 +19,4 @@ class Sports_statistics_model extends Fitzos_model {
 class Sports_statistic_model extends Base_module_record {
 
 }
+ 
