@@ -8,7 +8,7 @@
 			<fieldset>
 				<input type="text" required name="name" value="" placeholder="Name" /><br>
 				<div class="ui-widget">
-					<label>Select a Sport for your team</label>
+					<label>Select a sport for your team</label>
 					<select multiple required id="sportsbox" name="sport_id">
 	    				<option value="">Select a sport</option>
 						<?php

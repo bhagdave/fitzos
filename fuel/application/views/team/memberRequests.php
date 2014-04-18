@@ -1,4 +1,4 @@
-		<h2>Member Requests</h2>
+		<h2>Requests</h2>
 		<?php
 			if (isset($waiting)){
 				echo("<ul>");
