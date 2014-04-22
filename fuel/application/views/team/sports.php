@@ -4,4 +4,4 @@ if (isset($linkedSports) && !empty($linkedSports)){
 	echo("<p>No sports currently linked!</p>");	
 }
 ?>
-<a href="/teams/sports/<?=$team->sport_id ?>">Manage team sports</a>
+<a href="/teams/sports/<?=$team->id ?>">Manage team sports</a>

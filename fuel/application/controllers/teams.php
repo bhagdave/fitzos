@@ -240,6 +240,12 @@ class Teams extends CI_Controller{
 			if ($teamId > 0){
 				$this->load->model('teams_model','teams');
 				$this->load->model('sports_model','sports');
+				if ($this->input->post('team_id')){
+					$done = $this->teams->createTeamSport($this->input->post());
+					if ($done == 0){
+						$this->session->set_flashdata('message', 'Unable to add sport');
+					}
+				}
 				$sports = $this->sports->list_items();
 				$linkedSports = $this->teams->getSportsForTeam($teamId);
 				$team   = $this->teams->getTeam($teamId);

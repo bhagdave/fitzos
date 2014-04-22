@@ -220,6 +220,11 @@ class Teams_model extends Base_module_model {
     		return null;
     	}
 	}
+	function createTeamSport($data){
+		$this->db->insert('team_sports',array('team_id'=>$data['team_id'],'sport_id'=>$data['sport_id']));
+		$done = $this->db->affected_rows();
+		return $done;
+	}
 }
  
 class Team_model extends Base_module_record {
