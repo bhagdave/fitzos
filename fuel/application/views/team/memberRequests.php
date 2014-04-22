@@ -12,4 +12,4 @@
 				echo("<h4>No members awaiting approval</h4>");
 			}
 		?>
-	</div>
+	

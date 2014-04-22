@@ -24,25 +24,26 @@
 		</div>
 		<div class="col-md-4">
 			<h3><?=$team->name ?> Sports</h3>
-		</div>
-	</div>
-	<div class="col-md-8 col-md-offset-1 teamWall">
-		<h2>Team Wall</h2>
-		<form class="js-wallPostAdd">
-			<input type="hidden" name="team_id" value="<?=$team->id ?>" />
-			<textarea cols="40" rows="2" name="message" placeholder="Your message"></textarea>
-			<button class="btn-small btn-success js-wallPostAddBtn">Add post</button>
-		</form>
-		<div class="js-teamWall">
-			<?php $this->load->view('team/teamWall');?>
+			<?php $this->load->view('team/sports');?>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-8 teamEvents">
+		<div class="col-md-8 teamWall">
+			<h2>Team Wall</h2>
+			<form class="js-wallPostAdd">
+				<input type="hidden" name="team_id" value="<?=$team->id ?>" />
+				<textarea cols="40" rows="2" name="message" placeholder="Your message"></textarea>
+				<button class="btn-small btn-success js-wallPostAddBtn">Add post</button>
+			</form>
+			<div class="js-teamWall">
+				<?php $this->load->view('team/teamWall');?>
+			</div>
+		</div>
+		<div class="col-md-4 teamEvents">
 			<h2>Events</h2>
 			<div class="js-Events">				
 			<?php $this->load->view('team/teamEvents');?>
 			</div>
 		</div>
-	</div>
+		</div>
 </div>

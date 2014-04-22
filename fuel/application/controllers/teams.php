@@ -47,7 +47,6 @@ class Teams extends CI_Controller{
 		}
 	}
 	function leave($team,$member){
-	// TODO:Leave a member from the team.	
 		$this->load->model('teams_model','teams');
 		$this->load->model('members_model','members');
 		if ($this->session->userdata('id')){
@@ -191,6 +190,7 @@ class Teams extends CI_Controller{
 		}
 	}
 	function newEvent($team){
+		//TODO: Give  alist of possible sports.
 		if ($this->session->userdata('id')){
 			$this->load->model('teams_model','teams');
 			if ($this->input->post('team_id')){
