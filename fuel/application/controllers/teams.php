@@ -244,6 +244,8 @@ class Teams extends CI_Controller{
 					$done = $this->teams->createTeamSport($this->input->post());
 					if ($done == 0){
 						$this->session->set_flashdata('message', 'Unable to add sport');
+					} else {
+						$this->session->set_flashdata('message', 'Sport added');
 					}
 				}
 				$sports = $this->sports->list_items();
