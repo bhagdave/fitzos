@@ -235,4 +235,21 @@ class Teams extends CI_Controller{
 		$vars = array('events'=>$events,'team'=>$team,'layout'=>'none','owner'=>$owner);
 		$this->fuel->pages->render('team/teamEvents',$vars);
 	}
+	function sports($teamId = 0){
+		if ($this->session->userdata('id')){
+			if ($teamId > 0){
+				$this->load->model('teams_model','teams');
+				$this->load->model('sports_model','sports');
+				$sports = $this->sports->list_items();
+				$linkedSports = $this->teams->getSportsForTeam($teamId);
+				$team   = $this->teams->getTeam($teamId);
+				$vars   = array('linkedSports'=>$linkedSports,'team'=>$team,'sports'=>$sports);
+				$this->fuel->pages->render('team/manageSports',$vars);
+			} else {
+				redirect('404');
+			}
+		} else {
+			redirect('signin/login');
+		}
+	}
 }
