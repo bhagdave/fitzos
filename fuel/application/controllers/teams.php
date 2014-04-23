@@ -216,8 +216,9 @@ class Teams extends CI_Controller{
 				}
 				redirect('/teams/manage/' . $team);
 			}
+			$sports = $this->teams->getSportsForTeam($team);
 			$data = $this->teams->getTeam($team);
-			$vars = array('team'=>$data);
+			$vars = array('team'=>$data,'sports'=>$sports);
 			$this->fuel->pages->render('team/addTeamEvent',$vars);
 		} else {
 			redirect('signin/login');

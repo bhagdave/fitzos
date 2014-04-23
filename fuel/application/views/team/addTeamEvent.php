@@ -22,6 +22,27 @@
 						<textarea cols="40" rows="2" name="content" placeholder="Details of your event"><?=isset($event->content) ? $event->content: '' ; ?></textarea>
 					</div>
 				</div>
+				<?php 
+					if (isset($sports) && count($sports) > 1){
+						?>
+						<div class="control-group">
+							<label class="control-label">Sport</label>
+							<div class="controls">	
+								<select name="sport_id">
+									<?php 
+									foreach($sports as $sport){
+										echo("<option value='$sport->id'>$sport->name</option>");
+									}?>
+								</select>
+							</div>
+						</div>
+						<?php 
+					} else {
+					?>
+						<input name="sport_id" value="<?=isset($team->sport_id) ? $team->sport_id : ''  ?>" type="hidden">
+					<?php 
+					}
+				?>
 				<div class="control-group">
 					<label class="control-label">Location</label>
 					<div class="controls">	
