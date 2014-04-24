@@ -33,7 +33,7 @@
 			<form class="js-wallPostAdd">
 				<input type="hidden" name="team_id" value="<?=$team->id ?>" />
 				<textarea cols="40" rows="2" name="message" placeholder="Your message"></textarea>
-				<button class="btn-small btn-success js-wallPostAddBtn">Add post</button>
+				<button class="btn js-wallPostAddBtn">Add post</button>
 			</form>
 			<div class="js-teamWall">
 				<?php $this->load->view('team/teamWall');?>
