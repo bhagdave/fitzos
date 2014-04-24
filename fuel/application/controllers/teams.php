@@ -37,8 +37,9 @@ class Teams extends CI_Controller{
 			$data   = $this->teams->getTeam($team);
 			$events = $this->teams->getTeamEvents($team);
 			$members= $this->teams->getTeamMembers($team);
+			$sports = $this->sports->list_items();
 			$od     = $this->teams->getTeamOwner($team);
-			$vars   = array('member'=>$member, 'wall'=>$wall, 'team'=>$data, 'members'=>$members, 'events'=>$events, 'od'=>$od);
+			$vars   = array('member'=>$member,'sports'=>$sports, 'wall'=>$wall, 'team'=>$data, 'members'=>$members, 'events'=>$events, 'od'=>$od);
 			$this->fuel->pages->render('team/view',$vars);
 		} else {
 			redirect('signin/login');
@@ -46,12 +47,11 @@ class Teams extends CI_Controller{
 		}
 	}
 	function leave($team,$member){
-	// TODO:Leave a member from the team.	
 		$this->load->model('teams_model','teams');
 		$this->load->model('members_model','members');
 		if ($this->session->userdata('id')){
 			$this->teams->leaveTeam($team, $member);
-			$id     = $this->session->userdata('id');
+			$id = $this->session->userdata('id');
 			redirect('/');
 		} else {
 			redirect('signin/login');
@@ -72,8 +72,10 @@ class Teams extends CI_Controller{
 					$team   = $this->teams->getTeam($team_id);
 					$events = $this->teams->getTeamEvents($team_id);
 					$members= $this->teams->getTeamMembers($team_id);
+					$sports = $this->sports->list_items();
+					$linkedSports = $this->teams->getSportsForTeam($team_id);
 					$waiting= $this->teams->getMembersAwaiting($team_id);
-					$vars   = array('member'=>$member, 'wall'=>$wall,'owner'=>$owner, 'team'=>$team, 'members'=>$members, 'waiting'=>$waiting, 'events'=>$events);
+					$vars   = array('linkedSports'=>$linkedSports,'member'=>$member, 'wall'=>$wall,'owner'=>$owner, 'team'=>$team, 'members'=>$members, 'waiting'=>$waiting, 'events'=>$events);
 					$this->fuel->pages->render('team/manage',$vars);
 				} else {
 					redirect('signin/login');
@@ -188,6 +190,7 @@ class Teams extends CI_Controller{
 		}
 	}
 	function newEvent($team){
+		//TODO: Give  alist of possible sports.
 		if ($this->session->userdata('id')){
 			$this->load->model('teams_model','teams');
 			if ($this->input->post('team_id')){
@@ -213,8 +216,9 @@ class Teams extends CI_Controller{
 				}
 				redirect('/teams/manage/' . $team);
 			}
+			$sports = $this->teams->getSportsForTeam($team);
 			$data = $this->teams->getTeam($team);
-			$vars = array('team'=>$data);
+			$vars = array('team'=>$data,'sports'=>$sports);
 			$this->fuel->pages->render('team/addTeamEvent',$vars);
 		} else {
 			redirect('signin/login');
@@ -231,5 +235,30 @@ class Teams extends CI_Controller{
 		$owner  = $this->teams->isOwner($team_id,$member);
 		$vars = array('events'=>$events,'team'=>$team,'layout'=>'none','owner'=>$owner);
 		$this->fuel->pages->render('team/teamEvents',$vars);
+	}
+	function sports($teamId = 0){
+		if ($this->session->userdata('id')){
+			if ($teamId > 0){
+				$this->load->model('teams_model','teams');
+				$this->load->model('sports_model','sports');
+				if ($this->input->post('team_id')){
+					$done = $this->teams->createTeamSport($this->input->post());
+					if ($done == 0){
+						$this->session->set_flashdata('message', 'Unable to add sport');
+					} else {
+						$this->session->set_flashdata('message', 'Sport added');
+					}
+				}
+				$sports = $this->sports->list_items();
+				$linkedSports = $this->teams->getSportsForTeam($teamId);
+				$team   = $this->teams->getTeam($teamId);
+				$vars   = array('linkedSports'=>$linkedSports,'team'=>$team,'sports'=>$sports);
+				$this->fuel->pages->render('team/manageSports',$vars);
+			} else {
+				redirect('404');
+			}
+		} else {
+			redirect('signin/login');
+		}
 	}
 }

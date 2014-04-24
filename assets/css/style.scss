@@ -22,11 +22,6 @@
   box-sizing: border-box;
 }
 
-body {
-  background: url('../../../assets/images/jumpoff.jpg') no-repeat;
-  background-size: 100%;
-}
-
 body h1,
 body h2,
 body h3,
@@ -50,7 +45,7 @@ ul li {
 }
 
 .main {
-  width: 600px;
+  max-width: 800px;
   margin: 0 auto;
 }
 

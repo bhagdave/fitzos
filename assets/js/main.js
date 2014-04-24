@@ -95,9 +95,9 @@ $('#active').change(function(){
       },
  
       _removeIfInvalid: function( event, ui ) {
- 
         // Selected an item, nothing to do
         if ( ui.item ) {
+        	console.log(this.input[0].value);
           return;
         }
  

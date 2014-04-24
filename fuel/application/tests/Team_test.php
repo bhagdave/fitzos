@@ -36,8 +36,16 @@ class Team_test extends fitzos_testbase {
 			'team_id'=>1
 		);
 		$this->load_page('teams/newEvent/1',$post);
-		$this->run($this->page_contains('Event added',false),true,'Adding a new team event');
-		
+		$this->run($this->page_contains('Event added',false),true,'Adding a new team event');	
+	}
+	public function test_addNewSport(){
+		$this->_login();
+		$post = array(
+				'team_id'=>1,
+				'sport_id'=>1
+		);
+		$this->load_page('teams/sports/1',$post);
+		$this->run($this->page_contains('Sport added',false),true,'Adding a new team event');
 	}
 }
 class TeamController {
