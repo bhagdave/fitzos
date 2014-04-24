@@ -12,7 +12,7 @@
 						echo("<img src='" .$post->image."'>");
 					}
 					if ((isset($owner) && $owner) || $member->id == $post->memberId){
-						echo("<button class='btn-small js-DeletePost' onclick='deletePost(".$team->id.",".$post->id .")'>Delete</button>");
+						echo("<button class='btn js-DeletePost' onclick='deletePost(".$team->id.",".$post->id .")'>Delete</button>");
 					}	
 					echo("</div>");
 				}
