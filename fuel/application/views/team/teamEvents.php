@@ -7,20 +7,20 @@
 						echo($post->content. "<br>");
 					}
 					if (isset($owner) && $owner){
-						echo("<button class='btn-small js-DeleteEvent' onclick='deleteEvent(".$team->id.",".$post->id .")'>Delete</button>");
+						echo("<button class='btn js-DeleteEvent' onclick='deleteEvent(".$team->id.",".$post->id .")'>Delete</button>");
 					}
 					if (isset($post->image)){
 						echo("<a href='/event/view/".$post->id."'><img height=320px src='/".$post->image."' alt='".$post->name."' title='".$post->name."'></a>");
 					}	
 					if (!empty($post->date)){
 						$date = new DateTime($post->date);
-						echo($date->format('m/d/Y'). "<br>");
+						echo("<p>".$date->format('m/d/Y'). "</p>");
 					}
 					if (!empty($post->time)){
-						echo("Starts ".$post->time. "<br>");
+						echo("Starts ".$post->time);
 					}
 					if (!empty($post->end_time)){
-						echo("Finishes ".$post->end_time. "<br>");
+						echo(" Finishes ".$post->end_time. "<br>");
 					}
 					echo("</div>");
 				}
