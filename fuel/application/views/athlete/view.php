@@ -14,11 +14,9 @@
 		?>
 	</div>
 	<div class="athlete-profile__goal">
-		<div class="goal-indicator"></div>
 		<i class="fa fa-star fa-3x"></i>
 	</div>
 	<div class="athlete-profile__calendar">
-		<div class="calendar"></div>
 		<i class="fa fa-calendar fa-3x"></i>
 	</div>
 	<div class="athlete-profile__actions">
