@@ -1,5 +1,6 @@
 	<div class="signin-splash">
 			<h1>Sign up now and start your ascent</h1>
+			<h4>While exploring Reach Your Peak's features, please excuse our appearance and any bugs.  We are still in early development (Alpha) but want to start our ascent with a select few chosen athletes.  Thank you</h4>
 		<form action="../signin/start" method="post">
   			<label class="select-label">
   				<select name="choice" id="trainer" value="trainer">
