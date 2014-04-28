@@ -16,7 +16,7 @@ class Fitzos_email {
 		$this->email->to($to);
 		$this->email->subject($subject);
 		$this->email->message($message);
-		$this->email->send();
+		return $this->email->send();
 	}
 	function sendMemberActivation($member){
 		$this->CI =& get_instance();
@@ -36,7 +36,7 @@ class Fitzos_email {
 	function sendMemberInvite($member,$email){
 		$this->CI =& get_instance();
 		$message = $this->CI->load->view('email/memberInvite',array('member'=>$member),TRUE);
-		$this->_sendMail($email, 'member_services@reach-your-peak.com', "$member->first_name $member->last_name  would like you to join him as an athlete on Reach Your Peak", $message);
+		return $this->_sendMail($email, 'member_services@reach-your-peak.com', "$member->first_name $member->last_name  would like you to join him as an athlete on Reach Your Peak", $message);
 	}
 	function sendFriendRequest($member,$email,$request,$requestee){
 		$this->CI =& get_instance();

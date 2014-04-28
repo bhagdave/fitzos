@@ -71,7 +71,12 @@ class Signin extends CI_Controller{
 			$user = $this->session->userdata('id');
 			$member = $this->members->getMember($user);
 			$this->load->library('Fitzos_email',null,'Femail');
-			$this->Femail->sendMemberInvite($member,$this->inout->post('email'));
+			$emailed = $this->Femail->sendMemberInvite($member,$this->inout->post('email'));
+			if ($emailed){
+				$this->session->set_flashdata('message','Email request sent!');
+			} else {
+				$this->session->set_flashdata('message','Email request failed to send');
+			}
 		}
 	}
 }
