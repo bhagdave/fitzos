@@ -1,8 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Members_model extends Fitzos_model { 
-	// todo : accepFriendRequest
-	// todo : declineFriendRequest
     function __construct()
     {
         parent::__construct('member');
@@ -10,7 +8,7 @@ class Members_model extends Fitzos_model {
     function checkLogin($username,$password){
     	$this->db->select("email,salt,id");
     	$this->db->where('email',$username);
-//    	$this->db->where('password',$password);
+    	$this->db->where('password',$password);
     	$this->db->where('active','yes');
     	$result = $this->db->get('member');
     	$data = $result->result();

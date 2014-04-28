@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
  
-class Trainers_model extends Base_module_model {
+class Trainers_model extends Fitzos_model {
  
     function __construct()
     {

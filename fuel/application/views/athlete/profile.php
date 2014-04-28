@@ -6,7 +6,6 @@
 		<?= isset($message) ? $message :'' ; ?>
 	</div>
 </div>
-<div class="col-md-6">
 <div class="row">
 	<div class="col-md-6">
 		<form class="form-horizontal" action="/athlete/profile" method="post" enctype="multipart/form-data">
@@ -84,13 +83,13 @@
 						<label class="radio">No (I am shy)<input id="no" name="message" value="No" type="radio" data-bind="checked: message"></label>
 					</div>
 				</div>
-				<div class="control-group">
-					<label class="control-label">Can we hook you up with a trainer?</label>
-					<div class="controls">	
-						<label class="radio">Yes (I need help)<input id="yes" name="find_trainer" value="Yes" type="radio" data-bind="checked: find_trainer"></label>					
-						<label class="radio">No (I am good)<input id="no" name="find_trainer" value="No" type="radio" data-bind="checked: find_trainer"></label>
-					</div>
-				</div>
+<!-- 				<div class="control-group"> -->
+<!-- 					<label class="control-label">Can we hook you up with a trainer?</label> -->
+<!-- 					<div class="controls">	 -->
+<!-- 						<label class="radio">Yes (I need help)<input id="yes" name="find_trainer" value="Yes" type="radio" data-bind="checked: find_trainer"></label>					 -->
+<!-- 						<label class="radio">No (I am good)<input id="no" name="find_trainer" value="No" type="radio" data-bind="checked: find_trainer"></label> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
 				<div class="control-group">
 					<label class="control-label">Profile image</label>
 					<?php 
@@ -111,7 +110,6 @@
 	<div class="col-md-4 col-md-offset-1 top-right">
 		<?php echo fuel_block('athlete_profile');?>
 	</div>		
-</div>
 </div>
 <script type="text/javascript">
 function roundit(which){

@@ -31,7 +31,7 @@
 						?>
 					</select>
 				</div>	
-				<button class="btn btn-success">Add Sport</button>	
+				<button class="btn">Add Sport</button>	
 			</fieldset>
 		</form>
 		</div>
