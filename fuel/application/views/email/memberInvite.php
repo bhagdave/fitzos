@@ -7,9 +7,9 @@
 </head>
 <html lang="en-US">
 		<header>
-			<a href="http://www.reach-your-peak.com/">
-				<img src="http://www.reach-your-peak.com/assets/images/logo.png" alt="www.reach-your-peak.com" name="reach-your-peak.com" width="178" height="99" id="FitZos" style="display:block;" class="logo"/>
-			</a>
+		<a href="http://www.reach-your-peak.com/">
+			<img src="http://www.reach-your-peak.com/assets/images/logo.png" alt="www.reach-your-peak.com" name="reach-your-peak.com" width="178" height="99" id="FitZos" style="display:block;" class="logo"/>
+		</a>
 		</header>
 <body>
 	<p><?=$member->first_name ?> <?=$member->last_name ?> would like to see if you have what it takes to Reach Your Peak!</p>
