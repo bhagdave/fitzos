@@ -66,7 +66,7 @@ class Signin extends CI_Controller{
 		}
 	}
 	function invite(){
-		if ($this->inout->post('email')){
+		if ($this->input->post('email')){
 			// let us send an invite email..
 			$user = $this->session->userdata('id');
 			$member = $this->members->getMember($user);
