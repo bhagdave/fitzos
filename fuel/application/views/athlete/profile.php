@@ -84,13 +84,13 @@
 						<label class="radio">No (I am shy)<input id="no" name="message" value="No" type="radio" data-bind="checked: message"></label>
 					</div>
 				</div>
-				<div class="control-group">
-					<label class="control-label">Can we hook you up with a trainer?</label>
-					<div class="controls">	
-						<label class="radio">Yes (I need help)<input id="yes" name="find_trainer" value="Yes" type="radio" data-bind="checked: find_trainer"></label>					
-						<label class="radio">No (I am good)<input id="no" name="find_trainer" value="No" type="radio" data-bind="checked: find_trainer"></label>
-					</div>
-				</div>
+<!-- 				<div class="control-group"> -->
+<!-- 					<label class="control-label">Can we hook you up with a trainer?</label> -->
+<!-- 					<div class="controls">	 -->
+<!-- 						<label class="radio">Yes (I need help)<input id="yes" name="find_trainer" value="Yes" type="radio" data-bind="checked: find_trainer"></label>					 -->
+<!-- 						<label class="radio">No (I am good)<input id="no" name="find_trainer" value="No" type="radio" data-bind="checked: find_trainer"></label> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
 				<div class="control-group">
 					<label class="control-label">Profile image</label>
 					<?php 

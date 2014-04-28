@@ -1,6 +1,5 @@
 	<div class="signin-splash">
 			<h1>Sign up now and start your ascent</h1>
-			<h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quam velit,</h4>
 		<form action="../signin/start" method="post">
   			<label class="select-label">
   				<select name="choice" id="trainer" value="trainer">
