@@ -67,6 +67,9 @@ class Teams extends CI_Controller{
 				if ($this->session->userdata('id')){
 					$id     = $this->session->userdata('id');
 					$owner  = $this->teams->isOwner($team_id,$id);
+					if (!$owner){
+						redirect("teams/view/$team_id");
+					}
 					$member = $this->members->getMember($id);
 					$wall   = $this->teams->getTeamWall($team_id);
 					$team   = $this->teams->getTeam($team_id);
@@ -190,7 +193,6 @@ class Teams extends CI_Controller{
 		}
 	}
 	function newEvent($team){
-		//TODO: Give  alist of possible sports.
 		if ($this->session->userdata('id')){
 			$this->load->model('teams_model','teams');
 			if ($this->input->post('team_id')){
