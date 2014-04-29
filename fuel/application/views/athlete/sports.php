@@ -13,7 +13,7 @@ $existingSports = array();
 		<?php
 			if (isset($members_sports)){
 				foreach($members_sports as $sport){
-					echo("<div class='athleteSports' style='border:1px solid;border-radius:10px;'>");
+					echo("<div class='athleteSports'>");
 					echo("<a href='/athlete/stats/{$sport->id}'><h4>$sport->sport</h4></a>");
 					if (isset($sport->from_date)){
 						$date = new DateTime($sport->from_date);
@@ -25,6 +25,7 @@ $existingSports = array();
 					}
 					$existingSports[] = $sport->sport;
 					echo("</div>");
+					echo("<hr>");
 				}
 			}
 		?>
