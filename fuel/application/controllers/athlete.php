@@ -186,11 +186,7 @@ class Athlete extends CI_Controller{
 					$this->members->saveMember(array('id'=>$data['id'],'image'=>$path));
 				}
 			}			
-			// get the athlete from the database
-			$athlete = $this->athletes->loadProfile($data['id']);
-			$member  = $this->members->getMember($data['id']);
-			$vars = array('athlete'=>$athlete,'member'=>$member);
-			$this->fuel->pages->render('athlete/welcome',$vars);
+			redirect('athlete/view/'. $data['id']);
 		} else {
 			if ($this->session->userdata('id')){
 				// get the athlete from the database
