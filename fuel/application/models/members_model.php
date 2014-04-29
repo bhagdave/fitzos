@@ -99,7 +99,7 @@ class Members_model extends Fitzos_model {
 		return $member;
 	}
 	function checkIfMemberExists($data){
-		$this->db->where('first_name', $data['name']);
+		$this->db->where('email', $data['email']);
 		$count = $this->db->count_all_results('member');
 		return ($count > 0);
 	}

@@ -30,7 +30,7 @@
 			</a>
 			<?php
 				if (isset($this->session)){
-					echo($this->session->flashdata('message'));
+					echo("<div class='alert alert-danger'>".$this->session->flashdata('message')."</div>");
 				} 
 			?>
 		</header>
