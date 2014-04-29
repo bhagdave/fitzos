@@ -12,7 +12,7 @@
 			</a>
 		</header>
 <body>
-	<p>Please click on this <a href="http://www.reach-your-peak.com/signin/activate/{$member->salt}"></a>link to start your ascent on Reach Your Peak</p>
+	<p>Please click on this <a href="http://www.reach-your-peak.com/signin/activate/<?=$member->salt?>">link to start your ascent on Reach Your Peak</a></p>
 	<p>Stay Active,</p>
 	<p>Team Reach Your Peak</p>	
 	<div id="footer">
