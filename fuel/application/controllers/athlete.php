@@ -137,8 +137,11 @@ class Athlete extends CI_Controller{
 		if ($this->session->userdata('id')){
 			$this->load->model('events_model','events');	
 			// get the athlete from the database
-			$id      = $this->session->userdata('id');
-			$vars    = $this->_getCoreData($id);
+			$id   = $this->session->userdata('id');
+			$vars = $this->_getCoreData($id);
+			if (!isset($vars['member'])){
+				redirect('signin/login');
+			}
 			$vars['id'] = $id;
 			$vars['friends'] = $this->members->getFriends($id);
 			$vars['sportsForThisMonth']  = $this->events->getPublicEventsForMonthBySport();
