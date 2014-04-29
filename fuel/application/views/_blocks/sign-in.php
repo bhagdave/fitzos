@@ -4,7 +4,7 @@
 		<form action="../signin/start" method="post">
   			<label class="select-label">
   				<select name="choice" id="trainer" value="trainer">
-  					<option>Athlete</option>
+  					<option value="athlete">Athlete</option>
 <!--   					<option>Trainer</option> -->
   				</select>
   			</label>
