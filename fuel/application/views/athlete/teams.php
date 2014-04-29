@@ -44,7 +44,7 @@ $existingTeam = array();
 			} else {
 				if (isset($owned) && count($owned) > 0){
 					foreach($owned as $team){
-						echo("<div class='athleteTeams' style='border:1px solid;border-radius:10px;'>");
+						echo("<div class='athleteTeams'>");
 						$existingTeam[] = $team->name;
 						echo('<a href="/teams/manage/' . $team->id .'"><p>' . $team->name. '</p></a>');
 						echo("</div>");
