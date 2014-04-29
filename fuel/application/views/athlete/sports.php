@@ -52,7 +52,6 @@ $existingSports = array();
 				</div>
 				</fieldset>
 			</form>
-			<a href="#"  class="btn js-addASport">Add a new sport!</a>
 		</div>
 	</div>
 </div>
