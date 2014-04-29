@@ -15,6 +15,7 @@ class Events_model extends Base_module_model {
 		$sql = "(`team_membership`.`member_id` = $member OR `team`.`owner` = $member OR `event`.`member_id` = $member)";
 		$this->db->where($sql);
     	$this->db->where('event.date >=' ,date('Y-m-d'));
+    	$this->db->order_by('event.date','desc');
 		$result = $this->db->get('event');
 //		echo($this->db->last_query());
 		$data = $result->result();

@@ -137,8 +137,11 @@ class Athlete extends CI_Controller{
 		if ($this->session->userdata('id')){
 			$this->load->model('events_model','events');	
 			// get the athlete from the database
-			$id      = $this->session->userdata('id');
-			$vars    = $this->_getCoreData($id);
+			$id   = $this->session->userdata('id');
+			$vars = $this->_getCoreData($id);
+			if (!isset($vars['member'])){
+				redirect('signin/login');
+			}
 			$vars['id'] = $id;
 			$vars['friends'] = $this->members->getFriends($id);
 			$vars['sportsForThisMonth']  = $this->events->getPublicEventsForMonthBySport();
@@ -171,7 +174,7 @@ class Athlete extends CI_Controller{
 			$this->athletes->saveProfile($data);
 			$this->session->set_flashdata('message', 'Profile Saved');
 			// deal with the image.
-			if (isset($_FILES['file']['name'])){
+			if (isset($_FILES['file']['name']) && !empty($_FILES['file']['name'])){
 				if ($_FILES["file"]["error"] > 0){	
 					$this->session->set_flashdata('message', 'Unable to save image');
 				} else {
@@ -186,11 +189,7 @@ class Athlete extends CI_Controller{
 					$this->members->saveMember(array('id'=>$data['id'],'image'=>$path));
 				}
 			}			
-			// get the athlete from the database
-			$athlete = $this->athletes->loadProfile($data['id']);
-			$member  = $this->members->getMember($data['id']);
-			$vars = array('athlete'=>$athlete,'member'=>$member);
-			$this->fuel->pages->render('athlete/welcome',$vars);
+			redirect('athlete/view/'. $data['id']);
 		} else {
 			if ($this->session->userdata('id')){
 				// get the athlete from the database
