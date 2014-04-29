@@ -95,7 +95,7 @@ class Members_model extends Fitzos_model {
 			'name'=>$data['name'],
 			'member_id'=>$member
 		);
-		$this->db->insert($data['choice'],$insert);
+		$this->db->insert(strtolower($data['choice']),$insert);
 		return $member;
 	}
 	function checkIfMemberExists($data){
