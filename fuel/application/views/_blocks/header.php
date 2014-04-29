@@ -29,8 +29,9 @@
 				<img src="http://<?=$_SERVER['SERVER_NAME'] ?>/assets/images/logo.png" alt="www.reach-your-peak.com" name="www.reach-your-peak.com" width="129" height="89" id="FitZos" class="logo"/>
 			</a>
 			<?php
-				if (isset($this->session)){
-					echo("<div class='alert alert-danger'>".$this->session->flashdata('message')."</div>");
+				$mesg = $this->session->flashdata('message');
+				if (isset($mesg) && !empty($mesg)){
+					echo("<div class='alert alert-danger'>".$mesg."</div>");
 				} 
 			?>
 		</header>
