@@ -1,5 +1,10 @@
 // events
 
+.event {
+	border: 1px solid #ded8d1;
+	border-radius: 10px;
+	clear:both;
+}
 .event__image {
 		display: block;
 		float: left;							
@@ -8,4 +13,18 @@
 
 .event__image img {
 		width: 100%;
+}
+.event__content{
+	display:block;
+	float:left;
+	clear:both;
+}
+.event__date{
+	display:block;
+	float:left;
+	clear:both;
+}
+.event__title{
+	display:block;
+	clear:both;
 }
