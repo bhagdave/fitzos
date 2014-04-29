@@ -64,9 +64,10 @@
 
 	<?php
 	} else {
+		$this->load->view('athlete/external');		
 		echo("<a href='/athlete/beFriend/".$member->id."'>Friend Request</a>");
 	}
-?>
+	?>
 <?php 
 	$this->load->view('athlete/inviteFriend');
 ?>
