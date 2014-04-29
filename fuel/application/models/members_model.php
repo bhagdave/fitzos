@@ -127,7 +127,6 @@ class Members_model extends Fitzos_model {
 		$result = $this->db->get('member');
 		$data   = $result->result();
 		if (isset($data[0])){
-			$this->setCache('member_'. $id,$data[0]);
 			return $data[0];
 		} else {
 			return null;
