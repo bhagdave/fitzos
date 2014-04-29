@@ -28,6 +28,7 @@ class Search_model extends Base_module_model {
 		);
 	}
 	function getSearchResults($criteria,$id){
+		$names = $sports = $locations = $combined = null;
 		if (!empty($criteria['location'])){
 			$locations = $this->getMembersWithLocation($criteria['location'], $id);
 		} else {
