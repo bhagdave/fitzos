@@ -26,7 +26,7 @@
 <body class='<?=is_home() ? 'homeBG' :'' ; ?>'>
 		<header class="header">
 			<a href="http://<?=$_SERVER['SERVER_NAME'] ?>">
-				<img src="http://<?=$_SERVER['SERVER_NAME'] ?>/assets/images/logo.png" alt="www.reach-your-peak.com" name="www.reach-your-peak.com" width="89" height="49" id="FitZos" class="logo"/>
+				<img src="http://<?=$_SERVER['SERVER_NAME'] ?>/assets/images/logo.png" alt="www.reach-your-peak.com" name="www.reach-your-peak.com" width="129" height="89" id="FitZos" class="logo"/>
 			</a>
 			<?php
 				if (isset($this->session)){

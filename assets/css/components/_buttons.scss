@@ -8,3 +8,8 @@
 .btn {
 	@include button-style;
 }
+
+.teamCreate .btn{
+	float:left;
+	clear:both;
+}

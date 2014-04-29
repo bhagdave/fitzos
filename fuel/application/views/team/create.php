@@ -1,9 +1,8 @@
-<div class="col-md-6">
 <div class="row">
 	<div class="span2">&nbsp;</div>
 	<div class="span8">
 		<h2>Create new team</h2>
-		<form action="/teams/create/<?=$member->id ?>" method="post">
+		<form class="teamCreate" action="/teams/create/<?=$member->id ?>" method="post">
 			<input type="hidden" name="owner" value="<?=$member->id ?>" />
 			<fieldset>
 				<input type="text" required name="name" value="" placeholder="Name" /><br>
@@ -18,15 +17,18 @@
 						?>
 					</select>
 				</div>	
-				<label>Active</label>
-				<input type="radio" name="active" value="yes">Yes
-				<input type="radio" name="active" value="no">No<br>
-				<label>Public?</label>
-				<input type="radio" name="public" value="yes">Yes
-				<input type="radio" name="public" value="no">No
+				<div class="ui-widget">
+					<label>Active</label>
+					<input type="radio" name="active" value="yes">Yes
+					<input type="radio" name="active" value="no">No
+				</div>
+				<div class="ui-widget">
+					<label>Public?</label>
+					<input type="radio" name="public" value="yes">Yes
+					<input type="radio" name="public" value="no">No
+				</div>
 				<button class="btn btn-success">Submit</button>	
 			</fieldset>
 		</form>
 	</div>
-</div>
 </div>
