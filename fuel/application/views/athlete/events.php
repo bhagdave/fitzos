@@ -2,10 +2,10 @@
 			if (isset($events) && count($events) > 0){
 				foreach($events as $post){
 					echo("<div class='event'>");
+					echo("<h4 class='event__title'><a href='/event/view/".$post->id."'>".$post->name."</a></h4>");				
 					if (isset($post->image)){
 						echo("<a class='event__image' href='/event/view/" . $post->id . "'><img src='/".$post->image."' alt='".$post->name."' title='".$post->name."'></a>");
 					}	
-					echo("<h4><a href='/event/view/".$post->id."'>".$post->name."</a></h4>");				
 					if (!empty($post->content)){
 						echo('<div class="event__content">' . $post->content . '</div>');
 					}
