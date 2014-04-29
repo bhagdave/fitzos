@@ -5,7 +5,7 @@
   			<label class="select-label">
   				<select name="choice" id="trainer" value="trainer">
   					<option>Athlete</option>
-  					<option>Trainer</option>
+<!--   					<option>Trainer</option> -->
   				</select>
   			</label>
 			<input id="name" class="form-control" data-bind="value: name" name="name" type="text" placeholder="Name" autofocus required>   
@@ -32,12 +32,6 @@
 			}
 			if (showButton){
 				showButton = (self.password() != undefined); 
-			}
-			if (showButton){
-				showButton = (self.confirm() != undefined); 
-			}
-			if (showButton){
-				showButton = self.confirm() === self.password(); 
 			}
 			return showButton;	
 		},this);

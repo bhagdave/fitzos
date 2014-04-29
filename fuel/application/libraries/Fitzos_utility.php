@@ -16,14 +16,6 @@ class Fitzos_utility{
 		}
 		if (!isset($data['password'])){
 			$mesg[] = "No password entered!";
-		} else {
-			if (!isset($data['confirm_password'])){
-				$mesg[] = "No password confirmation entered!";
-			} else {
-				if ($data['confirm_password'] != $data['password']){
-					$mesg[] = "Password confirmation does not match!";
-				}
-			}
 		}
 		return $mesg;
 	}
