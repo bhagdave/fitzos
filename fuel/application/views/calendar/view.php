@@ -16,7 +16,9 @@
 			$eventDate = new DateTime($event->date);
 		}
 		echo("<td>");
-		isset($eventDate) ? $eventDate : '';
+		if (isset($eventDate)){
+			echo $eventDate;
+		}
 		echo("</td>");
 		echo("<td><a href='/event/view/$event->id'>$event->name</a></td>");
 		echo("<td>$event->sport</td>");
