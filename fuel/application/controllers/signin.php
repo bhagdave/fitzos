@@ -10,14 +10,16 @@ class Signin extends CI_Controller{
 	
 	function start(){
 		$mesg = $this->Futility->checkSignin($this->input->post());
+		var_dump($mesg);
 		if (count($mesg)> 0){
 			// show error
+			echo("Error");die();
 			$vars = array('messages'=>$mesg, 'request'=>$this->input->post());
 			$this->fuel->pages->render('signin/error',$vars);
 		} else {
 			// Put the stuff into the database
 			if ($this->members->checkIfMemberExists($this->input->post())){
-				$mesg[] = 'That username is already taken.';
+				$this->session->set_flashdata('message','That email address already taken.');
 				redirect('/');
 			} else {
 				$id = $this->members->createMember($this->input->post());
