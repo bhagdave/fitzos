@@ -123,7 +123,14 @@ class Members_model extends Fitzos_model {
 		$data = array('active'=>'yes');
 		$this->db->where('salt',$salt);
 		$this->db->update('member',$data);
-		return ($this->db->affected_rows() > 0);	
+		$this->db->where('salt',$salt);
+		$result = $this->db->get('member');
+		$data   = $result->result();
+		if (isset($data[0])){
+			return $data[0];
+		} else {
+			return null;
+		}
 	}
 	function getSports($id, $useCache = true){
 		if ($useCache){

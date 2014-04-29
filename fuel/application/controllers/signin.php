@@ -60,7 +60,9 @@ class Signin extends CI_Controller{
 	function activate($salt){
 		$activated = $this->members->activate($salt);
 		if ($activated){
-			$this->fuel->pages->render("signin/activationSuccess" );
+			$type = $this->members->getMemberType($activated->id);
+			$this->session->set_userdata(array('user'=>$activated->salt,'type'=>$type, 'id'=>$activated->id));
+			$this->fuel->pages->render("signin/activationSuccess",array('member'=>$activated) );
 		} else {
 			$this->fuel->pages->render("signin/activationError" );
 		}
