@@ -32,7 +32,7 @@
 				if (isset($this->session)){
 					$mesg = $this->session->flashdata('message');
 					if (isset($mesg) && !empty($mesg)){
-						echo("<div class='alert alert-danger'>".$mesg."</div>");
+						echo("<div class='header-mesg alert alert-danger'>".$mesg."</div>");
 					}
 				}
 			?>
