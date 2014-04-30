@@ -1,1 +1,332 @@
-.header{height:50px}.header .logo{margin:20px}.footer{clear:both;color:#eee;padding:1em 0;max-width:800px;margin:0 auto}.footer .btn,.footer p{margin:10px}.footer .signin{float:right;padding-top:10px;text-align:center;width:100px}.submit-btn{width:100%;color:#fff}.btn{background:#f8f8f8;border-radius:4px;-webkit-box-shadow:0 3px 0 #ccc,0 -1px #fff inset;box-shadow:0 3px 0 #ccc,0 -1px #fff inset;-webkit-appearance:none;-moz-appearance:none;appearance:none;color:#888}.teamCreate .btn{float:left;clear:both}.athlete-profile .athlete-profile__goal{height:6.5em}.athlete-profile .athlete-profile__goal .goal-indicator{float:right;height:35px;width:50%;background:#f8f8f8;border-radius:4px;-webkit-box-shadow:0 3px 0 #ccc,0 -1px #fff inset;box-shadow:0 3px 0 #ccc,0 -1px #fff inset;-webkit-appearance:none;-moz-appearance:none;appearance:none;color:#888}.athlete-profile .athlete-profile__calendar{height:6.5em}.athlete-profile .athlete-profile__calendar .calendar{float:right;height:35px;width:50%;background:#f8f8f8;border-radius:4px;-webkit-box-shadow:0 3px 0 #ccc,0 -1px #fff inset;box-shadow:0 3px 0 #ccc,0 -1px #fff inset;-webkit-appearance:none;-moz-appearance:none;appearance:none;color:#888}.athlete-profile .athlete-profile__actions{height:6em;float:left;width:65%}.athlete-profile .athlete-profile__actions .fa{margin-right:33%}.athlete-profile .athlete-profile__actions .fa:last-child{margin-right:0}.athlete-profile .athlete-profile__img{float:left;margin-right:5%;width:30%}.athlete-profile .athlete-profile__img img{height:auto;width:100%}.athlete-profile .athlete-profile__sports{clear:left;float:left;width:50%}.athlete-profile .athlete-profile__events{float:right;width:50%}.event__image{display:block;float:left;width:20%}.event__image img{width:100%}.event{border:1px solid #ded8d1;border-radius:10px;clear:both}.event__image{display:block;float:left;width:20%}.event__image img{width:100%}.event__content{display:block;float:left;clear:both}.event__date{display:block;float:left;clear:both}.event__title{display:block;clear:both}.homeBG{background:url("../../../assets/images/jumpoff.jpg") no-repeat;-webkit-background-size:100%;background-size:100%}.signin-splash h1{margin-top:0;padding:1em 0 0 0;font-size:3em;text-align:center}.signin-splash h4{text-align:center;padding-bottom:1em;font-weight:300}.signin-splash form{width:60%;margin:0 20%}.signin-splash form select,.signin-splash form input,.signin-splash form .submit-btn{margin:1em 0}.signin-splash form select{width:100%;height:30px;padding:3px;margin:0;text-indent:10px;background:#f8f8f8;border-radius:4px;-webkit-box-shadow:0 3px 0 #ccc,0 -1px #fff inset;box-shadow:0 3px 0 #ccc,0 -1px #fff inset;-webkit-appearance:none;-moz-appearance:none;appearance:none;color:#888;color:#888;border:0;outline:0;display:inline-block;cursor:pointer}.signin-splash form .select-label{position:relative;width:100%}.signin-splash form .select-label:after{content:'<>';font:11px monospace;color:#aaa;-webkit-transform:rotate(90deg);-ms-transform:rotate(90deg);transform:rotate(90deg);right:8px;top:8px;padding:0 0 2px;border-bottom:1px solid #ddd;position:absolute;pointer-events:none}.signin-splash form .select-label:before{content:'';right:6px;top:0;width:20px;height:20px;background:#f8f8f8;position:absolute;pointer-events:none;display:block}*,*:before,*:after{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}body h1,body h2,body h3,body h4,body h5,body h6,body p{font-family:'Lato',sans-serif}body h1{font-weight:900}body p{font-weight:300}ul li{color:#ff2518}.main{max-width:800px;margin:0 auto}.custom-combobox{display:inline-block;position:relative}.custom-combobox-toggle{margin-left:-1px;padding:0;position:absolute;top:0;bottom:0}.custom-combobox-input{margin:0;padding:.3em}.athleteSports{border:2px}#leaveTeam{padding:10px}#inviteDialog{display:none}#js-Invitations label{color:black}.js-Notifications .athleteNotes{border:1px solid black;border-radius:9px}.alreadyInvited h2,label{color:black}.searchResult{float:left}.searchResult a img{border:1px solid black;background-color:#6495ed;max-width:100px;max-height:100px}
+/* Mixins */
+/* Header styles */
+.header {
+  height: 50px;
+}
+.header .logo {
+  margin: 20px;
+}
+
+/* Footer */
+.footer {
+  clear: both;
+  color: #eee;
+  padding: 1em 0;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.footer .btn,
+.footer p {
+  margin: 10px;
+}
+.footer .signin {
+  float: right;
+  padding-top: 10px;
+  text-align: center;
+  width: 100px;
+}
+
+/* Buttons */
+.submit-btn {
+  width: 100%;
+  color: #fff;
+}
+
+.btn {
+  background: #f8f8f8;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;
+  -moz-box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;
+  box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  color: #888;
+}
+
+.teamCreate .btn {
+  float: left;
+  clear: both;
+}
+
+.athlete-profile .athlete-profile__goal {
+  height: 6.5em;
+}
+.athlete-profile .athlete-profile__goal .goal-indicator {
+  float: right;
+  height: 35px;
+  width: 50%;
+  background: #f8f8f8;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;
+  -moz-box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;
+  box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  color: #888;
+}
+.athlete-profile .athlete-profile__calendar {
+  height: 6.5em;
+}
+.athlete-profile .athlete-profile__calendar .calendar {
+  float: right;
+  height: 35px;
+  width: 50%;
+  background: #f8f8f8;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;
+  -moz-box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;
+  box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  color: #888;
+}
+.athlete-profile .athlete-profile__actions {
+  height: 6em;
+  float: left;
+  width: 65%;
+}
+.athlete-profile .athlete-profile__actions .fa {
+  margin-right: 33%;
+}
+.athlete-profile .athlete-profile__actions .fa:last-child {
+  margin-right: 0;
+}
+.athlete-profile .athlete-profile__img {
+  float: left;
+  margin-right: 5%;
+  width: 30%;
+}
+.athlete-profile .athlete-profile__img img {
+  height: auto;
+  width: 100%;
+}
+.athlete-profile .athlete-profile__sports {
+  clear: left;
+  float: left;
+  width: 50%;
+}
+.athlete-profile .athlete-profile__events {
+  float: right;
+  width: 50%;
+}
+
+.event__image {
+  display: block;
+  float: left;
+  width: 20%;
+}
+
+.event__image img {
+  width: 100%;
+}
+
+.event {
+  border: 1px solid #ded8d1;
+  border-radius: 10px;
+  clear: both;
+}
+
+.event__image {
+  display: block;
+  float: left;
+  width: 20%;
+}
+
+.event__image img {
+  width: 100%;
+}
+
+.event__content {
+  display: block;
+  float: left;
+  clear: both;
+}
+
+.event__date {
+  display: block;
+  float: left;
+  clear: both;
+}
+
+.event__title {
+  display: block;
+  clear: both;
+}
+
+/* Home-page */
+.homeBG {
+  background: url("../../../assets/images/jumpoff.jpg") no-repeat;
+  background-size: 100%;
+}
+
+.signin-splash h1 {
+  margin-top: 0;
+  padding: 1em 0 0 0;
+  font-size: 3em;
+  text-align: center;
+}
+.signin-splash h4 {
+  text-align: center;
+  padding-bottom: 1em;
+  font-weight: 300;
+}
+.signin-splash form {
+  width: 60%;
+  margin: 0 20%;
+}
+.signin-splash form select,
+.signin-splash form input,
+.signin-splash form .submit-btn {
+  margin: 1em 0;
+}
+.signin-splash form select {
+  width: 100%;
+  height: 30px;
+  padding: 3px;
+  margin: 0;
+  text-indent: 10px;
+  background: #f8f8f8;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;
+  -moz-box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;
+  box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  color: #888;
+  color: #888;
+  border: none;
+  outline: none;
+  display: inline-block;
+  cursor: pointer;
+}
+.signin-splash form .select-label {
+  position: relative;
+  width: 100%;
+}
+.signin-splash form .select-label:after {
+  content: '<>';
+  font: 11px monospace;
+  color: #aaa;
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  transform: rotate(90deg);
+  right: 8px;
+  top: 8px;
+  padding: 0 0 2px;
+  border-bottom: 1px solid #ddd;
+  position: absolute;
+  pointer-events: none;
+}
+.signin-splash form .select-label:before {
+  content: '';
+  right: 6px;
+  top: 0px;
+  width: 20px;
+  height: 20px;
+  background: #f8f8f8;
+  position: absolute;
+  pointer-events: none;
+  display: block;
+}
+
+*,
+*:before,
+*:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body h1,
+body h2,
+body h3,
+body h4,
+body h5,
+body h6,
+body p {
+  font-family: 'Lato', sans-serif;
+}
+
+body h1 {
+  font-weight: 900;
+}
+
+body p {
+  font-weight: 300;
+}
+
+ul li {
+  color: #ff2518;
+}
+
+.main {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.custom-combobox {
+  display: inline-block;
+  position: relative;
+}
+
+.custom-combobox-toggle {
+  margin-left: -1px;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+.custom-combobox-input {
+  margin: 0;
+  padding: .3em;
+}
+
+.athleteSports {
+  border: 2px;
+}
+
+#leaveTeam {
+  padding: 10px;
+}
+
+#inviteDialog {
+  display: none;
+}
+
+#js-Invitations label {
+  color: black;
+}
+
+.js-Notifications .athleteNotes {
+  border: 1px solid black;
+  border-radius: 9px;
+}
+
+.alreadyInvited h2, label {
+  color: black;
+}
+
+.searchResult {
+  float: left;
+}
+
+.searchResult a img {
+  border: 1px solid black;
+  background-color: #6495ed;
+  max-width: 100px;
+  max-height: 100px;
+}
