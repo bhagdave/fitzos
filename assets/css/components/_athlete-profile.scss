@@ -1,4 +1,14 @@
 // athlete profile
+		.athlete-profile__img {
+				float: left;
+				margin-right: 5%;
+				width: 30%;
+		
+				img {
+						height: auto;
+						width: 100%;
+				}
+		}
 
 .athlete-profile {
 	
@@ -35,17 +45,6 @@
 
 				.fa:last-child {
 						margin-right: 0;
-				}
-		}
-
-		.athlete-profile__img {
-				float: left;
-				margin-right: 5%;
-				width: 30%;
-		
-				img {
-						height: auto;
-						width: 100%;
 				}
 		}
 
