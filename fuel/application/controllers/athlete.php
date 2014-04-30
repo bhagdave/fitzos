@@ -298,8 +298,6 @@ class Athlete extends CI_Controller{
 			$teams   = $this->teams->getPublicTeams($id);
 			$owned   = $this->teams->getOwnedTeams($id);
 			$member  = $this->teams->getTeamsIn($id);
-			// let us get all of the sports man....
-			// Lets us get the sports attached to the member
 			$athlete_sports = $this->members->getSports($id, false);
 			if (isset($athlete)){
 				$vars['athlete'] = $athlete;
