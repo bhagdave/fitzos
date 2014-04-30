@@ -51,6 +51,16 @@
   clear: both;
 }
 
+.athlete-profile__img {
+  float: left;
+  margin-right: 5%;
+  width: 30%;
+}
+.athlete-profile__img img {
+  height: auto;
+  width: 100%;
+}
+
 .athlete-profile .athlete-profile__goal {
   height: 6.5em;
 }
@@ -99,15 +109,6 @@
 }
 .athlete-profile .athlete-profile__actions .fa:last-child {
   margin-right: 0;
-}
-.athlete-profile .athlete-profile__img {
-  float: left;
-  margin-right: 5%;
-  width: 30%;
-}
-.athlete-profile .athlete-profile__img img {
-  height: auto;
-  width: 100%;
 }
 .athlete-profile .athlete-profile__sports {
   clear: left;
