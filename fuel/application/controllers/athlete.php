@@ -87,12 +87,12 @@ class Athlete extends CI_Controller{
 				// get the relevant member
 				$member = $this->members->getMember($request->member_id_requested);
 				// display page with ability to accept/reject
-				$vars = array('request'=>$request,'member'=>$member);
 			} else {
 				$request = null;
 				$member = null;
 				$this->session->set_flashdata('message','The friend request you attempted to access was invalid!');
 			}
+			$vars = array('request'=>$request,'member'=>$member);
 			$this->fuel->pages->render('athlete/friendRequest',$vars);
 		} else {
 			redirect('signin/login');
@@ -298,8 +298,6 @@ class Athlete extends CI_Controller{
 			$teams   = $this->teams->getPublicTeams($id);
 			$owned   = $this->teams->getOwnedTeams($id);
 			$member  = $this->teams->getTeamsIn($id);
-			// let us get all of the sports man....
-			// Lets us get the sports attached to the member
 			$athlete_sports = $this->members->getSports($id, false);
 			if (isset($athlete)){
 				$vars['athlete'] = $athlete;

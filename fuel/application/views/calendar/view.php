@@ -17,7 +17,7 @@
 		}
 		echo("<td>");
 		if (isset($eventDate)){
-			echo $eventDate;
+			echo("<p>".$eventDate->format('m/d/Y'). "</p>");
 		}
 		echo("</td>");
 		echo("<td><a href='/event/view/$event->id'>$event->name</a></td>");
