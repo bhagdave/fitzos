@@ -16,6 +16,7 @@ class Events_model extends Base_module_model {
 		$this->db->where($sql);
     	$this->db->where('event.date >=' ,date('Y-m-d'));
     	$this->db->order_by('event.date','desc');
+    	$this->db->limit(10);
 		$result = $this->db->get('event');
 //		echo($this->db->last_query());
 		$data = $result->result();
