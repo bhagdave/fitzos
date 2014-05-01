@@ -189,7 +189,7 @@ class Athlete extends CI_Controller{
 					$this->members->saveMember(array('id'=>$data['id'],'image'=>$path));
 				}
 			}			
-			redirect('athlete/view/'. $data['id']);
+			redirect('athlete/index');
 		} else {
 			if ($this->session->userdata('id')){
 				// get the athlete from the database

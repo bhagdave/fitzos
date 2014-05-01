@@ -108,6 +108,7 @@ class Notifications_model extends Base_module_model {
 		$this->db->where("to_key",$id);
 		$this->db->where("read",0);
 		$this->db->order_by('date_added','desc');
+    	$this->db->limit(10);
 		$result = $this->db->get("notifications");
 		return $result->result();
 	}
