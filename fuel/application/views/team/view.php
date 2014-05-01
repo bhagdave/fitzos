@@ -34,9 +34,15 @@
 			</div>
 		</div>
 	</div>
+<?php 
+	if (isset($isMember) && $isMember){
+	?>
 	<div class="row">
 		<div class="col-md-3">
 			<h4>Team Membership</h4>
 			<?php echo("<a href='/teams/leave/{$team->id}/{$member->id}'><button class='btn'>Leave</button></a>"); ?>	
 		</div>
 	</div>
+	<?php 
+	}
+?>
