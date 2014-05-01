@@ -15,7 +15,7 @@ class Events_model extends Base_module_model {
 		$sql = "(`team_membership`.`member_id` = $member OR `team`.`owner` = $member OR `event`.`member_id` = $member)";
 		$this->db->where($sql);
     	$this->db->where('event.date >=' ,date('Y-m-d'));
-    	$this->db->order_by('event.date','desc');
+    	$this->db->order_by('event.date','asc');
     	$this->db->limit(10);
 		$result = $this->db->get('event');
 //		echo($this->db->last_query());
@@ -131,6 +131,7 @@ class Events_model extends Base_module_model {
 			$event = $data[0];
 		} else {
 			$event = null;
+			return null;
 		}
 		$members[] = $event->member_id;
 		$this->db->select('member_id');
@@ -147,11 +148,26 @@ class Events_model extends Base_module_model {
 		foreach($data as $member){
 			$members[] = $member->member_id;
 		}		
+		$invites = array();
+		$this->db->select('member_id');
 		$this->db->where('team_id',$team);
 		$this->db->where('status','yes');
 		$this->db->where_not_in('member_id',$members);
 		$this->db->join('member','member.id = member_id');
 		$result = $this->db->get('team_membership');
+    	$data = $result->result();
+		foreach($data as $member){
+			$invites[] = $member->member_id;
+		}		
+		$this->db->select('owner');
+		$this->db->where('id',$team);
+		$result = $this->db->get('team');
+		$data = $result->result();
+		$invites[] = $data[0]->owner;
+		
+		$this->db->where_in('id',$invites);
+		$this->db->where_not_in('id',Array($event->member_id));
+		$result = $this->db->get('member');
 		return $result->result();
 	}
 	function sendInvite($member,$user,$eventId){

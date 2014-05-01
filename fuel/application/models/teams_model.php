@@ -180,6 +180,7 @@ class Teams_model extends Base_module_model {
 		if (isset($team) && isset($user)){
 			$this->db->where('team_id',$team);
 			$this->db->where('member_id',$user);
+			$this->db->where('status','yes');
 			$member = $this->db->count_all_results('team_membership') > 0;
 			return $member OR $this->isOwner($team,$user);
 		}
