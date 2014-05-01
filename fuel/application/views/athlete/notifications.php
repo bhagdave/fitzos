@@ -7,7 +7,7 @@ if (isset($notes) && !empty($notes)){
 		echo("</div>");
 	}
 } else {
-	echo("<h2>You have no outstanding notifications</h2>");
+	echo("<p>You have no outstanding notifications</p>");
 }
 ?>
 </div>
