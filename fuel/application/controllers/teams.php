@@ -94,11 +94,14 @@ class Teams extends CI_Controller{
 	}
 	function getWall($team){
 		$this->load->model('teams_model','teams');
+		$this->load->model('members_model','members');
 		if ($this->session->userdata('id')){
-	 		$wall  = $this->teams->getTeamWall($team);
-	 		$owner = $this->teams->isOwner($team,$this->session->userdata('id'));
-			$data  = $this->teams->getTeam($team);
-	 		$vars  = array('wall'=>$wall,'owner'=>$owner,'layout'=>'none','team'=>$data);
+			$id     = $this->session->userdata('id');
+			$wall   = $this->teams->getTeamWall($team);
+	 		$owner  = $this->teams->isOwner($team,$this->session->userdata('id'));
+			$data   = $this->teams->getTeam($team);
+			$member = $this->members->getMember($id);
+	 		$vars   = array('wall'=>$wall,'owner'=>$owner,'layout'=>'none','team'=>$data,'member'=>$member);
 			$this->fuel->pages->render('team/teamWall',$vars);			
 		} else {
 			redirect('signin/login');
