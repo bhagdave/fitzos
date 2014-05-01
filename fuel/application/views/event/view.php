@@ -61,9 +61,15 @@
 	</div>
 </div>
 <div class="row actions">
+	<?php 
+	if (isset($owner) && $owner){
+	?>
 	<div class="col-md-2">
 		<button class="btn btn-primary js-Invite" onclick="showInviteForm();">Invite Members</button>
 	</div>
+	<?php 
+	}
+	?>
 	<div class="col-md-2">
 		<?php 
 		if ($edit){
@@ -79,9 +85,6 @@
 		?>
 	</div>
 </div>
-<?php 
-if (isset($owner) && $owner){
-?>
 <div id="inviteDialog" title="Invite Members" style="display:none;">
 <?php $this->load->view('event/invitation');?>
 </div>
