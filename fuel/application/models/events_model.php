@@ -42,6 +42,7 @@ class Events_model extends Base_module_model {
     	$this->db->join('team','team.id = event.team_id');
     	$this->db->join('sport','sport.id = team.sport_id');
     	$this->db->order_by('event.date');
+    	$this->db->limit(10);
     	$result = $this->db->get('event');
     	return $result->result();
     }
