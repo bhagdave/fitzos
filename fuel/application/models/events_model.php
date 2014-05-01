@@ -46,7 +46,7 @@ class Events_model extends Base_module_model {
     }
     function getPublicEventsForMonthBySport(){
     	$this->db->select('count(*) as count,sport.name');
-    	$this->db->where('event.date BETWEEN NOW() AND NOW() + INTERVAL 30 DAY');
+    	$this->db->where('event.date BETWEEN NOW() - INTERVAL 1 DAY AND NOW() + INTERVAL 30 DAY');
     	$this->db->where('event.public','PUBLIC');
     	$this->db->where('published','yes');
     	$this->db->where('team.public','yes');
