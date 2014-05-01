@@ -3,7 +3,7 @@
 <?php 
 	if (isset($public)){
 		foreach($public as $post){
-			echo("<div class='event' style='border:1px solid;border-radius:10px;'>");
+			echo("<div class='event'>");
  			echo("<h4><a href='/event/view/".$post->id."'>".$post->name." ".$post->sport."</a></h4>");
 			if (!empty($post->content)){
 				echo($post->content. "<br>");
