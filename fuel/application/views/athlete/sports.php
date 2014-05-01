@@ -17,11 +17,7 @@ $existingSports = array();
 					echo("<a href='/athlete/stats/{$sport->id}'><h4>$sport->sport</h4></a>");
 					if (isset($sport->from_date)){
 						$date = new DateTime($sport->from_date);
-						echo("From " . $date->format("m/d/Y"));
-					}
-					if (isset($sport->to_date)){
-						$date = new DateTime($sport->to_date);
-						echo(" Until " . $date->format("m/d/Y"));
+						echo("Started my ascent on " . $date->format("m/d/Y"));
 					}
 					$existingSports[] = $sport->sport;
 					echo("</div>");
@@ -46,8 +42,7 @@ $existingSports = array();
 							} 
 						?>
 					</select>
-					<input placeholder="From Date" type="text" class="datepicker"  data-date-format="mm/dd/yyyy"  name="from_date" />
-					<input placeholder="To date" type="text" class="datepicker"  data-date-format="mm/dd/yyyy"  name="to_date" />	
+					<input placeholder="Started my ascent on" type="text" class="datepicker"  data-date-format="mm/dd/yyyy"  name="from_date" />
 					<button class="btn btn-success">Submit</button>	
 				</div>
 				</fieldset>
