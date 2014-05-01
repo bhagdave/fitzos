@@ -28,11 +28,7 @@
 					echo("<h5>$sport->sport</h5>");
 					if (isset($sport->from_date)){
 						$date = new DateTime($sport->from_date);
-						echo("From: ". $date->format('m/d/Y'));
-					}
-					if (isset($sport->to_date)){
-						$date = new DateTime($sport->to_date);
-						echo(" Until " . $date->format('m/d/Y'));
+						echo("Started my ascent on ". $date->format('m/d/Y'));
 					}
 					echo("<br>");
 					$existingSports[] = $sport->sport;
