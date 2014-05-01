@@ -25,6 +25,7 @@ $config['modules']['athletes'] = array();
 $config['modules']['clubs'] = array();
 $config['modules']['events'] = array();
 $config['modules']['exercises'] = array();
+$config['modules']['filter'] = array();
 $config['modules']['forums'] = array();
 $config['modules']['members'] = array();
 $config['modules']['notifications'] = array();
