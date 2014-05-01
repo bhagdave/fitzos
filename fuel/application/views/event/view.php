@@ -79,6 +79,12 @@
 		?>
 	</div>
 </div>
+<?php 
+if (isset($owner) && $owner){
+?>
 <div id="inviteDialog" title="Invite Members" style="display:none;">
 <?php $this->load->view('event/invitation');?>
 </div>
+<?php 
+}
+?>

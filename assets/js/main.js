@@ -300,6 +300,7 @@ function attendEvent(eventId,user){
 		type:'POST'})
 		.done(function( data ) {
 			$(".js-attending").html(data);
+			alert("Attendance added!");
 		}) 
 		.fail(function() {
 			alert( "error" );
