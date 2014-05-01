@@ -55,20 +55,6 @@
 					</div>
 				</div>
 				<div class="control-group">
-					<label class="control-label">Type?</label>
-					<div class="controls">	
-						<label class="radio">Live<input id="yes" name="type" value="LIVE" type="radio" <?= isset($event->type) && $event->type == 'LIVE' ? 'checked' : '' ?>></label>					
-						<label class="radio">Virtual<input id="no" name="type" value="VIRTUAL" type="radio" <?= isset($event->type) && $event->type == 'VIRTUAL' ? 'checked' : '' ?>></label>
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label">Fee?</label>
-					<div class="controls">	
-						<label class="radio">Free<input id="yes" name="sub_type" value="FREE" type="radio" <?= isset($event->type) && $event->type == 'FREE' ? 'checked' : '' ?>></label>					
-						<label class="radio">Paid<input id="no" name="sub_type" value="PAID" type="radio" <?= isset($event->type) && $event->type == 'PAID' ? 'checked' : '' ?>></label>
-					</div>
-				</div>
-				<div class="control-group">
 					<label class="control-label">Event image</label>
 					<?php 
 						if (isset($event->image)){
