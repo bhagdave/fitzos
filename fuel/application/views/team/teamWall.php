@@ -11,12 +11,12 @@
 					if (!empty($post->image)){
 						echo("<img src='" .$post->image."'>");
 					}
+					echo("</div>");
 					if ((isset($owner) && $owner) || $member->id == $post->memberId){
 						echo("<button class='btn js-DeletePost' onclick='deletePost(".$team->id.",".$post->id .")'>Delete</button>");
 					}	
-					echo("</div>");
 				}
 			} else {
-				echo("No wall posts!");
+				echo("<div class='wallPost'>No wall posts!</div>");
 			}
 		?>
