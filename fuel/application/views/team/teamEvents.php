@@ -25,7 +25,7 @@
 					echo("</div>");
 				}
 			} else {
-				echo("No team events");
+				echo("<div class='wallEvent'>No team events</div>");
 			}
 		?>
 	<a href="/teams/newEvent/<?=$team->id ?>" class='btn'>New Event</a>

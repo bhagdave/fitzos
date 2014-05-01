@@ -60,6 +60,7 @@
 		</div>
 	</div>
 </div>
+<hr>
 <div class="row actions">
 	<?php 
 	if (isset($owner) && $owner){
