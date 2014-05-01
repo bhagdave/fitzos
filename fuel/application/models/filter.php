@@ -1,5 +1,5 @@
 <?php
-class Exercises_model extends Fitzos_model {
+class Filter_model extends Fitzos_model {
 
 	function __construct()
 	{
