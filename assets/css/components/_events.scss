@@ -4,7 +4,10 @@
 	border: 1px solid #ded8d1;
 	border-radius: 10px;
 	clear:both;
+	background-color: #ccffcc;
 }
+.event a:link {color: #0000ff; text-decoration: underline; }
+.event a:active {color: #0000ff; text-decoration: underline; }
 .event__image {
 		display: block;
 		float: left;							
