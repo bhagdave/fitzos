@@ -278,10 +278,10 @@ class Teams extends CI_Controller{
 					$this->teams_model->sendInvite($memberId,$user,$teamId);
 				}
 				// get the list of peeps who can now be invited.
-				$friends = $this->teams->getFriendsForTeamOwner($team_id);
-				$invited = $this->teams->getInvitedFriends($team_id);
-				$teamData = $this->teams->getTeam($teamId);
-				$vars = array('layout'=>'none','ajax'=>'yes','friends'=>$friends,'team'=>$teamtData,'invited'=>$invited);
+				$friends = $this->teams_model->getFriendsForTeamOwner($teamId);
+				$invited = $this->teams_model->getInvitedFriendsDetails($teamId);
+				$teamData = $this->teams_model->getTeam($teamId);
+				$vars = array('layout'=>'none','ajax'=>'yes','friends'=>$friends,'team'=>$teamData,'invited'=>$invited);
 				$this->fuel->pages->render('team/invitation',$vars);
 			}
 		} else {
