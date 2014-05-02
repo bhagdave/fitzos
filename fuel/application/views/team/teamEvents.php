@@ -27,9 +27,10 @@
 			} else {
 				echo("<div class='wallEvent'>No team events</div>");
 			}
-			if (isset($isMember) && $isMember){
-		?>
-	<a href="/teams/newEvent/<?=$team->id ?>" class='btn'>New Event</a>
-	<?php 
+			$createEvent = isset($isMember) && $isMember;
+			if ($createEvent || $owner){
+			?>
+				<a href="/teams/newEvent/<?=$team->id ?>" class='btn'>New Event</a>
+			<?php 
 			}
 	?>

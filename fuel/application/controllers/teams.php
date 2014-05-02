@@ -76,10 +76,11 @@ class Teams extends CI_Controller{
 					$team   = $this->teams->getTeam($team_id);
 					$events = $this->teams->getTeamEvents($team_id);
 					$members= $this->teams->getTeamMembers($team_id);
+					$friends= $this->teams->getFriendsForTeamOwner($team_id);
 					$sports = $this->sports->list_items();
 					$linkedSports = $this->teams->getSportsForTeam($team_id);
 					$waiting= $this->teams->getMembersAwaiting($team_id);
-					$vars   = array('linkedSports'=>$linkedSports,'member'=>$member, 'wall'=>$wall,'owner'=>$owner, 'team'=>$team, 'members'=>$members, 'waiting'=>$waiting, 'events'=>$events);
+					$vars   = array('friends'=>$friends,'linkedSports'=>$linkedSports,'member'=>$member, 'wall'=>$wall,'owner'=>$owner, 'team'=>$team, 'members'=>$members, 'waiting'=>$waiting, 'events'=>$events);
 					$this->fuel->pages->render('team/manage',$vars);
 				} else {
 					redirect('signin/login');
@@ -266,5 +267,8 @@ class Teams extends CI_Controller{
 		} else {
 			redirect('signin/login');
 		}
+	}
+	function sendInvites($teamId){
+		
 	}
 }
