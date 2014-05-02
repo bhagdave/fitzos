@@ -90,7 +90,7 @@ class Teams_model extends Base_module_model {
 		$result = $this->db->get('team_membership');
 		return $result->result();
 	}
-	function getFriendsForTeamOwner($team_id){
+	private function getOwnersFriends($team_id){
 		$team = $this->getTeam($team_id);
 		$id = $team->owner;
 		$this->load->model('members_model');
@@ -100,16 +100,39 @@ class Teams_model extends Base_module_model {
 			$friendList[] = $friend->id;
 		}
 		unset($friends);
+		return $friendList;
+	}
+	private function getArrayOfMembers($team_id){
 		$members = $this->getTeamMembers($team_id);
 		$memberList = array();
 		foreach($members as $member){
 			$memberList[] = $member->id;
 		}
 		unset($members);
+		return $memberList;
+	}
+	function getInvitedFriends($team_id,$asArray = false){
+		$this->db->select('member_id');
+		$this->db->where('team_id',$team_id);
+		$result = $this->db->get('team_invites');
+		if ($asArray){
+			return $result->result_array();
+		} else {
+			return $result->result();
+		}
+	}
+	function getFriendsForTeamOwner($team_id){
+		$friendList = $this->getOwnersFriends($team_id);
+		$members = $this->getTeamMembers($team_id);
+		$memberList = $this->getArrayOfMembers($team_id);
+		$invited = $this->getInvitedFriends($team_id,true); 
 		// get a list of members who are not existing members from friend list
 		if (isset($friendList) && count($friendList) > 0){
 			if (isset($memberList) && count($memberList) > 0){
 				$this->db->where_not_in('id',$memberList);
+			}
+			if (isset($invited) && count($invited) > 0){
+				$this->db->where_not_in('id',$invited);
 			}
 			$this->db->where_in('id',$friendList);
 			$result = $this->db->get('member');
