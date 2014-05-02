@@ -197,6 +197,11 @@ $(function() {
     		});    	
     });
     
+    $('.js-InviteFriends').bind('click',function(){
+		$('#inviteDialog').dialog({
+		      modal: true
+		    });
+    });
     $('.js-emailFriend').bind('click',function(){
     	event.preventDefault();
     	$('#inviteFriendDialog').dialog({
@@ -340,6 +345,23 @@ function sendInvites(eventId){
 	data = $('#js-Invitations').serialize();
 	$.ajax({
 		url: "/event/sendInvites/" + eventId,
+		data:data,		
+		type:'POST'
+		})
+		.done(function( data ) {
+			$('#inviteDialog').dialog("close");
+			$("#inviteDialog").html(data);
+		}) 
+		.fail(function() {
+			alert( "error" );
+	});    		
+	console.log('Here with ' + data);
+}
+function sendTeamInvites(teamId){
+	event.preventDefault();
+	data = $('#js-Invitations').serialize();
+	$.ajax({
+		url: "/teams/sendInvites/" + teamId,
 		data:data,		
 		type:'POST'
 		})

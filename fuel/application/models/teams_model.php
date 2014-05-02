@@ -90,6 +90,35 @@ class Teams_model extends Base_module_model {
 		$result = $this->db->get('team_membership');
 		return $result->result();
 	}
+	function getFriendsForTeamOwner($team_id){
+		$team = $this->getTeam($team_id);
+		$id = $team->owner;
+		$this->load->model('members_model');
+		$friends = $this->members_model->getFriends($id);
+		$friendList = array();
+		foreach($friends as $friend){
+			$friendList[] = $friend->id;
+		}
+		unset($friends);
+		$members = $this->getTeamMembers($team_id);
+		$memberList = array();
+		foreach($members as $member){
+			$memberList[] = $member->id;
+		}
+		unset($members);
+		// get a list of members who are not existing members from friend list
+		if (isset($friendList) && count($friendList) > 0){
+			if (isset($memberList) && count($memberList) > 0){
+				$this->db->where_not_in('id',$memberList);
+			}
+			$this->db->where_in('id',$friendList);
+			$result = $this->db->get('member');
+			$data = $result->result();
+			return $data;
+		} else {
+			return null;
+		}
+	}
 	function addWallPost($data){
 		if (is_array($data)){
 			if (!isset($data['date'])){

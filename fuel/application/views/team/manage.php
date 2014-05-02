@@ -16,6 +16,7 @@
 			<div class="js-Members">
 			<?php $this->load->view('team/teamMembers');?>
 			</div>
+			<button class="btn js-InviteFriends">Invite Friends</button>
 		</div>
 		<div class="col-md-4">
 			<div class="js-MemberRequests">
@@ -46,4 +47,7 @@
 			</div>
 		</div>
 		</div>
+</div>
+<div id="inviteDialog" title="Invite Friends" style="display:none;">
+<?php $this->load->view('team/invitation');?>
 </div>
