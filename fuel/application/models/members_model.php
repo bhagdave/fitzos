@@ -163,7 +163,7 @@ class Members_model extends Fitzos_model {
 			} else {
 				unset($data['from_date']);
 			}
-			if (strtotime($data['to_date'])){
+			if (!empty($data['to_date']) && strtotime($data['to_date'])){
 				$data['to_date'] = date('Y-m-d',strtotime($data['to_date']));
 			} else {
 				unset($data['to_date']);
