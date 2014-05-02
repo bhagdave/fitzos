@@ -355,7 +355,6 @@ function sendInvites(eventId){
 		.fail(function() {
 			alert( "error" );
 	});    		
-	console.log('Here with ' + data);
 }
 function sendTeamInvites(teamId){
 	event.preventDefault();
@@ -372,5 +371,4 @@ function sendTeamInvites(teamId){
 		.fail(function() {
 			alert( "error" );
 	});    		
-	console.log('Here with ' + data);
 }
