@@ -269,6 +269,24 @@ class Teams extends CI_Controller{
 		}
 	}
 	function sendInvites($teamId){
-		
+		$this->load->model('teams_model');
+		if ($this->session->userdata('id')){
+			if (isset($_POST)){
+				$user = $this->session->userdata('id');
+				foreach($_POST as $key=>$member){
+					$memberId = str_replace('mmbrd','',$key);
+					$this->teams_model->sendInvite($memberId,$user,$teamId);
+				}
+				// get the list of peeps who can now be invited.
+				$friends = $this->teams->getFriendsForTeamOwner($team_id);
+				$invited = $this->teams->getInvitedFriends($team_id);
+				$teamData = $this->teams->getTeam($teamId);
+				$vars = array('layout'=>'none','ajax'=>'yes','friends'=>$friends,'team'=>$teamtData,'invited'=>$invited);
+				$this->fuel->pages->render('team/invitation',$vars);
+			}
+		} else {
+			redirect('signin/login');
+			die();
+		}
 	}
 }

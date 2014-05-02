@@ -278,6 +278,34 @@ class Teams_model extends Base_module_model {
 		$done = $this->db->affected_rows();
 		return $done;
 	}
+	function sendInvite($memberId,$user,$teamId){
+		$this->load->model('notifications_model');
+		$team = $this->getTeam($teamId);
+		$mesg = "You have been invited to the team <a href='/team/view/".$teamId."'>$team->name</a>";
+		$data = array(
+				"from_table"=>"member",
+				"from_key"=>$user,
+				"to_table"=>"member",
+				"to_key"=>$member,
+				"notification"=>$mesg,
+				"published"=>"yes"
+		);
+		$this->notifications_model->createNotification($data);
+		// do enmails
+		$this->load->model('members_model');
+		$memberData = $this->members_model->getMember($memberId);
+		$sender = $this->members_model->getMember($user);
+		$this->load->library('Fitzos_email',null,'Femail');
+		$this->Femail->sendTeamInvite($memberData,$team,$sender);
+		// record invite
+		$invite = array(
+				'team_id'=>$teamId,
+				'member_id'=>$member,
+				'status'=>'invited',
+				'invite_sent'=>date('Y-m-d')
+		);
+		$this->db->insert('team_invites',$invite);
+	}
 }
  
 class Team_model extends Base_module_record {
