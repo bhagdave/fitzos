@@ -28,6 +28,11 @@ class Fitzos_email {
 		$message = $this->CI->load->view('email/eventInvite',array('member'=>$member,'event'=>$event),TRUE);
 		$this->_sendMail($member->email, 'member_services@reach-your-peak.com', 'Event Invitation', $message);
 	}
+	function sendTeamInvite($member,$team,$sender){
+		$this->CI =& get_instance();
+		$message = $this->CI->load->view('email/teamInvite',array('member'=>$member,'team'=>$team, 'sender'=>$sender),TRUE);
+		$this->_sendMail($member->email, 'member_services@reach-your-peak.com', 'Team Invitation', $message);
+	}
 	function sendMemberJoiningEmail($team,$member,$owner){
 		$this->CI =& get_instance();
 		$message = $this->CI->load->view('email/teamRequest',array('member'=>$member,'team'=>$team),TRUE);

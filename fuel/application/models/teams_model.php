@@ -121,18 +121,30 @@ class Teams_model extends Base_module_model {
 			return $result->result();
 		}
 	}
+	function getInvitedFriendsDetails($team_id){
+		$this->db->where('team_id',$team_id);
+		$this->db->join('member','member_id = member.id');
+		$result = $this->db->get('team_invites');
+		return $result->result();
+	}
 	function getFriendsForTeamOwner($team_id){
 		$friendList = $this->getOwnersFriends($team_id);
 		$members = $this->getTeamMembers($team_id);
 		$memberList = $this->getArrayOfMembers($team_id);
-		$invited = $this->getInvitedFriends($team_id,true); 
+		$invited = $this->getInvitedFriends($team_id); 
+		$inviteList = array();
+		foreach($invited as $member){
+			if (isset($member->member_id)){
+				$inviteList[] = $member->member_id;
+			}
+		}
 		// get a list of members who are not existing members from friend list
 		if (isset($friendList) && count($friendList) > 0){
 			if (isset($memberList) && count($memberList) > 0){
 				$this->db->where_not_in('id',$memberList);
 			}
-			if (isset($invited) && count($invited) > 0){
-				$this->db->where_not_in('id',$invited);
+			if (isset($inviteList) && count($inviteList) > 0){
+				$this->db->where_not_in('id',$inviteList);
 			}
 			$this->db->where_in('id',$friendList);
 			$result = $this->db->get('member');
@@ -277,6 +289,34 @@ class Teams_model extends Base_module_model {
 		$this->db->insert('team_sports',array('team_id'=>$data['team_id'],'sport_id'=>$data['sport_id']));
 		$done = $this->db->affected_rows();
 		return $done;
+	}
+	function sendInvite($memberId,$user,$teamId){
+		$this->load->model('notifications_model');
+		$team = $this->getTeam($teamId);
+		$mesg = "You have been invited to the team <a href='/team/view/".$teamId."'>$team->name</a>";
+		$data = array(
+				"from_table"=>"member",
+				"from_key"=>$user,
+				"to_table"=>"member",
+				"to_key"=>$memberId,
+				"notification"=>$mesg,
+				"published"=>"yes"
+		);
+		$this->notifications_model->createNotification($data);
+		// do enmails
+		$this->load->model('members_model');
+		$memberData = $this->members_model->getMember($memberId);
+		$sender = $this->members_model->getMember($user);
+		$this->load->library('Fitzos_email',null,'Femail');
+		$this->Femail->sendTeamInvite($memberData,$team,$sender);
+		// record invite
+		$invite = array(
+				'team_id'=>$teamId,
+				'member_id'=>$memberId,
+				'status'=>'invited',
+				'invite_sent'=>date('Y-m-d')
+		);
+		$this->db->insert('team_invites',$invite);
 	}
 }
  
