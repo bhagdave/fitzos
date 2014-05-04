@@ -39,7 +39,7 @@
 						<input id="weight" data-bind="value: weight" name="weight" type="text" placeholder="Weight in Kilos" >
 					</div>
 					<div data-bind="visible: imperial" class="controls">
-						<input id="weight" data-bind="value: weightPounds" name="weight" type="text" placeholder="Weight in Pounds" >
+						<input id="weight" data-bind="value: weightPounds" name="weight-pounds" type="text" placeholder="Weight in Pounds" >
 					</div>
 				</div>
 				<div class="control-group">
@@ -90,6 +90,7 @@
 <!-- 						<label class="radio">No (I am good)<input id="no" name="find_trainer" value="No" type="radio" data-bind="checked: find_trainer"></label> -->
 <!-- 					</div> -->
 <!-- 				</div> -->
+				<input type="hidden" name="find_trainer" value="No">
 				<div class="control-group">
 					<label class="control-label">Profile image</label>
 					<?php 
@@ -101,7 +102,7 @@
 						<input type="file" name="file" id="file" value="<?=isset($member->image) ? $member->image : ''  ?>">
 					</div>
 				</div>
-				<button class="btn btn-success">Submit</button>	
+				<button class="btn btn-success" id="Fuck" >Submit</button>	
 				
 			</fieldset>
 			
@@ -138,7 +139,7 @@ function profileView(){
 	});
 	self.heightInches = ko.computed({
 		read: function(){
-			return(roundit(self.height()/2.54) % 12);	
+		return(roundit(self.height()/2.54) % 12);	
 		},
 		write: function(value){
 			var inches = parseInt(value);
@@ -192,13 +193,11 @@ function profileView(){
 		self.message(data.message);
 		self.find_trainer(data.find_trainer);	
 	})
-	self.saveMe = function(){
-		var data = ko.toJSON(self);
-		console.log(data);
-		$.post("/athlete/setAthlete", {payload:data}, function(returnedData) {
-		    // This callback is executed if the post was successful     
-		})
-	}		
 }
 ko.applyBindings(new profileView());
+</script>
+<script>
+	$('#Fuck').bind('click',function(){
+		console.log($('#weight').val());
+	});	
 </script>
