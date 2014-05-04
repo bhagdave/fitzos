@@ -13,7 +13,7 @@
 </header>
 <body>
 <p><?=$sender->first_name ?> <?=$sender->last_name ?> has requested you join them on the team on <a href="http://www.reach-your-peak.com">Reach Your Peak</a></p>
-<p><a href="http://www.reach-your-peak.com/team/view/<?=$team->id ?>">Please follow this link to join or decline the request</a></p>
+<p><a href="http://www.reach-your-peak.com/teams/view/<?=$team->id ?>">Please follow this link to join or decline the request</a></p>
 <div id="footer">
 <p>Copyright &copy; PROformance 2014 </p>
 </div>
