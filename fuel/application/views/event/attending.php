@@ -9,7 +9,7 @@
 				echo("<p>$member->name</p>");
 				// if they can edit give them the ability to remove the attendee
 				if (isset($edit) && $edit == true){
-					echo("<button onclick='removeAttendee(".$event->id.",".$member->member_id.");'>Remove $member->name from event.</button>");
+					echo("<button class='btn' onclick='removeAttendee(".$event->id.",".$member->member_id.");'>Remove $member->name from event.</button>");
 				}
 			}
 		} else {
