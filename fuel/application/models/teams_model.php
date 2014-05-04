@@ -121,6 +121,13 @@ class Teams_model extends Base_module_model {
 			return $result->result();
 		}
 	}
+	function isInvited($team,$id){
+		$this->db->select('member_id');
+		$this->db->where('team_id',$team);
+		$this->db->where('member_id',$id);
+		$invited = $this->db->count_all_results('team_invites') > 0;
+		return $invited;
+	}
 	function getInvitedFriendsDetails($team_id){
 		$this->db->where('team_id',$team_id);
 		$this->db->join('member','member_id = member.id');
