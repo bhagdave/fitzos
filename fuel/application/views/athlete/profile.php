@@ -90,6 +90,7 @@
 <!-- 						<label class="radio">No (I am good)<input id="no" name="find_trainer" value="No" type="radio" data-bind="checked: find_trainer"></label> -->
 <!-- 					</div> -->
 <!-- 				</div> -->
+				<input type="hidden" name="find_trainer" value="No">
 				<div class="control-group">
 					<label class="control-label">Profile image</label>
 					<?php 
