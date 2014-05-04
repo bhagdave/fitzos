@@ -40,8 +40,9 @@ class Teams extends CI_Controller{
 			$members= $this->teams->getTeamMembers($team);
 			$sports = $this->sports->list_items();
 			$od     = $this->teams->getTeamOwner($team);
-			$vars   = array('member'=>$member,'sports'=>$sports, 'wall'=>$wall, 'team'=>$data, 'members'=>$members, 'events'=>$events, 'od'=>$od,'isMember'=>$isMember);
-			if (!$isMember && $data->public = 'no'){
+			$invited =$this->teams->isInvited($team,$id); 
+			$vars   = array('member'=>$member,'sports'=>$sports, 'wall'=>$wall, 'team'=>$data, 'members'=>$members, 'events'=>$events, 'od'=>$od,'isMember'=>$isMember,'owner'=>false);
+			if (!$isMember && $data->public = 'no' && !$invited){
 				$this->fuel->pages->render('team/private',$vars);
 			} else {
 				$this->fuel->pages->render('team/view',$vars);
