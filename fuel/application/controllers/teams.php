@@ -32,6 +32,7 @@ class Teams extends CI_Controller{
 		$this->load->model('members_model','members');
 		if ($this->session->userdata('id')){
 			$id     = $this->session->userdata('id');
+			$isMember = $this->teams->isMember($team,$id);
 			$member = $this->members->getMember($id);
 			$wall   = $this->teams->getTeamWall($team);
 			$data   = $this->teams->getTeam($team);
@@ -39,9 +40,12 @@ class Teams extends CI_Controller{
 			$members= $this->teams->getTeamMembers($team);
 			$sports = $this->sports->list_items();
 			$od     = $this->teams->getTeamOwner($team);
-			$isMember = $this->teams->isMember($team,$id);
 			$vars   = array('member'=>$member,'sports'=>$sports, 'wall'=>$wall, 'team'=>$data, 'members'=>$members, 'events'=>$events, 'od'=>$od,'isMember'=>$isMember);
-			$this->fuel->pages->render('team/view',$vars);
+			if (!$isMember && $data->public = 'no'){
+				$this->fuel->pages->render('team/private',$vars);
+			} else {
+				$this->fuel->pages->render('team/view',$vars);
+			}
 		} else {
 			redirect('signin/login');
 			die();
