@@ -124,6 +124,7 @@ class Teams_model extends Base_module_model {
 	function isInvited($team,$id){
 		$this->db->select('member_id');
 		$this->db->where('team_id',$team);
+		$this->db->where('status','invited');
 		$this->db->where('member_id',$id);
 		$invited = $this->db->count_all_results('team_invites') > 0;
 		return $invited;
@@ -215,6 +216,15 @@ class Teams_model extends Base_module_model {
 	}
 	private function createNotification($data){
 		$this->db->insert('notifications',$data);
+	}
+	function createMemberFromInvite($team,$member){
+		$insert = array('member_id'=>$member,'team_id'=>$team, 'status'=>'yes', 'requested_date'=>date('Y-m-d'),'approved_date'=>date('Y-m-d'));
+		$this->db->insert('team_membership',$insert);
+		$id = $this->db->insert_id();		
+		$this->db->where('team_id',$team);
+		$this->db->where('member_id',$member);
+		$this->db->set('status','accepted');
+		$this->db->update('team_invites');
 	}
 	function acceptMember($team,$member){
 		$this->db->where("member_id",$member);
