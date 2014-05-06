@@ -58,6 +58,13 @@ $existingTeam = array();
 	<div class="col-md-6">
 		<h2>Public teams</h2>
 		<?php 
+		if (isset($public_teams)){
+			for ($i =0; $i < count($public_teams); $i++){
+				if (array_search($public_teams[$i]->name,$existingTeam)){
+					unset($public_teams[$i]);
+				}
+			}
+		}
 		if (isset($public_teams) && count($public_teams) > 0){
 		?>
 		<form action="/athlete/joinTeam" method="post" id="js-JoinTeam">
