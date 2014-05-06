@@ -60,9 +60,31 @@ class Events_model extends Base_module_model {
 		$result = $this->db->get('event_attendance');
 		return $result->result();	    	
     }
+	private function fixDate($date){
+		if (isset($date)){
+			if (strtotime($date)){
+				$date = date('Y-m-d',strtotime($date));
+				return $date;
+			} else {
+				return null;
+			}
+		} else {
+			return null;
+		}
+	}
     function updateEvent($data){
-    	$this->db->where('id',$data['id']);
-    	$this->db->update('event',$data);	
+    	if (is_array($data)){
+    		if (!isset($data['date'])){
+    			$data['date'] = date('Y-m-d');
+    		} else {
+    			$data['date'] = $this->fixDate($data['date']);
+    		}
+    		if (isset($data['end_date'])){
+    			$data['end_date'] = $this->fixDate($data['end_date']);
+    		}
+    		$this->db->where('id',$data['id']);    	
+    		$this->db->update('event',$data);
+    	}	
     }
     function _canAttend($event,$user){
     	// alreadt attending??

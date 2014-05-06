@@ -11,7 +11,16 @@
 					}
 					if (!empty($post->date)){
 						$date = new DateTime($post->date);
-						echo('<div class="event__date">' . $date->format('m/d/Y'). "</div>");
+						if (isset($post->end_date)){
+							$enddate = new DateTime($post->end_date);
+						} else {
+							$enddate = null;
+						}
+						echo('<div class="event__date">' . $date->format('m/d/Y'));
+						if (isset($enddate)){
+							echo(' until ' . $enddate->format('m/d/Y'));
+						}
+						echo("</div>");
 					}
 					echo("</div>");
 				}

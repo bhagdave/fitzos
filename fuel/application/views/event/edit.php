@@ -41,6 +41,12 @@
 					</div>
 				</div>
 				<div class="control-group">
+					<label class="control-label">End Date</label>
+					<div class="controls">
+						<input id="js-eventEndDate" class="datepicker" name="end_date"  data-date-format="mm/dd/yyyy" value="<?=isset($event->end_date) ? $event->end_date : ''  ?>" type="text" placeholder="Event end date">
+					</div>
+				</div>
+				<div class="control-group">
 					<label class="control-label">Finish Time</label>
 					<div class="controls">
 						<input id="js-eventTime" class="timepicker" name="end_time"  value="<?=isset($event->end_time) ? $event->end_time : ''  ?>" type="text" placeholder="Finish time">

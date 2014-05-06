@@ -273,16 +273,27 @@ class Teams_model extends Base_module_model {
 		$this->db->set('deleted','yes');
 		$this->db->update('team_wall');
 	}
+	private function fixDate($date){
+		if (isset($date)){
+			if (strtotime($date)){
+				$date = date('Y-m-d',strtotime($date));
+				return $date;
+			} else {
+				return null;
+			}
+		} else {
+			return null;
+		}
+	}
 	function addTeamEvent($data){
 		if (is_array($data)){
 			if (!isset($data['date'])){
 				$data['date'] = date('Y-m-d');
 			} else {
-				if (strtotime($data['date'])){
-					$data['date'] = date('Y-m-d',strtotime($data['date']));
-				} else {
-					unset($data['date']);
-				}
+				$data['date'] = $this->fixDate($data['date']);
+			}
+			if (isset($data['end_date'])){
+				$data['end_date'] = $this->fixDate($data['end_date']);
 			}
 			$this->db->insert('event',$data);
 			return $this->db->insert_id();
