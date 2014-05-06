@@ -34,14 +34,19 @@ class Signin extends CI_Controller{
 		redirect('/');
 	}
 	function login(){
+		$url = $this->input->get('url');
 		if ($this->input->post('username') && $this->input->post('password')){
 			$username = $this->input->post('username');
 			$password = md5($this->input->post('password'));
+			$url      = $this->input->post('url');
 			$login    = $this->members->checkLogin($username, $password);
 			if (isset($login)){
 				// get the member type and go the right way...
 				$type = $this->members->getMemberType($login->id);
 				$this->session->set_userdata(array('user'=>$login->salt,'type'=>$type, 'id'=>$login->id));
+				if (isset($url)){
+					redirect($url);
+				}
 				if ($type == 'athlete' || $type == 'both'){
 					redirect('athlete/index');					
 				} else {
@@ -53,7 +58,7 @@ class Signin extends CI_Controller{
 				$this->fuel->pages->render('signin/loginError',$vars);
 			}			
 		} else {
-			$vars = array('message'=>"", 'request'=>$this->input->post());
+			$vars = array('message'=>"", 'url'=>$url,'request'=>$this->input->post());
 			$this->fuel->pages->render('signin/login',$vars);
 		}
 	}	

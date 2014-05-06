@@ -43,7 +43,7 @@ class Event extends CI_Controller{
 				die();
 			}
 		} else {
-			redirect('signin/login');
+			redirect('signin/login?url=event/view/'.$id);
 			die();
 		}
 	}
@@ -119,7 +119,7 @@ class Event extends CI_Controller{
 				$this->fuel->pages->render('event/edit',$vars);
 			}
 		} else {
-			redirect('signin/login');
+			redirect('signin/login?url=event/edit/'.$id);
 			die();
 		}
 	}
