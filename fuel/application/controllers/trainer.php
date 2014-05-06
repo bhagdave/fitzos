@@ -10,9 +10,12 @@ class Trainer extends CI_Controller{
 		$this->fuel->pages->render('trainer/welcome',$vars);
 	}
 	function profile(){	
-		// check for login???
-		$vars = array();
-		$this->fuel->pages->render('trainer/welcome',$vars);
+		if ($this->session->userdata('id')){
+			$vars = array();
+			$this->fuel->pages->render('trainer/profile',$vars);
+		} else {
+			redirect('signin/login');
+		}
 	}
 	function portal(){
 		// check for login???
