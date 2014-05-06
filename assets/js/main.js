@@ -208,6 +208,10 @@ $(function() {
   	      modal: true
   	    });
     });
+    $('.js-terms').bind('click',function(){
+    	$('.terms').show();
+    	return false;
+    });
 });
 function getMembers(team){
 	$.ajax({

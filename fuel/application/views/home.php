@@ -18,4 +18,10 @@
 	$events_model = $ci->load->model('events_model');
 	$public = $events_model->getPublicEvents();
 	$this->load->view('calendar/public',array('public'=>$public));
+	$fuel_model = $ci->load->model('fuel_data');
+	$page = $fuel_model->getFuelPageContent('terms');
 ?>
+<div class="terms" style="display:none;">
+	<h1>Terms and Conditions</h1>
+<?= $page ?>
+</div>

@@ -12,7 +12,7 @@
 			<input id="email" class="form-control" data-bind="value: email" name="email" value="" type="text" placeholder="Email" required>
 			<input id="password" class="form-control" data-bind="value: password,valueUpdate: 'afterkeydown'" name="password" type="password" placeholder="Password" required>
 	  		<input type="radio" name="TC" id="TC" value="Accept">
-	  		<label for="TC">I accept <a href="terms">the terms and conditions</a></label>
+	  		<label for="TC">I accept <a class="js-terms" href="#">the terms and conditions</a></label>
 			<button class="submit-btn" data-bind="twButton:isDone()">Sign me up</button>
 		</form>
 	</div>
