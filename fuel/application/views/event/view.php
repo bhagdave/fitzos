@@ -30,9 +30,21 @@
 		if (isset($event->date)){
 			$eventDate = new DateTime($event->date);
 		} 
+		if (isset($event->end_date)){
+			$eventEndDate = new DateTime($event->end_date);
+		}
 		
 	?>
-		<h4><?=isset($event->location) ? $event->location : 'Location not set '; ?><?=isset($eventDate) ? ' on ' .$eventDate->format('d/m/Y') : ''; ?><?=isset($event->time) ? ' @ ' . $event->time : ''; ?></h4>
+		<h4><?=isset($event->location) ? $event->location : 'Location not set '; ?>
+			<?=isset($eventDate) ? ' on ' .$eventDate->format('d/m/Y') : ''; ?>
+			<?=isset($event->time) ? ' @ ' . $event->time : ''; ?>
+			<?php
+				if (isset($eventEndDate)){
+					echo(' Until ');
+					echo($eventEndDate->format('d/m/Y'));
+				}		
+			?>
+		</h4>
 	</div>
 	<div class="col-md-4">
 		<?php 

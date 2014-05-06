@@ -1,0 +1,1 @@
+ALTER TABLE `fitzos`.`event` ADD COLUMN `end_date` TIMESTAMP NULL  AFTER `sport_id` ;

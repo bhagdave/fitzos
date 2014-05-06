@@ -14,7 +14,16 @@
 					}	
 					if (!empty($post->date)){
 						$date = new DateTime($post->date);
-						echo("<p>".$date->format('m/d/Y'). "</p>");
+						if (isset($post->end_date)){
+							$enddate = new DateTime($post->end_date);
+						} else {
+							$enddate = null;
+						}
+						echo("<p>".$date->format('m/d/Y'));
+						if (isset($enddate)){
+							echo(' until ' . $enddate->format('m/d/Y'));
+						}
+						echo("</p>");
 					}
 					if (!empty($post->time)){
 						echo("Starts ".$post->time);
