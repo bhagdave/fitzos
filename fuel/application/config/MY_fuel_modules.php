@@ -34,6 +34,9 @@ $config['modules']['sports_links'] = array();
 $config['modules']['sports_statistics'] = array();
 $config['modules']['teams'] = array();
 $config['modules']['trainers'] = array();
+$config['modules']['certificates'] = array();
+$config['modules']['specialties'] = array();
+$config['modules']['preferences'] = array();
 
 
 
