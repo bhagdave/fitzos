@@ -210,6 +210,9 @@ $(function() {
     });
     $('.js-terms').bind('click',function(){
     	$('.terms').show();
+    	$('html, body').animate({
+            scrollTop: $('.terms').offset().top
+        }, 500);
     	return false;
     });
 });
