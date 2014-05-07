@@ -31,16 +31,16 @@
 			$memberModel  = $ci->load->model("members_model");
 			$member = $memberModel->getMember($userId);
 			if (isset($member)){
-				echo("<div class='welcome'><a href='http://" .$_SERVER['SERVER_NAME']."/$type/index'>Welcome " . $member->first_name . ' ' . $member->last_name.'</a></div>');
-				echo("<a href='http://" .$_SERVER['SERVER_NAME']."/signin/logout'>Logout</a></div>'");
+				echo("<div class='welcome'><a href='/$type/index'>Welcome " . $member->first_name . ' ' . $member->last_name.'</a></div>');
+				echo("<a href='/signin/logout'>Logout</a></div>'");
 			} else {
 	?>
-	<a class="signin btn" href="http://<?=$_SERVER['SERVER_NAME'] ?>/signin/login">Sign in</a>
+	<a class="signin btn" href="/signin/login">Sign in</a>
 	<?php 
 		}
 	} else {
 	?>
-	<a class="signin btn" href="http://<?=$_SERVER['SERVER_NAME'] ?>/signin/login">Sign in</a>
+	<a class="signin btn" href="/signin/login">Sign in</a>
 	<?php 
 	}
 	?>
