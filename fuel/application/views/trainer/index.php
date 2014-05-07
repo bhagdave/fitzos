@@ -21,3 +21,24 @@
 	?>
 	</div>
 </div>
+<div class="row">
+	<div class="col-md-5">
+		<h4>Events</h4>
+		<?php $this->load->view('trainer/events'); ?>
+	</div>
+	<div class="col-md-5">
+		<?php  $this->load->view('calendar/bySport'); ?>
+	</div>
+</div>
+<div class="row">
+
+	<div class="col-md-5">
+		<h2>Proteges</h2>
+		<?php  $this->load->view('trainer/athletes'); ?>
+	</div>
+
+	<div class="col-md-5">
+		<h2>Notifications</h2>
+		<?php  $this->load->view('trainer/notifications'); ?>
+	</div>		
+</div>
