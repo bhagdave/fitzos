@@ -3,11 +3,15 @@ class Trainer extends CI_Controller{
 	function __construct()
 	{
 		parent::__construct();
+		$this->load->library("session");
 	}
 	function index(){
-		// check for login???
-		$vars = array();
-		$this->fuel->pages->render('trainer/welcome',$vars);
+		if ($this->session->userdata('id')){
+			$vars = array();
+			$this->fuel->pages->render('trainer/index',$vars);
+		} else {
+			redirect('signin/login');
+		}
 	}
 	function profile(){	
 		if ($this->session->userdata('id')){
