@@ -26,11 +26,12 @@
 		$ci = &get_instance(); 
 		$session = $ci->load->library("session");
 		$userId  = $session->userdata('id');
+		$type    = $session->userdata('type');
 		if (isset($userId)){
 			$memberModel  = $ci->load->model("members_model");
 			$member = $memberModel->getMember($userId);
 			if (isset($member)){
-				echo("<div class='welcome'><a href='http://" .$_SERVER['SERVER_NAME']."/athlete/index'>Welcome " . $member->first_name . ' ' . $member->last_name.'</a></div>');
+				echo("<div class='welcome'><a href='http://" .$_SERVER['SERVER_NAME']."/$type/index'>Welcome " . $member->first_name . ' ' . $member->last_name.'</a></div>');
 				echo("<a href='http://" .$_SERVER['SERVER_NAME']."/signin/logout'>Logout</a></div>'");
 			} else {
 	?>
