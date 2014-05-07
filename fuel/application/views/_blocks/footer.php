@@ -5,26 +5,19 @@
 		$ci = &get_instance();
 		$session = $ci->load->library("session");
 		$userId  = $session->userdata('id');
+		$type    = $session->userdata('type');
 		if ($userId){
-			if ($uri != '/athlete/sports'){
-			?>
-						<a href="/athlete/sports" class="btn">Sports</a>
-			<?php 
+			if ($uri != "/$type/sports"){
+				echo('<a href="/'.$type.'/sports" class="btn">Sports</a>');
 			}
-			if ($uri != '/athlete/teams'){
-			?>
-						<a href="/athlete/teams" class="btn">Teams</a>
-			<?php 
+			if ($uri != "/$type/teams"){
+				echo('<a href="/'.$type.'/teams" class="btn">Teams</a>');
 			}
-			if ($uri != '/athlete/notifications'){
-			?>
-						<a href="/athlete/notifications" class="btn">Notifications</a>
-			<?php 
+			if ($uri != "/$type/notifications"){
+				echo('<a href="/'.$type.'/notifications" class="btn">Notifications</a>');
 			}
 			if ($uri != '/find/search'){
-			?>
-						<a href="/find/search" class="btn">Find a Friend</a>
-			<?php 
+				echo('<a href="/find/search" class="btn">Find a Friend</a>');
 			}
 		}
 	?>
