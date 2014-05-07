@@ -2,17 +2,18 @@
 	<div class="col-md-6">
 		<form class="form-horizontal" action="/trainer/profile" method="post" enctype="multipart/form-data">
 			<fieldset id="inputs">
-				<?php $this->load->view('_blocks/all-members');?>
+				<input name="id"  type="hidden" value="<?=isset($trainer->id) ? $trainer->id : ''  ?>">
+			<?php $this->load->view('_blocks/all-members');?>
 				<div class="control-group">
 					<label class="control-label">Nickname</label>
 					<div class="controls">
-						<input id="nickname" class="form-control" name="nickname"  type="text" placeholder="Nickname">
+						<input id="nickname" class="form-control" name="nickname"  type="text" placeholder="Nickname" value="<?=isset($trainer->nickname) ? $trainer->nickname : ''  ?>">
 					</div>
 				</div>
 				<div class="control-group">
 					<label class="control-label">Biography</label>
 					<div class="controls">
-						<textarea id="bio" class="form-control" name="bio"></textarea>
+						<textarea id="bio" class="form-control" name="bio"><?=isset($trainer->bio) ? $trainer->bio : ''  ?></textarea>
 					</div>
 				</div>
 				<div class="control-group">

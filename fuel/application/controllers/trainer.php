@@ -32,13 +32,14 @@ class Trainer extends CI_Controller{
 	function profile(){
 		if ($this->input->post('age')){
 			$data = $this->input->post();
-			$data['id'] = $this->session->userdata('id');
+			$data['member_id'] = $this->session->userdata('id');
 			$this->trainers->save($data);
 			$this->session->set_flashdata('message', 'Profile Saved');
 			redirect('trainer/index');	
 		} else {
 			if ($this->session->userdata('id')){
-				$vars = array();
+				$trainer = $this->trainers->loadProfile($this->session->userdata('id'));
+				$vars = array('trainer'=>$trainer);
 				$this->fuel->pages->render('trainer/profile',$vars);
 			} else {
 				redirect('signin/login');
