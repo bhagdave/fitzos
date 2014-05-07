@@ -4,10 +4,25 @@ class Trainer extends CI_Controller{
 	{
 		parent::__construct();
 		$this->load->library("session");
+		$this->load->model('members_model','members');
+		$this->load->model('events_model','events');
+		$this->load->model('notifications_model','notify');
+	}
+	private function _getCoreData($id){
+		// get the athlete from the database
+		$member  = $this->members->getMember($id);
+		$events  = $this->events->getEventsForMember($id);
+		$notifications = $this->notify->getNotifications('member',$id);
+		return array(
+				'member'=>$member,
+				'notes'=>$notifications,
+				'events'=>$events
+		);
 	}
 	function index(){
 		if ($this->session->userdata('id')){
-			$vars = array();
+			$vars = $this->_getCoreData($this->session->userdata('id'));
+			$vars['id'] = $this->session->userdata('id');
 			$this->fuel->pages->render('trainer/index',$vars);
 		} else {
 			redirect('signin/login');
