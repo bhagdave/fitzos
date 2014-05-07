@@ -1,0 +1,1 @@
+CREATE  TABLE `fitzos`.`specialties` (  `id` INT NOT NULL AUTO_INCREMENT ,  `type` VARCHAR(145) NULL ,  PRIMARY KEY (`id`) );
