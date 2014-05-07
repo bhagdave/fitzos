@@ -7,6 +7,7 @@ class Trainer extends CI_Controller{
 		$this->load->model('members_model','members');
 		$this->load->model('events_model','events');
 		$this->load->model('notifications_model','notify');
+		$this->load->model('trainers_model','trainers');
 	}
 	private function _getCoreData($id){
 		// get the athlete from the database
@@ -28,13 +29,21 @@ class Trainer extends CI_Controller{
 			redirect('signin/login');
 		}
 	}
-	function profile(){	
-		if ($this->session->userdata('id')){
-			$vars = array();
-			$this->fuel->pages->render('trainer/profile',$vars);
+	function profile(){
+		if ($this->input->post('age')){
+			$data = $this->input->post();
+			$data['id'] = $this->session->userdata('id');
+			$this->trainers->save($data);
+			$this->session->set_flashdata('message', 'Profile Saved');
+			redirect('trainer/index');	
 		} else {
-			redirect('signin/login');
-		}
+			if ($this->session->userdata('id')){
+				$vars = array();
+				$this->fuel->pages->render('trainer/profile',$vars);
+			} else {
+				redirect('signin/login');
+			}
+		}	
 	}
 	function portal(){
 		// check for login???

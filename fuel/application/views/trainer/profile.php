@@ -1,12 +1,12 @@
 <div class="row">
 	<div class="col-md-6">
-		<form class="form-horizontal" action="/trainers/profile" method="post" enctype="multipart/form-data">
+		<form class="form-horizontal" action="/trainer/profile" method="post" enctype="multipart/form-data">
 			<fieldset id="inputs">
 				<?php $this->load->view('_blocks/all-members');?>
 				<div class="control-group">
 					<label class="control-label">Nickname</label>
 					<div class="controls">
-						<input id="nickname" class="form-control" data-bind="value: nickname" name="nickname"  type="text" placeholder="Nickname">
+						<input id="nickname" class="form-control" name="nickname"  type="text" placeholder="Nickname">
 					</div>
 				</div>
 				<div class="control-group">
