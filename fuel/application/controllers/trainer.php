@@ -49,6 +49,15 @@ class Trainer extends CI_Controller{
 		}	
 	}
 	function certs(){
+		if ($this->input->post('trainer_id')){
+			$affected = $this->trainers->createCertificate($this->input->post());
+			if ($affected > 0){
+				$this->session->set_flashdata('message', 'Certificate Saved');
+			} else {
+				$this->session->set_flashdata('message', 'Error saving certificate');
+			}
+			redirect('trainer/certs');
+		}
 		if ($this->session->userdata('id')){
 			$this->load->model('certificates_model','certificates');
 			$vars = $this->_getCoreData($this->session->userdata('id'));

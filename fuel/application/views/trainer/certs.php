@@ -38,7 +38,7 @@
 				<div class="control-group">
 					<label class="control-label">Certificate Number</label>
 					<div class="controls">
-						<input class="form-control" name="number"  type="text" placeholder="Number">
+						<input class="form-control" name="number" type="text" placeholder="Number">
 					</div>
 				</div>
 				<div class="control-group">
@@ -47,6 +47,7 @@
 						<input class="datepicker form-control" name="date"  data-date-format="mm/dd/yyyy" type="text" placeholder="Certificate date">
 					</div>
 				</div>
+				<button class="btn btn-success" >Submit</button>	
 			</fieldset>	
 		</form>
 	</div>

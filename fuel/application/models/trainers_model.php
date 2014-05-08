@@ -23,6 +23,10 @@ class Trainers_model extends Fitzos_model {
 		$result = $this->db->get('trainer_qualifications');
 		return $result->result();
 	}
+	function createCertificate($data){
+		$this->db->insert('trainer_qualifications',$data);
+		return $this->db->affected_rows();
+	}
 }
  
 class Trainer_model extends Base_module_record {
