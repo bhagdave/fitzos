@@ -138,6 +138,12 @@ class Athlete extends CI_Controller{
 			// get the athlete from the database
 			$id   = $this->session->userdata('id');
 			$vars = $this->_getCoreData($id);
+			if (count($vars['sports']) == 0){
+				$this->session->set_flashdata('message', 'Remember to add a sport to your profile!');
+			}
+			if (empty($vars['member']->image)){
+				$this->session->set_flashdata('message', 'Remember to add a photo to your profile!');
+			}
 			if (!isset($vars['member'])){
 				redirect('signin/login');
 			}

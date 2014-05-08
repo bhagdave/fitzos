@@ -26,17 +26,20 @@
 <body class='<?=is_home() ? 'homeBG' :'' ; ?>'>
 		<header class="header">
 			<a href="http://<?=$_SERVER['SERVER_NAME'] ?>">
-				<img src="http://<?=$_SERVER['SERVER_NAME'] ?>/assets/images/logo.png" alt="www.reach-your-peak.com" name="www.reach-your-peak.com" width="129" height="89" id="FitZos" class="logo"/>
+				<img src="/assets/images/logo.png" alt="www.reach-your-peak.com" name="www.reach-your-peak.com" width="129" height="89" id="FitZos" class="logo"/>
 			</a>
-			<?php
-				if (isset($this->session)){
-					$mesg = $this->session->flashdata('message');
-					if (isset($mesg) && !empty($mesg)){
-						echo("<div class='header-mesg alert alert-danger'>".$mesg."</div>");
+			<div class="row">
+				<div class="col-md-6">
+				<?php
+					if (isset($this->session)){
+						$mesg = $this->session->flashdata('message');
+						if (isset($mesg) && !empty($mesg)){
+							echo("<div class='header-mesg alert alert-danger'>".$mesg."</div>");
+						}
 					}
-				}
-			?>
-		</header>
-
+				?>
+				</div>
+			</div>
+			</header>
 
 
