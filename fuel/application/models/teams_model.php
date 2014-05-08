@@ -321,7 +321,7 @@ class Teams_model extends Base_module_model {
 	function sendInvite($memberId,$user,$teamId){
 		$this->load->model('notifications_model');
 		$team = $this->getTeam($teamId);
-		$mesg = "You have been invited to the team <a href='/team/view/".$teamId."'>$team->name</a>";
+		$mesg = "You have been invited to the team <a href='/teams/view/".$teamId."'>$team->name</a>";
 		$data = array(
 				"from_table"=>"member",
 				"from_key"=>$user,
