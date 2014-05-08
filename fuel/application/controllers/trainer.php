@@ -14,10 +14,12 @@ class Trainer extends CI_Controller{
 		$member  = $this->members->getMember($id);
 		$events  = $this->events->getEventsForMember($id);
 		$notifications = $this->notify->getNotifications('member',$id);
+		$trainer = $this->trainers->loadProfile($id);
 		return array(
 				'member'=>$member,
 				'notes'=>$notifications,
-				'events'=>$events
+				'events'=>$events,
+				'trainer'=>$trainer
 		);
 	}
 	function index(){
@@ -48,8 +50,11 @@ class Trainer extends CI_Controller{
 	}
 	function certs(){
 		if ($this->session->userdata('id')){
+			$this->load->model('certificates_model','certificates');
 			$vars = $this->_getCoreData($this->session->userdata('id'));
+			$vars['quals'] = $this->trainers->getQualifications($vars['trainer']->id);
 			$vars['id'] = $this->session->userdata('id');
+			$vars['certificates'] = $this->certificates->options_list('id','name');
 			$this->fuel->pages->render('trainer/certs',$vars);
 		} else {
 			redirect('signin/login');

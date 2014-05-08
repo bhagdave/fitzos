@@ -17,6 +17,12 @@ class Trainers_model extends Fitzos_model {
     		return null;
     	}
     }
+	function getQualifications($id){
+		$this->db->where('trainer_id',$id);
+		$this->db->join('trainer_certificates','certificate_id = trainer_certificates.id');	
+		$result = $this->db->get('trainer_qualifications');
+		return $result->result();
+	}
 }
  
 class Trainer_model extends Base_module_record {
