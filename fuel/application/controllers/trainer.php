@@ -46,53 +46,14 @@ class Trainer extends CI_Controller{
 			}
 		}	
 	}
-	function portal(){
-		// check for login???
-		$vars = array();
-		$this->fuel->pages->render('trainer/welcome',$vars);
-		
-	}
-	function calendar(){
-		// check for login???
-		$vars = array();
-		$this->fuel->pages->render('trainer/welcome',$vars);
-		
-	}
-	function plans(){
-		// check for login???
-		$vars = array();
-		$this->fuel->pages->render('trainer/welcome',$vars);
-		
-	}
-	function badges(){
-		// check for login???
-		$vars = array();
-		$this->fuel->pages->render('trainer/welcome',$vars);
-		
-	}
-	function business(){
-		// check for login???
-		$vars = array();
-		$this->fuel->pages->render('trainer/welcome',$vars);
-		
-	}
-	function message(){
-		// check for login???
-		$vars = array();
-		$this->fuel->pages->render('trainer/welcome',$vars);
-		
-	}
-	function progress(){
-		// check for login???
-		$vars = array();
-		$this->fuel->pages->render('trainer/welcome',$vars);
-		
-	}
-	function events(){
-		// check for login???
-		$vars = array();
-		$this->fuel->pages->render('trainer/welcome',$vars);
-		
+	function certs(){
+		if ($this->session->userdata('id')){
+			$vars = $this->_getCoreData($this->session->userdata('id'));
+			$vars['id'] = $this->session->userdata('id');
+			$this->fuel->pages->render('trainer/certs',$vars);
+		} else {
+			redirect('signin/login');
+		}
 	}
 }
 ?>
