@@ -39,7 +39,7 @@
 					}
 				?>
 				</div>
-				<div class="col-md-6">BETA BETA BETA</div>
+				<div class="col-md-6"><h1>BETA BETA BETA</h1></div>
 			</div>
 			</header>
 
