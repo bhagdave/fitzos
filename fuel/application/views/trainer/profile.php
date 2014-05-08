@@ -27,6 +27,30 @@
 						<input type="file" name="file" id="file" value="<?=isset($member->image) ? $member->image : ''  ?>">
 					</div>
 				</div>
+				<?php 
+				if (isset($specialties)){
+					?>
+					<hr>
+					<h3>Specialties</h3>
+					<?php 
+					foreach($specialties as $key => $value){
+						?>
+						<div class="control-group">
+							<div class="controls">	
+								<label class="checkbox"><?=$value ?>
+								<input name="specialty[<?=$key ?>]" value="Yes" type="checkbox" <?php 
+								if (isset($trainerSpecialties[$key]) && $trainerSpecialties[$key] == $key){
+									echo('checked');
+								} ?>>					
+							</div>
+						</div>
+						
+						<?php 
+					}
+					?>
+					<?php 
+				}
+				?>
 				<button class="btn btn-success" >Submit</button>	
 			</fieldset>
 		</form>

@@ -35,13 +35,19 @@ class Trainer extends CI_Controller{
 		if ($this->input->post('age')){
 			$data = $this->input->post();
 			$data['member_id'] = $this->session->userdata('id');
+			$specialties = $data['specialty'];
+			unset($data['specialty']);
+			$this->trainers->saveSpecialties($specialties,$this->input->post('id'));
 			$this->trainers->save($data);
 			$this->session->set_flashdata('message', 'Profile Saved');
 			redirect('trainer/index');	
 		} else {
 			if ($this->session->userdata('id')){
 				$trainer = $this->trainers->loadProfile($this->session->userdata('id'));
-				$vars = array('trainer'=>$trainer);
+				$this->load->model('specialties_model','specialties');
+				$specialties = $this->specialties->options_list('id','type');
+				$trainerSpecialties = $this->trainers->getSpecialties($trainer->id);
+				$vars = array('trainer'=>$trainer, 'specialties'=>$specialties, 'trainerSpecialties'=>$trainerSpecialties);
 				$this->fuel->pages->render('trainer/profile',$vars);
 			} else {
 				redirect('signin/login');
