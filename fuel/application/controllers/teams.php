@@ -120,6 +120,7 @@ class Teams extends CI_Controller{
 	}
 	function addWallPost(){
 		$this->load->model('teams_model','teams');
+		$this->load->model('members_model','members');
 		if ($this->input->post()){
 			if ($this->session->userdata('id')){
 				// check if owner of team..
@@ -132,7 +133,8 @@ class Teams extends CI_Controller{
 				$id   = $this->teams->addWallPost($data);
 				$team = $this->teams->getTeam($this->input->get_post('team_id'));
 				$wall = $this->teams->getTeamWall($this->input->get_post('team_id'));
-			 	$vars = array('wall'=>$wall,'owner'=>$owner,'layout'=>'none','team'=>$team);
+				$member = $this->members->getMember($user);
+			 	$vars = array('wall'=>$wall,'owner'=>$owner,'layout'=>'none','team'=>$team,'member'=>$member);
 				$this->fuel->pages->render('team/teamWall',$vars);
 			} else {
 				redirect('signin/login');
