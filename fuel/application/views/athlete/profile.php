@@ -102,7 +102,7 @@
 						<input type="file" name="file" id="file" value="<?=isset($member->image) ? $member->image : ''  ?>">
 					</div>
 				</div>
-				<button class="btn btn-success" id="Fuck" >Submit</button>	
+				<button class="btn btn-success" >Submit</button>	
 				
 			</fieldset>
 			

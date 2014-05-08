@@ -5,7 +5,7 @@
   			<label class="select-label">
   				<select name="choice" id="trainer" value="trainer">
   					<option value="athlete">Athlete</option>
-<!--   					<option>Trainer</option> -->
+<!--   					<option value="trainer">Trainer</option> -->
   				</select>
   			</label>
 			<input id="name" class="form-control" data-bind="value: name" name="name" type="text" placeholder="Name" autofocus required>   

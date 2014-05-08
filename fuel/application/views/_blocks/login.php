@@ -4,6 +4,7 @@
 		<fieldset class="loginform" id="inputs">
 			<input name="username" class="form-control" id="username" type="text" placeholder="Email" autofocus required>   
 			<input name="password" class="form-control" id="password" type="password" placeholder="Password">
+			<input name="url" type="hidden" value="<?=isset($url) ? $url: '' ?>">
 		</fieldset>
 		<div class="btn-group">
 			<button class="btn-small btn-primary" >Log in</button>

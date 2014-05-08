@@ -1,0 +1,1 @@
+CREATE  TABLE `fitzos`.`trainer_certificates` (  `id` INT NOT NULL AUTO_INCREMENT ,  `name` VARCHAR(245) NULL ,  `website` VARCHAR(245) NULL ,  `validation` ENUM('yes','no') NULL ,  PRIMARY KEY (`id`) );

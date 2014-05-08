@@ -5,26 +5,19 @@
 		$ci = &get_instance();
 		$session = $ci->load->library("session");
 		$userId  = $session->userdata('id');
+		$type    = $session->userdata('type');
 		if ($userId){
-			if ($uri != '/athlete/sports'){
-			?>
-						<a href="/athlete/sports" class="btn">Sports</a>
-			<?php 
+			if ($uri != "/$type/sports"){
+				echo('<a href="/'.$type.'/sports" class="btn">Sports</a>');
 			}
-			if ($uri != '/athlete/teams'){
-			?>
-						<a href="/athlete/teams" class="btn">Teams</a>
-			<?php 
+			if ($uri != "/$type/teams"){
+				echo('<a href="/'.$type.'/teams" class="btn">Teams</a>');
 			}
-			if ($uri != '/athlete/notifications'){
-			?>
-						<a href="/athlete/notifications" class="btn">Notifications</a>
-			<?php 
+			if ($uri != "/$type/notifications"){
+				echo('<a href="/'.$type.'/notifications" class="btn">Notifications</a>');
 			}
 			if ($uri != '/find/search'){
-			?>
-						<a href="/find/search" class="btn">Find a Friend</a>
-			<?php 
+				echo('<a href="/find/search" class="btn">Find a Friend</a>');
 			}
 		}
 	?>
@@ -33,20 +26,21 @@
 		$ci = &get_instance(); 
 		$session = $ci->load->library("session");
 		$userId  = $session->userdata('id');
+		$type    = $session->userdata('type');
 		if (isset($userId)){
 			$memberModel  = $ci->load->model("members_model");
 			$member = $memberModel->getMember($userId);
 			if (isset($member)){
-				echo("<div class='welcome'><a href='http://" .$_SERVER['SERVER_NAME']."/athlete/index'>Welcome " . $member->first_name . ' ' . $member->last_name.'</a></div>');
-				echo("<a href='http://" .$_SERVER['SERVER_NAME']."/signin/logout'>Logout</a></div>'");
+				echo("<div class='welcome'><a href='/$type/index'>Welcome " . $member->first_name . ' ' . $member->last_name.'</a></div>');
+				echo("<a href='/signin/logout'>Logout</a></div>'");
 			} else {
 	?>
-	<a class="signin btn" href="http://<?=$_SERVER['SERVER_NAME'] ?>/signin/login">Sign in</a>
+	<a class="signin btn" href="/signin/login">Sign in</a>
 	<?php 
 		}
 	} else {
 	?>
-	<a class="signin btn" href="http://<?=$_SERVER['SERVER_NAME'] ?>/signin/login">Sign in</a>
+	<a class="signin btn" href="/signin/login">Sign in</a>
 	<?php 
 	}
 	?>
