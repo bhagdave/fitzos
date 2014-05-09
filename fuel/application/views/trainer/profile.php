@@ -51,6 +51,30 @@
 					<?php 
 				}
 				?>
+				<?php 
+				if (isset($preferences)){
+					?>
+					<hr>
+					<h3>Training preferences</h3>
+					<?php 
+					foreach($preferences as $key => $value){
+						?>
+						<div class="control-group">
+							<div class="controls">	
+								<label class="checkbox"><?=$value ?>
+								<input name="preference[<?=$key ?>]" value="Yes" type="checkbox" <?php 
+								if (isset($trainerPreferences[$key]) && $trainerPreferences[$key] == $key){
+									echo('checked');
+								} ?>>					
+							</div>
+						</div>
+						
+						<?php 
+					}
+					?>
+					<?php 
+				}
+				?>
 				<button class="btn btn-success" >Submit</button>	
 			</fieldset>
 		</form>

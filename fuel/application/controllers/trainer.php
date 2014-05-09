@@ -37,7 +37,10 @@ class Trainer extends CI_Controller{
 			$data['member_id'] = $this->session->userdata('id');
 			$specialties = $data['specialty'];
 			unset($data['specialty']);
+			$preferences = $data['preference'];
+			unset($data['preference']);
 			$this->trainers->saveSpecialties($specialties,$this->input->post('id'));
+			$this->trainers->savePreferences($preferences,$this->input->post('id'));
 			$this->trainers->save($data);
 			$this->session->set_flashdata('message', 'Profile Saved');
 			redirect('trainer/index');	
@@ -45,9 +48,12 @@ class Trainer extends CI_Controller{
 			if ($this->session->userdata('id')){
 				$trainer = $this->trainers->loadProfile($this->session->userdata('id'));
 				$this->load->model('specialties_model','specialties');
+				$this->load->model('preferences_model','preferences');
 				$specialties = $this->specialties->options_list('id','type');
+				$preferences = $this->preferences->options_list('id','preference');
 				$trainerSpecialties = $this->trainers->getSpecialties($trainer->id);
-				$vars = array('trainer'=>$trainer, 'specialties'=>$specialties, 'trainerSpecialties'=>$trainerSpecialties);
+				$trainerPreferences = $this->trainers->getPreferences($trainer->id);
+				$vars = array('trainer'=>$trainer, 'specialties'=>$specialties,'preferences'=>$preferences,'trainerSpecialties'=>$trainerSpecialties,'trainerPreferences'=>$trainerPreferences);
 				$this->fuel->pages->render('trainer/profile',$vars);
 			} else {
 				redirect('signin/login');
