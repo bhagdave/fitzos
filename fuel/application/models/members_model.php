@@ -218,9 +218,8 @@ class Members_model extends Fitzos_model {
 			$this->db->where('id',$data[0]->id);
 			$this->db->set('password',md5($newPassword));
 			$this->db->update('member');
-			echo($newPassword);
 			if ($this->db->affected_rows() > 0){
-				return array('success'=>true,'message'=>'Password updated');	
+				return array('success'=>true,'message'=>'Password updated','member'=>$data[0],'password'=>$newPassword);	
 			} else {
 				return array('success'=>false,'message'=>'Unable to update member record!');
 			}					
