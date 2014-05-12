@@ -48,4 +48,9 @@ class Fitzos_email {
 		$message = $this->CI->load->view('email/friendRequest',array('member'=>$member,'request'=>$request,'requestee'=>$requestee),TRUE);
 		$this->_sendMail($email, 'member_services@reach-your-peak.com', "$member->first_name $member->last_name  you have a new athlete connection", $message);
 	}
+	function sendPasswordReset($member,$email,$newPassword){
+		$this->CI =& get_instance();
+		$message = $this->CI->load->view('email/passwordReset',array('member'=>$member,'password'=>$newPassword),TRUE);
+		$this->_sendMail($email, 'member_services@reach-your-peak.com', "Password Reset Email", $message);
+	}
 }
