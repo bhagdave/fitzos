@@ -86,5 +86,18 @@ class Signin extends CI_Controller{
 			}
 		}
 	}
+	function forgotPassword(){
+		if ($this->input->post('email')){
+			$update = $this->members->resetpassword($this->input->post('email'));
+			if ($update['success']){
+				
+				$this->fuel->pages->render('signin/passwordReset');
+			} else {
+				$this->fuel->pages->render('signin/passwordResetError');
+			}
+		} else {
+			$this->fuel->pages->render('signin/forgotPassword');
+		}
+	}
 }
 ?>

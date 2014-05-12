@@ -209,6 +209,35 @@ class Members_model extends Fitzos_model {
 			$this->createMember($data);		
 		}
 	}	
+	function resetPassword($email){
+		$this->db->where('email',$email);
+		$result = $this->db->get('member');
+		$data = $result->result();
+		if (isset($data[0])){
+			$newPassword = $this->randomPassword();
+			$this->db->where('id',$data[0]->id);
+			$this->db->set('password',md5($newPassword));
+			$this->db->update('member');
+			echo($newPassword);
+			if ($this->db->affected_rows() > 0){
+				return array('success'=>true,'message'=>'Password updated');	
+			} else {
+				return array('success'=>false,'message'=>'Unable to update member record!');
+			}					
+		} else {
+			return array('success'=>false,'message'=>'Email address not found!');
+		}
+	}
+	private function randomPassword(){
+		$alphabet = "qwe0rtyuJKLME-8PQ1ioj!h3zxc5YZvbn6mA#B7CDpl2k@RSTUVgfds4aWXFGH9INO";
+		$pass = array();
+		$length = strlen($alphabet) - 1;
+		for ($i = 0; $i < 10; $i++){
+			$n = rand(0,$length);
+			$pass[] = $alphabet[$n];
+		}
+		return implode($pass);
+	}
 }
  
 class Member_model extends Base_module_record {
