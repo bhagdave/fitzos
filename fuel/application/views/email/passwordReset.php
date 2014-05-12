@@ -14,7 +14,7 @@
 <body>
 	<p>You have requested a password reset on the Reach Your Peak site.</p>
 	<p>Your new password has been set as:<?=$password?></p>
-	<p>Stay Active,</p>
+	<p>stay active,</p>
 	<p>Team Reach Your Peak</p>	
 	<div id="footer">
 		<p>Copyright &copy; PROformance 2014 </p>
