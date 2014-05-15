@@ -36,17 +36,40 @@ class Trainers_model extends Fitzos_model {
 		}
 		$this->db->insert_batch('trainer_specialties',$insert);	
 	}
+	function savePreferences($data,$id){
+		$this->db->where('trainer_id',$id);
+		$this->db->delete('trainers_preference');
+		$insert = array();
+		foreach($data as $key => $value){
+			$insert[] = array('trainer_id'=>$id,'preference_id'=>$key);
+		}
+		$this->db->insert_batch('trainers_preference',$insert);	
+	}
 	function getSpecialties($id){
 		$this->db->where('trainer_id',$id);
 		$this->db->select('specialty_id');
 		$result = $this->db->get('trainer_specialties');
 		$data =  $result->result_array();
+		$return = array();
 		foreach($data as $id => $arrData){
 			foreach($arrData as $key => $value)
 				$return[$value] = $value;
 		}
 		return $return;
 	}
+	function getPreferences($id){
+		$this->db->where('trainer_id',$id);
+		$this->db->select('preference_id');
+		$result = $this->db->get('trainers_preference');
+		$data =  $result->result_array();
+		$return = array();
+		foreach($data as $id => $arrData){
+			foreach($arrData as $key => $value)
+				$return[$value] = $value;
+		}
+		return $return;
+	}
+	
 }
  
 class Trainer_model extends Base_module_record {
