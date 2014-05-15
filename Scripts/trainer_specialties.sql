@@ -1,1 +1,1 @@
-CREATE  TABLE `fitzos`.`trainer_specialties` (  `trainer_id` INT NOT NULL ,  `specialty_id` INT NOT NULL ,  PRIMARY KEY (`trainer_id`, `specialty_id`) );
+CREATE  TABLE `trainer_specialties` (  `trainer_id` INT NOT NULL ,  `specialty_id` INT NOT NULL ,  PRIMARY KEY (`trainer_id`, `specialty_id`) );

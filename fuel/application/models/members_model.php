@@ -66,6 +66,8 @@ class Members_model extends Fitzos_model {
     	$this->db->join('athlete','athlete.member_id = member.id','left');
     	$this->db->join('trainer','trainer.member_id = member.id','left');
     	$result = $this->db->get();
+//     	echo($this->db->last_query());
+//     	die();
     	$data   = $result->result();
     	if (isset($data[0])){
     		if (isset($data[0]->athlete)){
