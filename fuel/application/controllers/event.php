@@ -91,6 +91,7 @@ class Event extends CI_Controller{
 		if ($this->session->userdata('id')){
 			if ($this->input->post('team_id')){
 				// ok update the beast...
+				$data = $this->input->post();
 				if (isset($_FILES['file']['name'])){
 					if ($_FILES["file"]["error"] > 0){
 						$this->session->set_flashdata('message', 'Unable to save image');
@@ -103,7 +104,6 @@ class Event extends CI_Controller{
 							move_uploaded_file($_FILES["file"]["tmp_name"],$path);
 						}
 						// update the member
-						$data = $this->input->post();
 						$data['image'] =$path;
 					}
 				}
