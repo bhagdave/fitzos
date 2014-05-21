@@ -80,9 +80,9 @@ class Signin extends CI_Controller{
 			$this->load->library('Fitzos_email',null,'Femail');
 			$emailed = $this->Femail->sendMemberInvite($member,$this->input->post('email'));
 			if ($emailed){
-				$this->session->set_flashdata('message','Email request sent!');
+				echo("OK");
 			} else {
-				$this->session->set_flashdata('message','Email request failed to send');
+				echo("ERR");
 			}
 		}
 	}
