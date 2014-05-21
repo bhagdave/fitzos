@@ -191,6 +191,11 @@ $(function() {
     		.done(function( data ) {
     			$('#inviteFriendDialog, input').val('');
     			$('#inviteFriendDialog').dialog('close');
+    			if (data === 'OK'){
+    				alert('Email request sent');
+    			} else {
+    				alert('Email request failed');    				
+    			}
     		}) 
     		.fail(function() {
     			alert( "error" );
