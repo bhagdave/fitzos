@@ -30,6 +30,7 @@ $config['modules']['filter'] = array();
 $config['modules']['forums'] = array();
 $config['modules']['members'] = array();
 $config['modules']['notifications'] = array();
+$config['modules']['preferences'] = array();
 $config['modules']['sports'] = array();
 $config['modules']['sports_links'] = array();
 $config['modules']['sports_statistics'] = array();
