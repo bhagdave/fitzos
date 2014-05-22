@@ -21,6 +21,7 @@ $config['modules']['projects'] = array(
 
 *********************** EXAMPLE ***********************************/
 $config['modules']['activity'] = array();
+$config['modules']['agerange'] = array();
 $config['modules']['athletes'] = array();
 $config['modules']['clubs'] = array();
 $config['modules']['events'] = array();
