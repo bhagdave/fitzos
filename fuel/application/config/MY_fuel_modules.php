@@ -37,7 +37,6 @@ $config['modules']['teams'] = array();
 $config['modules']['trainers'] = array();
 $config['modules']['certificates'] = array();
 $config['modules']['specialties'] = array();
-$config['modules']['preferences'] = array();
 
 
 
