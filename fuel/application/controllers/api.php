@@ -5,6 +5,26 @@ class Api extends CI_Controller{
 		$this->load->library('Fitzos_utility',null,'Futility');
 	}
 	
+	function index($model,$function){
+		$data = $_REQUEST;
+		$modelName = $model . '_model';
+		$err = $this->load->model($modelName,$model);
+		if (isset($err)){
+			if (isset($data['id'])){
+				$result = $this->$model->$function($data['id']);
+			} else {
+				$result = $this->$model->$function($data);
+			}
+		} else {
+			$result = null;
+		}
+		if (isset($result) && !empty($result)){
+			$this->_respond('OK', 'API Call worked',$result);
+		} else {
+			$this->_respond('ERR', 'API Call failed');
+		}
+	}
+	
 	function login(){
 		if ($this->_checkSessionKey()){
 			$this->load->model("api_model","api");
