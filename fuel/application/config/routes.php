@@ -41,6 +41,8 @@
 
 $route['default_controller'] = 'fuel/page_router';
 $route['404_override'] = 'fuel/page_router';
+$route['api/rest/(:any)/(:any)'] = 'api/rest/$1/$2';
+$route['api/rest/(:any)'] = 'api/rest/$1';
 $route['api/(:any)/(:any)'] = 'api/index/$1/$2';
 
 /*	

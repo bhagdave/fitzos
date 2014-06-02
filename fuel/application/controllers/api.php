@@ -25,6 +25,46 @@ class Api extends CI_Controller{
 		}
 	}
 	
+	private function _getRestMethod($verb,$id = null){
+		if ($verb === 'DELETE'){
+			return 'delete';
+		}
+		if ($verb === 'PUT'){
+			return 'update';
+		}
+		if ($verb === 'POST'){
+			return 'create';
+		}
+		if ($verb === 'GET'){
+			if (isset($id)){
+				return 'find_one';
+			} else {
+				return 'find_all';
+			}
+		}
+	}
+	
+	function rest($model,$id = null){
+		$verb = $_SERVER['REQUEST_METHOD'];
+		$modelName = $model . '_model';
+		$err = $this->load->model($modelName,$model);
+		if (isset($err)){
+			$method = $this->_getRestMethod($verb,$id);
+			if (isset($id)){
+				$result = $this->$model->$method(array('id'=>$id));
+			} else {
+				$result = $this->$model->$method();
+			}
+		} else {
+			$result =  null;
+		}
+		if (isset($result) && !empty($result)){
+			$this->_respond('OK', 'API Call worked',$result);
+		} else {
+			$this->_respond('ERR', 'API Call failed');
+		}
+	}
+	
 	function login(){
 		if ($this->_checkSessionKey()){
 			$this->load->model("api_model","api");
