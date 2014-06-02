@@ -43,7 +43,7 @@ class Api extends CI_Controller{
 			}
 		}
 	}
-	
+
 	function rest($model,$id = null){
 		$verb = $_SERVER['REQUEST_METHOD'];
 		$modelName = $model . '_model';
@@ -51,7 +51,7 @@ class Api extends CI_Controller{
 		if (isset($err)){
 			$method = $this->_getRestMethod($verb,$id);
 			if (isset($id)){
-				$result = $this->$model->$method(array('id'=>$id));
+				$result = $this->$model->$method($id);
 			} else {
 				$result = $this->$model->$method();
 			}

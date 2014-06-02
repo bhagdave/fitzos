@@ -7,6 +7,15 @@ class Events_model extends Base_module_model {
     {
         parent::__construct('event');
     }
+    function find_one($id){
+    	$this->db->where('id',$id);
+    	$result = $this->db->get($this->table_name);
+    	return $result->result();
+    }
+    function find_all(){
+    	$result = $this->db->get($this->table_name);
+    	return $result->result();
+    }
     function getEventsForMember($member){
     	$this->db->select('event.*');
 		$this->db->join("team","event.team_id = team.id");
