@@ -48,8 +48,8 @@ class Fitzos_model extends Base_module_model {
     }
     function delete($id){
     	$this->db->where($this->key_field(),$id);
-    	$result = $this->db->delete($this->table_name);
-    	return $result->result();
+    	$this->db->delete($this->table_name);
+		return $this->db->affected_rows();
     }
     function create($data){
     	$this->db->insert($this->table_name,$data);
