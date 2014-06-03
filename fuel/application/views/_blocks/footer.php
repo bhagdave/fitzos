@@ -16,8 +16,14 @@
 			if ($uri != "/$type/notifications"){
 				echo('<a href="/'.$type.'/notifications" class="btn">Notifications</a>');
 			}
-			if ($uri != '/find/search'){
-				echo('<a href="/find/search" class="btn">Find a Friend</a>');
+			if ($type == "athlete"){
+				if ($uri != '/find/search'){
+					echo('<a href="/find/search" class="btn">Find a Friend</a>');
+				}
+			} elseif($type == "trainer"){
+				if ($uri != '/trainer/certs'){
+					echo('<a href="/trainer/certs" class="btn">Certificates</a>');
+				}
 			}
 		}
 	?>

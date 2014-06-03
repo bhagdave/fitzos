@@ -5,6 +5,75 @@ class Api extends CI_Controller{
 		$this->load->library('Fitzos_utility',null,'Futility');
 	}
 	
+	function index($model,$function){
+		$data = $_REQUEST;
+		$modelName = $model . '_model';
+		$err = $this->load->model($modelName,$model);
+		if (isset($err)){
+			if (isset($data['id'])){
+				$result = $this->$model->$function($data['id']);
+			} else {
+				$result = $this->$model->$function($data);
+			}
+		} else {
+			$result = null;
+		}
+		if (isset($result) && !empty($result)){
+			$this->_respond('OK', 'API Call worked',$result);
+		} else {
+			$this->_respond('ERR', 'API Call failed');
+		}
+	}
+	
+	private function _getRestMethod($verb,$id = null){
+		if ($verb === 'DELETE'){
+			return 'delete';
+		}
+		if ($verb === 'PUT'){
+			return 'update';
+		}
+		if ($verb === 'POST'){
+			return 'create';
+		}
+		if ($verb === 'GET'){
+			if (isset($id)){
+				return 'find_one';
+			} else {
+				return 'find_all';
+			}
+		}
+	}
+
+	function rest($model,$id = null){
+		$verb = $_SERVER['REQUEST_METHOD'];
+		$modelName = $model . '_model';
+		$err = $this->load->model($modelName,$model);
+		if (isset($err)){
+			$method = $this->_getRestMethod($verb,$id);
+			$data = $this->input->post();
+			if (isset($id)){
+				if ($verb === 'PUT'){
+					$result = $this->$model->$method($data);
+				} else {
+					$result = $this->$model->$method($id);
+				}
+			} else {
+				if ($verb === 'POST'){
+					$result = $this->$model->$method($data);
+				} else {
+					$result = $this->$model->$method($id);
+				}
+			}
+		} else {
+			$result =  null;
+		}
+		if (isset($result)){
+			$this->_respond('OK', 'API Call worked',$result);
+		} else {
+			$this->_respond('ERR', 'API Call failed');
+		}
+	}
+	
 	function login(){
 		if ($this->_checkSessionKey()){
 			$this->load->model("api_model","api");

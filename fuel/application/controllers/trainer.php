@@ -14,10 +14,12 @@ class Trainer extends CI_Controller{
 		$member  = $this->members->getMember($id);
 		$events  = $this->events->getEventsForMember($id);
 		$notifications = $this->notify->getNotifications('member',$id);
+		$trainer = $this->trainers->loadProfile($id);
 		return array(
 				'member'=>$member,
 				'notes'=>$notifications,
-				'events'=>$events
+				'events'=>$events,
+				'trainer'=>$trainer
 		);
 	}
 	function index(){
@@ -33,66 +35,51 @@ class Trainer extends CI_Controller{
 		if ($this->input->post('age')){
 			$data = $this->input->post();
 			$data['member_id'] = $this->session->userdata('id');
+			$specialties = $data['specialty'];
+			unset($data['specialty']);
+			$preferences = $data['preference'];
+			unset($data['preference']);
+			$this->trainers->saveSpecialties($specialties,$this->input->post('id'));
+			$this->trainers->savePreferences($preferences,$this->input->post('id'));
 			$this->trainers->save($data);
 			$this->session->set_flashdata('message', 'Profile Saved');
 			redirect('trainer/index');	
 		} else {
 			if ($this->session->userdata('id')){
 				$trainer = $this->trainers->loadProfile($this->session->userdata('id'));
-				$vars = array('trainer'=>$trainer);
+				$this->load->model('specialties_model','specialties');
+				$this->load->model('preferences_model','preferences');
+				$specialties = $this->specialties->options_list('id','type');
+				$preferences = $this->preferences->options_list('id','preference');
+				$trainerSpecialties = $this->trainers->getSpecialties($trainer->id);
+				$trainerPreferences = $this->trainers->getPreferences($trainer->id);
+				$vars = array('trainer'=>$trainer, 'specialties'=>$specialties,'preferences'=>$preferences,'trainerSpecialties'=>$trainerSpecialties,'trainerPreferences'=>$trainerPreferences);
 				$this->fuel->pages->render('trainer/profile',$vars);
 			} else {
 				redirect('signin/login');
 			}
 		}	
 	}
-	function portal(){
-		// check for login???
-		$vars = array();
-		$this->fuel->pages->render('trainer/welcome',$vars);
-		
-	}
-	function calendar(){
-		// check for login???
-		$vars = array();
-		$this->fuel->pages->render('trainer/welcome',$vars);
-		
-	}
-	function plans(){
-		// check for login???
-		$vars = array();
-		$this->fuel->pages->render('trainer/welcome',$vars);
-		
-	}
-	function badges(){
-		// check for login???
-		$vars = array();
-		$this->fuel->pages->render('trainer/welcome',$vars);
-		
-	}
-	function business(){
-		// check for login???
-		$vars = array();
-		$this->fuel->pages->render('trainer/welcome',$vars);
-		
-	}
-	function message(){
-		// check for login???
-		$vars = array();
-		$this->fuel->pages->render('trainer/welcome',$vars);
-		
-	}
-	function progress(){
-		// check for login???
-		$vars = array();
-		$this->fuel->pages->render('trainer/welcome',$vars);
-		
-	}
-	function events(){
-		// check for login???
-		$vars = array();
-		$this->fuel->pages->render('trainer/welcome',$vars);
-		
+	function certs(){
+		if ($this->input->post('trainer_id')){
+			$affected = $this->trainers->createCertificate($this->input->post());
+			if ($affected > 0){
+				$this->session->set_flashdata('message', 'Certificate Saved');
+			} else {
+				$this->session->set_flashdata('message', 'Error saving certificate');
+			}
+			redirect('trainer/certs');
+		}
+		if ($this->session->userdata('id')){
+			$this->load->model('certificates_model','certificates');
+			$vars = $this->_getCoreData($this->session->userdata('id'));
+			$vars['quals'] = $this->trainers->getQualifications($vars['trainer']->id);
+			$vars['id'] = $this->session->userdata('id');
+			$vars['certificates'] = $this->certificates->options_list('id','name');
+			$this->fuel->pages->render('trainer/certs',$vars);
+		} else {
+			redirect('signin/login');
+		}
 	}
 }
 ?>

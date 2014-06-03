@@ -21,6 +21,7 @@ $config['modules']['projects'] = array(
 
 *********************** EXAMPLE ***********************************/
 $config['modules']['activity'] = array();
+$config['modules']['agerange'] = array();
 $config['modules']['athletes'] = array();
 $config['modules']['clubs'] = array();
 $config['modules']['events'] = array();
@@ -29,6 +30,7 @@ $config['modules']['filter'] = array();
 $config['modules']['forums'] = array();
 $config['modules']['members'] = array();
 $config['modules']['notifications'] = array();
+$config['modules']['preferences'] = array();
 $config['modules']['sports'] = array();
 $config['modules']['sports_links'] = array();
 $config['modules']['sports_statistics'] = array();
@@ -36,7 +38,6 @@ $config['modules']['teams'] = array();
 $config['modules']['trainers'] = array();
 $config['modules']['certificates'] = array();
 $config['modules']['specialties'] = array();
-$config['modules']['preferences'] = array();
 
 
 
