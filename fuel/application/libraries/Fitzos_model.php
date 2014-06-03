@@ -1,6 +1,7 @@
 <?php
+require_once(FUEL_PATH.'models/base_module_model.php');
 
-class Fitzos_model extends Fitzos_model {
+class Fitzos_model extends Base_module_model {
 	public $memcache;
 	public $cacheAvailable = 0;
 	function __construct($table = null,$params = array())
