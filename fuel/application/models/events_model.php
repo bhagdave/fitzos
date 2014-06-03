@@ -52,7 +52,7 @@ class Events_model extends Fitzos_model {
     	$this->db->order_by('event.date');
     	$this->db->limit(10);
     	$result = $this->db->get('event');
-    	echo($this->db->last_query());
+//    	echo($this->db->last_query());
     	return $result->result();
     }
     function getPublicEventsForMonthBySport(){
