@@ -50,15 +50,24 @@ class Api extends CI_Controller{
 		$err = $this->load->model($modelName,$model);
 		if (isset($err)){
 			$method = $this->_getRestMethod($verb,$id);
+			$data = $this->input->post();
 			if (isset($id)){
-				$result = $this->$model->$method($id);
+				if ($verb === 'PUT'){
+					$result = $this->$model->$method($data);
+				} else {
+					$result = $this->$model->$method($id);
+				}
 			} else {
-				$result = $this->$model->$method();
+				if ($verb === 'POST'){
+					$result = $this->$model->$method($data);
+				} else {
+					$result = $this->$model->$method($id);
+				}
 			}
 		} else {
 			$result =  null;
 		}
-		if (isset($result) && !empty($result)){
+		if (isset($result)){
 			$this->_respond('OK', 'API Call worked',$result);
 		} else {
 			$this->_respond('ERR', 'API Call failed');
