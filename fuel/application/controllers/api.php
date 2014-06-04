@@ -45,20 +45,21 @@ class Api extends CI_Controller{
 	}
 
 	function rest($model,$id = null){
+		parse_str(file_get_contents("php://input"),$put);
 		$verb = $_SERVER['REQUEST_METHOD'];
+		if ($verb === 'PUT'){
+			$data = $put;
+		} else {
+			$data = $_REQUEST;
+		}
 		$modelName = $model . '_model';
 		$err = $this->load->model($modelName,$model);
 		if (isset($err)){
 			$method = $this->_getRestMethod($verb,$id);
-			$data = $this->input->post();
 			if (isset($id)){
-				if ($verb === 'PUT'){
-					$result = $this->$model->$method($data);
-				} else {
-					$result = $this->$model->$method($id);
-				}
+				$result = $this->$model->$method($id);
 			} else {
-				if ($verb === 'POST'){
+				if ($verb === 'POST' || $verb === 'PUT'){
 					$result = $this->$model->$method($data);
 				} else {
 					$result = $this->$model->$method($id);
