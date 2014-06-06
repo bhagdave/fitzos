@@ -1,11 +1,19 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
-require_once(FUEL_PATH.'models/base_module_model.php');
 
-class Events_model extends Base_module_model {
+class Events_model extends Fitzos_model {
  
     function __construct()
     {
         parent::__construct('event');
+    }
+    function find_one($id){
+    	$this->db->where('id',$id);
+    	$result = $this->db->get($this->table_name);
+    	return $result->result();
+    }
+    function find_all(){
+    	$result = $this->db->get($this->table_name);
+    	return $result->result();
     }
     function getEventsForMember($member){
     	$this->db->select('event.*');
@@ -44,6 +52,7 @@ class Events_model extends Base_module_model {
     	$this->db->order_by('event.date');
     	$this->db->limit(10);
     	$result = $this->db->get('event');
+//    	echo($this->db->last_query());
     	return $result->result();
     }
     function getPublicEventsForMonthBySport(){
