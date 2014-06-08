@@ -15,7 +15,13 @@ class Api_model extends Base_module_model {
     	$result = $this->db->get('api_access');
     	$data = $result->result();
     	if (isset($data[0])){
-    		return $data[0]->session_key;
+    		// lets create a session key and wack it in..
+    		$session_key = md5("name=$name&key=$key" . date("H:i:s"));
+    		// update the session key and timestamp
+    		$this->db->where('name',$name);
+    		$this->db->where('key',$key);
+    		$this->db->update('api_access',array('session_key'=>$session_key,'timestamp'=>date("Y-m-d H:i:s")));
+    		return $session_key;
     	} else {
     		$this->logEvent('OpenSession Failed',"name=$name&key=$key");
     		return null;
@@ -28,6 +34,7 @@ class Api_model extends Base_module_model {
 	function isValidSessionKey($name,$key){
     	$this->db->where('name',$name);
     	$this->db->where('session_key',$key);
+    	$this->db->where('timestamp >','now() + interval - 1 hour');
     	$result = $this->db->get('api_access');
     	$data = $result->result();
     	if (isset($data[0])){
