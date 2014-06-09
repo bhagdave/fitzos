@@ -33,7 +33,7 @@ class Api_model extends Base_module_model {
     	$this->db->where('name',$name);
     	$this->db->where('session_key',$key);
     	$this->db->where('timestamp >','now() + interval - 1 hour');
-    	$result = $this->db->get('api_access');
+    	$result = $this->db->get('session');
     	$data = $result->result();
     	if (isset($data[0])){
     		return true;
