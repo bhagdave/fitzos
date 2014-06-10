@@ -107,7 +107,7 @@ class Api extends CI_Controller{
 		if ($this->input->get_post('name') && $this->input->get_post('key')){
 			$name = $this->input->get_post('name');
 			$key  = $this->input->get_post('key');
-			$session_key = $this->api->openSession($name,$key);
+			$session_key = $this->api->openSession($name,$key,$_SERVER['REMOTE_ADDR']);
 			if (isset($session_key)){
 				$this->_respond('OK','Session Successful',$session_key);
 			} else {
