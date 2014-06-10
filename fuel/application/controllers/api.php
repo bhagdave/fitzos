@@ -76,7 +76,7 @@ class Api extends CI_Controller{
 	}
 	
 	function login(){
-		if ($this->_checkSessionKey()){
+		if ($this->_checkSessionKey('login')){
 			$this->load->model("api_model","api");
 			$this->load->model("members_model","members");
 			$username = $this->input->get_post('username');
@@ -117,10 +117,10 @@ class Api extends CI_Controller{
 				$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
 		}
 	}
-	private function _checkSessionKey(){
-		if ($this->input->get_post('access_name') && $this->input->get_post('api_key')){
+	private function _checkSessionKey($method){
+		if ($this->input->get_post('key') && $this->input->get_post('signature')){
 			$this->load->model("api_model","api");
-			return $this->api->isValidSessionKey($this->input->get_post('access_name'),$this->input->get_post('api_key'));
+			return $this->api->isValidSessionKey($method,$this->input->get_post('key'),$this->input->get_post('signature'));
 		} else {
 			return false;
 		}

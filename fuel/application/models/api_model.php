@@ -28,14 +28,19 @@ class Api_model extends Base_module_model {
 		$insert = array('event'=>$event,'message'=>$message, 'time'=>date("Y-m-d H:i:s"));
 		$this->db->insert('api_log',$insert);
 	}
-	function isValidSessionKey($name,$key){
-    	$this->db->where('name',$name);
+	function isValidSessionKey($method,$key, $signature){
     	$this->db->where('session_key',$key);
     	$this->db->where('timestamp >','now() + interval - 1 hour');
+    	$this->db->join('api_access','api_access.name = session.session_name');
     	$result = $this->db->get('session');
     	$data = $result->result();
     	if (isset($data[0])){
-    		return true;
+    		$test = md5($data[0]->session_name . $data[0]->key. $method);
+    		if ($test == $signature){
+    			return true;
+    		} else {
+    			return false;
+    		}
     	} else {
     		return false;
     	}
