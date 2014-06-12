@@ -88,7 +88,7 @@ class Api extends CI_Controller{
 				$data = array('salt'=>$login->salt, 'type'=>$type);
 				$this->_respond('OK','Login Successful',$data);
 			} else {
-				$this->_respond("ERR","Username or Password Invalid", $this->input->get_post());
+				$this->_respond("ERR","Username or Password Invalid", $login);
 			}
 		} else {
 			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
