@@ -9,10 +9,11 @@ class Api_model extends Base_module_model {
     }
     function openSession($name,$key,$ipAddress = ''){
     	$this->logEvent('OpenSession',"name=$name&key=$key");
-    	$this->db->select("api_access.name,api_access.session_key,api_access.key,md5(pi_access.key + api_access.name) as hash");
+    	$this->db->select("api_access.name,api_access.session_key,api_access.key,md5(convert(api_access.key using latin1) + convert(api_access.name using latin1)) as hash");
     	$this->db->where('name',$name);
     	$result = $this->db->get('api_access');
     	$data = $result->result();
+    	//echo($data[0]->hash);
     	if (isset($data[0]) && $data[0]->hash == $key){
     		// lets create a session key and wack it in to the session table....
     		$session_key = md5("name=$name&key=". $data[0]->session_key . date("H:i:s"));
@@ -30,12 +31,15 @@ class Api_model extends Base_module_model {
 	}
 	function isValidSessionKey($method,$key, $signature){
     	$this->db->where('session.session_key',$key);
-    	$this->db->where('session.timestamp >','now() + interval - 1 hour');
+//    	$this->db->where('session.timestamp >','now() + interval - 1 hour');
     	$this->db->join('api_access','api_access.name = session.session_name');
     	$result = $this->db->get('session');
+    	echo($this->db->last_query()); echo("\n");
     	$data = $result->result();
     	if (isset($data[0])){
+    		echo("Putting in " . $data[0]->session_name . $data[0]->key . $method . "\n");
     		$test = md5($data[0]->session_name . $data[0]->key. $method);
+    		echo($test);
     		if ($test == $signature){
     			return true;
     		} else {
