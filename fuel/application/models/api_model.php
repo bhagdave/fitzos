@@ -40,6 +40,7 @@ class Api_model extends Base_module_model {
 //    	$this->db->where('session.timestamp >','now() + interval - 1 hour');
     	$this->db->join('api_access','api_access.name = session.session_name');
     	$result = $this->db->get('session');
+    	echo($this->db->last_query());
     	$data = $result->result();
     	if (isset($data[0])){
     		$test = md5($data[0]->session_name . $data[0]->key. $method);
