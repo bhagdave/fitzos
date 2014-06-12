@@ -9,17 +9,23 @@ class Api_model extends Base_module_model {
     }
     function openSession($name,$key,$ipAddress = ''){
     	$this->logEvent('OpenSession',"name=$name&key=$key");
-    	$this->db->select("api_access.name,api_access.session_key,api_access.key,md5(convert(api_access.key using latin1) + convert(api_access.name using latin1)) as hash");
+    	$this->db->select("name,session_key,key");
     	$this->db->where('name',$name);
     	$result = $this->db->get('api_access');
     	$data = $result->result();
     	//echo($data[0]->hash);
-    	if (isset($data[0]) && $data[0]->hash == $key){
-    		// lets create a session key and wack it in to the session table....
-    		$session_key = md5("name=$name&key=". $data[0]->session_key . date("H:i:s"));
-    		// create the session key and timestamp
-    		$this->db->insert('session',array('session_name'=>$name,'ip_address'=>$ipAddress,'session_key'=>$session_key,'timestamp'=>date("Y-m-d H:i:s")));
-    		return $session_key;
+    	if (isset($data[0])){
+    		$hash = md5($data[0]->key . $data[0]->name);
+    		if ($hash == $key){
+    			// lets create a session key and wack it in to the session table....
+    			$session_key = md5("name=$name&key=". $data[0]->session_key . date("H:i:s"));
+    			// create the session key and timestamp
+    			$this->db->insert('session',array('session_name'=>$name,'ip_address'=>$ipAddress,'session_key'=>$session_key,'timestamp'=>date("Y-m-d H:i:s")));
+    			return $session_key;
+    		} else {
+    			$this->logEvent('OpenSession Failed',"name=$name&key=$key&hash=$hash");
+    			return null;
+    		}
     	} else {
     		$this->logEvent('OpenSession Failed',"name=$name&key=$key");
     		return null;
