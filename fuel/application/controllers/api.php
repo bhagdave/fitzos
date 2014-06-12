@@ -76,6 +76,7 @@ class Api extends CI_Controller{
 	}
 	
 	function login(){
+		echo("Login!!!!");
 		if ($this->_checkSessionKey('login')){
 			$this->load->model("api_model","api");
 			$this->load->model("members_model","members");
