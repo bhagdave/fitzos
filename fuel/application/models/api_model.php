@@ -29,8 +29,8 @@ class Api_model extends Base_module_model {
 		$this->db->insert('api_log',$insert);
 	}
 	function isValidSessionKey($method,$key, $signature){
-    	$this->db->where('session_key',$key);
-    	$this->db->where('timestamp >','now() + interval - 1 hour');
+    	$this->db->where('session.session_key',$key);
+    	$this->db->where('session.timestamp >','now() + interval - 1 hour');
     	$this->db->join('api_access','api_access.name = session.session_name');
     	$result = $this->db->get('session');
     	$data = $result->result();

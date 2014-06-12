@@ -91,7 +91,7 @@ class Api extends CI_Controller{
 				$this->_respond("ERR","Username or Password Invalid", $this->input->get_post());
 			}
 		} else {
-			$this->_respond("ERR","Invalid Session Request", $this->input->get_post);
+			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
 		}
 	}	
 	private function _respond($status,$message,$result = null){
