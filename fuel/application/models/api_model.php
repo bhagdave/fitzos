@@ -16,7 +16,7 @@ class Api_model extends Base_module_model {
     	//echo($data[0]->hash);
     	if (isset($data[0])){
     		$hash = md5($data[0]->key . $data[0]->name);
-    		if ($hash == $key){
+    		if (strtoupper($hash) == strtoupper($key)){
     			// lets create a session key and wack it in to the session table....
     			$session_key = md5("name=$name&key=". $data[0]->session_key . date("H:i:s"));
     			// create the session key and timestamp
