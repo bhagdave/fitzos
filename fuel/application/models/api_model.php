@@ -34,12 +34,9 @@ class Api_model extends Base_module_model {
 //    	$this->db->where('session.timestamp >','now() + interval - 1 hour');
     	$this->db->join('api_access','api_access.name = session.session_name');
     	$result = $this->db->get('session');
-    	echo($this->db->last_query()); echo("\n");
     	$data = $result->result();
     	if (isset($data[0])){
-    		echo("Putting in " . $data[0]->session_name . $data[0]->key . $method . "\n");
     		$test = md5($data[0]->session_name . $data[0]->key. $method);
-    		echo($test);
     		if ($test == $signature){
     			return true;
     		} else {
