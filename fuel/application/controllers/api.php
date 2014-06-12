@@ -76,7 +76,6 @@ class Api extends CI_Controller{
 	}
 	
 	function login(){
-		echo("Login!!!!");
 		if ($this->_checkSessionKey('login')){
 			$this->load->model("api_model","api");
 			$this->load->model("members_model","members");
@@ -120,7 +119,6 @@ class Api extends CI_Controller{
 	}
 	private function _checkSessionKey($method){
 		if ($this->input->get_post('key') && $this->input->get_post('signature')){
-			echo("CALLED: Method=$method Key=" .$this->input->get_post('key') . "Signature=".$this->input->get_post('signature')."\n");
 			$this->load->model("api_model","api");
 			return $this->api->isValidSessionKey($method,$this->input->get_post('key'),$this->input->get_post('signature'));
 		} else {
