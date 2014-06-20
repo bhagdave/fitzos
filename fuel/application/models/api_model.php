@@ -36,12 +36,12 @@ class Api_model extends Base_module_model {
 		$this->db->insert('api_log',$insert);
 	}
 	function isValidSessionKey($method,$key, $signature){
-//		echo("Method=$method Key=$key Signature=$signature\n");
+		echo("Method=$method Key=$key Signature=$signature\n");
     	$this->db->where('session.session_key',strtolower($key));
 //    	$this->db->where('session.timestamp >','now() + interval - 1 hour');
     	$this->db->join('api_access','api_access.name = session.session_name');
     	$result = $this->db->get('session');
-//    	echo($this->db->last_query());
+    	echo($this->db->last_query());
     	$data = $result->result();
     	if (isset($data[0])){
     		$test = md5($data[0]->session_name . $data[0]->key. $method);
