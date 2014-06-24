@@ -57,4 +57,14 @@ class Api_model extends Base_module_model {
     		return false;
     	}
 	}
+	function getMemberFromSalt($salt){
+		$this->db->where('salt',$salt);
+		$result = $this->db->get('member');
+		$data = $result->result();
+		if (isset($data[0])){
+			return $data[0]->id;
+		} else {
+			return null;
+		}
+	}
 }

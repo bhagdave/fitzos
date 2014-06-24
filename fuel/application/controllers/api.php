@@ -3,6 +3,12 @@ class Api extends CI_Controller{
 	function __construct(){
 		parent::__construct();
 		$this->load->library('Fitzos_utility',null,'Futility');
+		$this->load->model("api_model","api");
+	}
+	
+	private function _convertMemberSaltToId($member){
+		$memberId = $this->api->getMemberFromSalt($member);
+		return $memberId;	
 	}
 	
 	function index($model,$function){
@@ -81,7 +87,6 @@ class Api extends CI_Controller{
 	
 	function login(){
 		if ($this->_checkSessionKey('login')){
-			$this->load->model("api_model","api");
 			$this->load->model("members_model","members");
 			$username = $this->input->get_post('username');
 			$password = md5($this->input->get_post('password'));
