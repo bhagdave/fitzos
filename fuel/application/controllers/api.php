@@ -21,7 +21,7 @@ class Api extends CI_Controller{
 				if (isset($data['id'])){
 					// convert salt to memberid
 					$data['id'] = $this->_convertMemberSaltToId($data['id']);
-					$this->api->logEvent($model . '->' . $function . ' PRECALL',print_r($_REQUEST,true));
+					$this->api->logEvent($model . '->' . $function . ' PRECALL',print_r($data,true));
 					$result = $this->$model->$function($data['id']);
 //					echo("Calling $model $function with " . $data['id']);
 				} else {
@@ -32,8 +32,10 @@ class Api extends CI_Controller{
 			}
 			$this->api->logEvent($model . '->' . $function . ' RESULT',print_r($result,true));
 			if (isset($result) && !empty($result)){
+				$this->api->logEvent($model . '->' . $function,'Result Returned!');
 				$this->_respond('OK', 'API Call worked',$result);
 			} else {
+				$this->api->logEvent($model . '->' . $function,'No Result and Failed!');
 				$this->_respond('ERR', 'API Call failed');
 			}
 //		} else {
