@@ -6,22 +6,26 @@ class Api extends CI_Controller{
 	}
 	
 	function index($model,$function){
-		$data = $_REQUEST;
-		$modelName = $model . '_model';
-		$err = $this->load->model($modelName,$model);
-		if (isset($err)){
-			if (isset($data['id'])){
-				$result = $this->$model->$function($data['id']);
+		if ($this->_checkSessionKey($function)){
+			$data = $_REQUEST;
+			$modelName = $model . '_model';
+			$err = $this->load->model($modelName,$model);
+			if (isset($err)){
+				if (isset($data['id'])){
+					$result = $this->$model->$function($data['id']);
+				} else {
+					$result = $this->$model->$function($data);
+				}
 			} else {
-				$result = $this->$model->$function($data);
+				$result = null;
+			}
+			if (isset($result) && !empty($result)){
+				$this->_respond('OK', 'API Call worked',$result);
+			} else {
+				$this->_respond('ERR', 'API Call failed');
 			}
 		} else {
-			$result = null;
-		}
-		if (isset($result) && !empty($result)){
-			$this->_respond('OK', 'API Call worked',$result);
-		} else {
-			$this->_respond('ERR', 'API Call failed');
+			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
 		}
 	}
 	
