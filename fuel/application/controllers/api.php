@@ -12,6 +12,7 @@ class Api extends CI_Controller{
 	}
 	
 	function index($model,$function){
+		$this->api->logEvent($model . '->' . $function,print_r($_REQUEST,true));
 //		if ($this->_checkSessionKey($function)){
 			$data = $_REQUEST;
 			$modelName = $model . '_model';
