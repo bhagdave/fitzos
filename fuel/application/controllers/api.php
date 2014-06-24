@@ -18,6 +18,8 @@ class Api extends CI_Controller{
 			$err = $this->load->model($modelName,$model);
 			if (isset($err)){
 				if (isset($data['id'])){
+					// convert salt to memberid
+					$data['id'] = $this->_convertMemberSaltToId($data['id']);
 					$result = $this->$model->$function($data['id']);
 //					echo("Calling $model $function with " . $data['id']);
 				} else {
