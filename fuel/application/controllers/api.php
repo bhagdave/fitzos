@@ -19,8 +19,11 @@ class Api extends CI_Controller{
 			$err = $this->load->model($modelName,$model);
 			if (isset($err)){
 				if (isset($data['id'])){
-					// convert salt to memberid
-					$data['id'] = $this->_convertMemberSaltToId($data['id']);
+					// if the id is not a number then treat it as a salt.
+					if (!is_numeric($data['id'])){
+						// convert salt to memberid
+						$data['id'] = $this->_convertMemberSaltToId($data['id']);
+					}
 					$this->api->logEvent($model . '->' . $function . ' PRECALL',print_r($data,true));
 					$result = $this->$model->$function($data['id']);
 //					echo("Calling $model $function with " . $data['id']);
