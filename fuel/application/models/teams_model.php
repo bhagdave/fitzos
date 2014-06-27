@@ -37,6 +37,15 @@ class Teams_model extends Fitzos_model {
     	$result = $this->db->get('team_membership');
     	return $result->result();
     }
+    function getMembersTeams($id){
+    	$query = "select team.id,team.name from team_membership
+					join team on team_id = team.id
+					where member_id = $id
+					union
+				  select id,name from team where owner = $id";
+    	$result = $this->db->query($query);
+    	return $result->result();
+    }
     function createTeam($data){
     	$this->db->insert('team',$data);
     	$team_id = $this->db->insert_id();
