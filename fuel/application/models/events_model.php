@@ -245,6 +245,16 @@ class Events_model extends Fitzos_model {
 			return false;
 		}
 	}
+	function isAttendee($event,$id){
+		if (isset($event) && isset($id)){
+			$this->db->where('event_id',$event);
+			$this->db->where("member_id",$id);
+			$result = $this->db->get('event_attendance');
+			return $result->num_rows() > 0;
+		} else {
+			return false;
+		}
+	}
 	function addWallPost($data){
 		if (is_array($data)){
 			if (!isset($data['date'])){
