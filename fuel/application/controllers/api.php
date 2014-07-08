@@ -11,6 +11,36 @@ class Api extends CI_Controller{
 		return $memberId;	
 	}
 	
+	private function doTheMethodCall($class,$method,$data){
+		$r = new ReflectionMethod($class.'_model', $method);
+		$pass = array();
+		foreach($r->getParameters() as $param){
+			if (isset($data[$param->getName()])){
+				$pass[] = $data[$param->getName()];
+			} else {
+//				$pass[] = $param->getDefaultValue();
+			}
+		}
+		$result = $r->invokeArgs($this->$class, $pass);
+		return $result;
+	}
+	
+	function r($model,$function){
+		$data = $_REQUEST;
+		$modelName = $model . '_model';
+		$err = $this->load->model($modelName,$model);
+		if (isset($err)){
+			if (isset($data['id']) && !is_numeric($data['id'])){
+				// convert salt to memberid
+				$data['id'] = $this->_convertMemberSaltToId($data['id']);
+			}
+			$result = $this->doTheMethodCall($model, $function, $data);		
+		} else {
+			$result = null;
+		}
+		$this->_respond('OK', 'API Call worked',$result);
+	}
+	
 	function index($model,$function){
 		$this->api->logEvent($model . '->' . $function,print_r($_REQUEST,true));
 //		if ($this->_checkSessionKey($function)){
@@ -25,9 +55,10 @@ class Api extends CI_Controller{
 						$data['id'] = $this->_convertMemberSaltToId($data['id']);
 					}
 					$this->api->logEvent($model . '->' . $function . ' PRECALL',print_r($data,true));
-					$result = $this->$model->$function($data['id']);
-//					echo("Calling $model $function with " . $data['id']);
+//					$result = $this->doTheMethodCall($model, $function, $data);
+ 					$result = $this->$model->$function($data['id']);
 				} else {
+// 					$result = $this->doTheMethodCall($model, $function, $data);
 					$result = $this->$model->$function($data);
 				}
 			} else {
