@@ -289,7 +289,7 @@ class Events_model extends Fitzos_model {
 					'date'=>date('Y-m-d')
 			);
 			$this->db->insert('event_wall',$insert);
-			return $this->db->insert_id();
+			return $this->db->insert_id() > 0;
 		} else {
 			return false;
 		}
