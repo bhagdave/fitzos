@@ -266,6 +266,34 @@ class Events_model extends Fitzos_model {
 			return null;
 		}
 	}
+	function getMemberFromSalt($salt){
+		$this->db->where('salt',$salt);
+		$result = $this->db->get('member');
+		$data = $result->result();
+		if (isset($data[0])){
+			return $data[0]->id;
+		} else {
+			return null;
+		}
+	}
+	
+	function addWallPostAPI($member_id,$event_id,$message){
+		if (!is_numeric($member_id)){
+			$member_id = $this->getMemberFromSalt($member_id);
+		}
+		if (isset($member_id)){
+			$insert = array(
+					'member_id'=>$member_id,
+					'event_id'=>$event_id,
+					'message'=>$message,
+					'date'=>date('Y-m-d')
+			);
+			$this->db->insert('event_wall',$insert);
+			return $this->db->insert_id();
+		} else {
+			return false;
+		}
+	}
 	function deletePost($event,$id){
 		$this->db->where('event_id',$event);
 		$this->db->where('id',$id);
