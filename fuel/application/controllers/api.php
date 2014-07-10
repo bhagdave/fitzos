@@ -18,7 +18,9 @@ class Api extends CI_Controller{
 			if (isset($data[$param->getName()])){
 				$pass[] = $data[$param->getName()];
 			} else {
-//				$pass[] = $param->getDefaultValue();
+				if($param->isOptional()){
+					$pass[] = $param->getDefaultValue();
+				}
 			}
 		}
 		$result = $r->invokeArgs($this->$class, $pass);
