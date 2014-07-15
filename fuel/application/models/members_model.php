@@ -110,6 +110,7 @@ class Members_model extends Fitzos_model {
 		if (isset($member)){
 			return $member;
 		} else {
+			$this->db->select('id,active,first_name,last_name,language,salt,email,image');
 			$this->db->where('id', $id);
 			$result = $this->db->get('member');
 			$data   = $result->result();

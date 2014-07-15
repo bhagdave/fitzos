@@ -1,0 +1,2 @@
+ALTER TABLE `event` CHANGE COLUMN `date` `date` DATE NULL DEFAULT NULL  , CHANGE COLUMN `end_date` `end_date` DATE NULL DEFAULT NULL  ;
+

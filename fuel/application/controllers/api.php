@@ -3,26 +3,80 @@ class Api extends CI_Controller{
 	function __construct(){
 		parent::__construct();
 		$this->load->library('Fitzos_utility',null,'Futility');
+		$this->load->model("api_model","api");
 	}
 	
-	function index($model,$function){
+	private function _convertMemberSaltToId($member){
+		$memberId = $this->api->getMemberFromSalt($member);
+		return $memberId;	
+	}
+	
+	private function doTheMethodCall($class,$method,$data){
+		$r = new ReflectionMethod($class.'_model', $method);
+		$pass = array();
+		foreach($r->getParameters() as $param){
+			if (isset($data[$param->getName()])){
+				$pass[] = $data[$param->getName()];
+			} else {
+				if($param->isOptional()){
+					$pass[] = $param->getDefaultValue();
+				}
+			}
+		}
+		$result = $r->invokeArgs($this->$class, $pass);
+		return $result;
+	}
+	
+	function r($model,$function){
 		$data = $_REQUEST;
 		$modelName = $model . '_model';
 		$err = $this->load->model($modelName,$model);
 		if (isset($err)){
-			if (isset($data['id'])){
-				$result = $this->$model->$function($data['id']);
-			} else {
-				$result = $this->$model->$function($data);
+			if (isset($data['id']) && !is_numeric($data['id'])){
+				// convert salt to memberid
+				$data['id'] = $this->_convertMemberSaltToId($data['id']);
 			}
+			$result = $this->doTheMethodCall($model, $function, $data);		
 		} else {
 			$result = null;
 		}
-		if (isset($result) && !empty($result)){
-			$this->_respond('OK', 'API Call worked',$result);
-		} else {
-			$this->_respond('ERR', 'API Call failed');
-		}
+		$this->_respond('OK', 'API Call worked',$result);
+	}
+	
+	function index($model,$function){
+		$this->api->logEvent($model . '->' . $function,print_r($_REQUEST,true));
+//		if ($this->_checkSessionKey($function)){
+			$data = $_REQUEST;
+			$modelName = $model . '_model';
+			$err = $this->load->model($modelName,$model);
+			if (isset($err)){
+				if (isset($data['id'])){
+					// if the id is not a number then treat it as a salt.
+					if (!is_numeric($data['id'])){
+						// convert salt to memberid
+						$data['id'] = $this->_convertMemberSaltToId($data['id']);
+					}
+					$this->api->logEvent($model . '->' . $function . ' PRECALL',print_r($data,true));
+//					$result = $this->doTheMethodCall($model, $function, $data);
+ 					$result = $this->$model->$function($data['id']);
+				} else {
+// 					$result = $this->doTheMethodCall($model, $function, $data);
+					$result = $this->$model->$function($data);
+				}
+			} else {
+				$result = null;
+			}
+			$this->api->logEvent($model . '->' . $function . ' RESULT',print_r($result,true));
+			if (isset($result) && !empty($result)){
+				$this->api->logEvent($model . '->' . $function,'Result Returned!');
+				$this->_respond('OK', 'API Call worked',$result);
+			} else {
+				$this->api->logEvent($model . '->' . $function,'No Result and Failed!');
+				$this->_respond('ERR', 'API Call failed');
+			}
+//		} else {
+//			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
+//		}
 	}
 	
 	private function _getRestMethod($verb,$id = null){
@@ -45,20 +99,30 @@ class Api extends CI_Controller{
 	}
 
 	function rest($model,$id = null){
+		parse_str(file_get_contents("php://input"),$put);
 		$verb = $_SERVER['REQUEST_METHOD'];
+		if ($verb === 'PUT'){
+			$data = $put;
+		} else {
+			$data = $_REQUEST;
+		}
+		// frig the ids if they are salted
+		if (isset($data['id']) && !is_numeric($data['id'])){
+			// convert salt to memberid
+			$data['id'] = $this->_convertMemberSaltToId($data['id']);
+		}
+		if (isset($data['member_id']) && !is_numeric($data['member_id'])){
+			// convert salt to memberid
+			$data['member_id'] = $this->_convertMemberSaltToId($data['member_id']);
+		}
 		$modelName = $model . '_model';
 		$err = $this->load->model($modelName,$model);
 		if (isset($err)){
 			$method = $this->_getRestMethod($verb,$id);
-			$data = $this->input->post();
 			if (isset($id)){
-				if ($verb === 'PUT'){
-					$result = $this->$model->$method($data);
-				} else {
-					$result = $this->$model->$method($id);
-				}
+				$result = $this->$model->$method($id);
 			} else {
-				if ($verb === 'POST'){
+				if ($verb === 'POST' || $verb === 'PUT'){
 					$result = $this->$model->$method($data);
 				} else {
 					$result = $this->$model->$method($id);
@@ -75,8 +139,7 @@ class Api extends CI_Controller{
 	}
 	
 	function login(){
-		if ($this->_checkSessionKey()){
-			$this->load->model("api_model","api");
+		if ($this->_checkSessionKey('login')){
 			$this->load->model("members_model","members");
 			$username = $this->input->get_post('username');
 			$password = md5($this->input->get_post('password'));
@@ -87,10 +150,10 @@ class Api extends CI_Controller{
 				$data = array('salt'=>$login->salt, 'type'=>$type);
 				$this->_respond('OK','Login Successful',$data);
 			} else {
-				$this->_respond("ERR","Username or Password Invalid", $this->input->get_post());
+				$this->_respond("ERR","Username or Password Invalid", $login);
 			}
 		} else {
-			$this->_respond("ERR","Invalid Session Request", $this->input->get_post);
+			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
 		}
 	}	
 	private function _respond($status,$message,$result = null){
@@ -106,7 +169,7 @@ class Api extends CI_Controller{
 		if ($this->input->get_post('name') && $this->input->get_post('key')){
 			$name = $this->input->get_post('name');
 			$key  = $this->input->get_post('key');
-			$session_key = $this->api->openSession($name,$key);
+			$session_key = $this->api->openSession($name,$key,$_SERVER['REMOTE_ADDR']);
 			if (isset($session_key)){
 				$this->_respond('OK','Session Successful',$session_key);
 			} else {
@@ -116,10 +179,10 @@ class Api extends CI_Controller{
 				$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
 		}
 	}
-	private function _checkSessionKey(){
-		if ($this->input->get_post('access_name') && $this->input->get_post('api_key')){
+	private function _checkSessionKey($method){
+		if ($this->input->get_post('key') && $this->input->get_post('signature')){
 			$this->load->model("api_model","api");
-			return $this->api->isValidSessionKey($this->input->get_post('access_name'),$this->input->get_post('api_key'));
+			return $this->api->isValidSessionKey($method,$this->input->get_post('key'),$this->input->get_post('signature'));
 		} else {
 			return false;
 		}
