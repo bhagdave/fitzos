@@ -36,6 +36,10 @@ class Api extends CI_Controller{
 				// convert salt to memberid
 				$data['id'] = $this->_convertMemberSaltToId($data['id']);
 			}
+			if (isset($data['from']) && !is_numeric($data['from'])){
+				// convert salt to memberid
+				$data['from'] = $this->_convertMemberSaltToId($data['from']);
+			}
 			$result = $this->doTheMethodCall($model, $function, $data);		
 		} else {
 			$result = null;
@@ -112,6 +116,10 @@ class Api extends CI_Controller{
 		if (isset($data['member_id']) && !is_numeric($data['member_id'])){
 			// convert salt to memberid
 			$data['member_id'] = $this->_convertMemberSaltToId($data['member_id']);
+		}
+		if (isset($data['owner']) && !is_numeric($data['owner'])){
+			// convert salt to memberid
+			$data['owner'] = $this->_convertMemberSaltToId($data['owner']);
 		}
 		$modelName = $model . '_model';
 		$err = $this->load->model($modelName,$model);
