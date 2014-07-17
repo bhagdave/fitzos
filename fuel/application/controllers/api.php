@@ -119,6 +119,10 @@ class Api extends CI_Controller{
 			// convert salt to memberid
 			$data['member_id'] = $this->_convertMemberSaltToId($data['member_id']);
 		}
+		if (isset($data['owner']) && !is_numeric($data['owner'])){
+			// convert salt to memberid
+			$data['owner'] = $this->_convertMemberSaltToId($data['owner']);
+		}
 		$modelName = $model . '_model';
 		$err = $this->load->model($modelName,$model);
 		if (isset($err)){
