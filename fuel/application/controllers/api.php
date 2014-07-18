@@ -12,6 +12,7 @@ class Api extends CI_Controller{
 	}
 	
 	private function doTheMethodCall($class,$method,$data){
+		$data['data'] = $data;
 		$r = new ReflectionMethod($class.'_model', $method);
 		$pass = array();
 		foreach($r->getParameters() as $param){
