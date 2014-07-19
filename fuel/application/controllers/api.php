@@ -12,6 +12,13 @@ class Api extends CI_Controller{
 	}
 	
 	private function doTheMethodCall($class,$method,$data){
+		if (isset($data['signature'])){
+			unset($data['signature']);	
+		}
+		if (isset($data['key'])){
+			unset($data['key']);	
+		}
+		$data['data'] = $data;
 		$r = new ReflectionMethod($class.'_model', $method);
 		$pass = array();
 		foreach($r->getParameters() as $param){
@@ -32,6 +39,10 @@ class Api extends CI_Controller{
 		$modelName = $model . '_model';
 		$err = $this->load->model($modelName,$model);
 		if (isset($err)){
+			if (isset($data['member_id']) && !is_numeric($data['member_id'])){
+				// convert salt to memberid
+				$data['member_id'] = $this->_convertMemberSaltToId($data['member_id']);
+			}
 			if (isset($data['id']) && !is_numeric($data['id'])){
 				// convert salt to memberid
 				$data['id'] = $this->_convertMemberSaltToId($data['id']);
@@ -59,6 +70,10 @@ class Api extends CI_Controller{
 					if (!is_numeric($data['id'])){
 						// convert salt to memberid
 						$data['id'] = $this->_convertMemberSaltToId($data['id']);
+					}
+					if (isset($data['member_id']) && !is_numeric($data['member_id'])){
+						// convert salt to memberid
+						$data['member_id'] = $this->_convertMemberSaltToId($data['member_id']);
 					}
 					$this->api->logEvent($model . '->' . $function . ' PRECALL',print_r($data,true));
  					$result = $this->$model->$function($data['id']);

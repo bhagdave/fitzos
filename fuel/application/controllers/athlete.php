@@ -171,8 +171,27 @@ class Athlete extends CI_Controller{
 		$this->fuel->pages->render('athlete/calendar',$vars);
 		
 	}
+	function saveProfileIMage($id){
+		if (isset($_FILES['file']['name']) && !empty($_FILES['file']['name'])){
+			if ($_FILES["file"]["error"] > 0){
+				$this->session->set_flashdata('message', 'Unable to save image');
+			} else {
+				$_FILES["file"]["name"] = underscore($_FILES["file"]["name"]);
+				$path = 'assets/images/members/' . $_FILES["file"]["name"];
+				if (file_exists($path)){
+					// update member image to point here...
+				} else {
+					// save file...
+					move_uploaded_file($_FILES["file"]["tmp_name"],$path);
+				}
+				// update the member
+				$this->members->saveMemberBySalt(array('id'=>$id,'image'=>$path));
+			}
+		}
+	}
 	function profile(){
 		if ($this->input->post('age')){	
+			$this->load->helper('inflector');
 			// post to the database baby...
 			$data = $this->input->post();
 			$data['id'] = $this->session->userdata('id');
@@ -183,6 +202,7 @@ class Athlete extends CI_Controller{
 				if ($_FILES["file"]["error"] > 0){	
 					$this->session->set_flashdata('message', 'Unable to save image');
 				} else {
+					$_FILES["file"]["name"] = underscore($_FILES["file"]["name"]);
 					$path = 'assets/images/members/' . $_FILES["file"]["name"];
 					if (file_exists($path)){
 						// update member image to point here...
