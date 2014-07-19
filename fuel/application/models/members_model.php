@@ -199,6 +199,19 @@ class Members_model extends Fitzos_model {
 			return null;
 		}
 	}
+	function saveMemberBySalt($data){
+		// check if they exist..
+		$this->db->where('salt',$data['id']);
+		$count = $this->db->count_all_results('member');
+		if ($count > 0){
+			// if they do update
+			$this->db->where('salt',$data['id']);
+			$this->db->update('member',$data);
+		} else {
+			// if not then create
+			$this->createMember($data);
+		}
+	}
 	function saveMember($data){
 		// check if they exist..
 		$this->db->where('id',$data['id']);
