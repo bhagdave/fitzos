@@ -171,7 +171,7 @@ class Athlete extends CI_Controller{
 		$this->fuel->pages->render('athlete/calendar',$vars);
 		
 	}
-	function saveProfileIMage($id){
+	function saveProfileImage($id){
 		if (isset($_FILES['file']['name']) && !empty($_FILES['file']['name'])){
 			if ($_FILES["file"]["error"] > 0){
 				$this->session->set_flashdata('message', 'Unable to save image');
