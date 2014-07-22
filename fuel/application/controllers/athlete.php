@@ -172,8 +172,8 @@ class Athlete extends CI_Controller{
 		
 	}
 	function saveProfileImage($id){
+		$request = $_REQUEST;
 		$this->load->model('api_model','x');
-		$this->x->logEvent('saveProfileImage','Entered');
 		if (isset($_FILES['file']['name']) && !empty($_FILES['file']['name'])){
 			if ($_FILES["file"]["error"] > 0){
 				$this->session->set_flashdata('message', 'Unable to save image');
@@ -195,6 +195,7 @@ class Athlete extends CI_Controller{
 			$this->x->logEvent('saveProfileImage','No file received');
 			$data = file_get_contents('php://input');
 			$this->x->logEvent('saveProfileImage->phpinput',print_r($data,true));
+			$this->x->logEvent('saveProfileImage->request',print_r($request,true));
 		}
 	}
 	function profile(){
