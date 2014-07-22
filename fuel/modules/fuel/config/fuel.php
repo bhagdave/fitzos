@@ -338,7 +338,7 @@ $config['nav_auto_arrange'] = TRUE;
 $config['default_home_view'] = 'home';
 
 // turn on cache. Can be TRUE/FALSE or cms
-$config['use_page_cache'] = 'cms';
+$config['use_page_cache'] = FALSE;
 
 // how long to cache the page. A value of 0 means forever until the page or other modules have been updated
 $config['page_cache_ttl'] = 0;
@@ -420,7 +420,7 @@ $config['generate'] = array(
 										'assets/css/{module}.css',
 										'assets/images/ico_cog.png',
 										'assets/js/{ModuleName}Controller.js',
-										'assets/cache/',
+										'assets//',
 										'config/{module}.php',
 										'config/{module}_constants.php',
 										'config/{module}_routes.php',
