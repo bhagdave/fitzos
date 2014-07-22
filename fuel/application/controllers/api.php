@@ -60,7 +60,7 @@ class Api extends CI_Controller{
 	
 	function index($model,$function){
 		$this->api->logEvent($model . '->' . $function,print_r($_REQUEST,true));
-//		if ($this->_checkSessionKey($function)){
+		if ($this->_checkSessionKey($function)){
 			$data = $_REQUEST;
 			$modelName = $model . '_model';
 			$err = $this->load->model($modelName,$model);
@@ -76,10 +76,8 @@ class Api extends CI_Controller{
 						$data['member_id'] = $this->_convertMemberSaltToId($data['member_id']);
 					}
 					$this->api->logEvent($model . '->' . $function . ' PRECALL',print_r($data,true));
-//					$result = $this->doTheMethodCall($model, $function, $data);
  					$result = $this->$model->$function($data['id']);
 				} else {
-// 					$result = $this->doTheMethodCall($model, $function, $data);
 					$result = $this->$model->$function($data);
 				}
 			} else {
@@ -93,9 +91,9 @@ class Api extends CI_Controller{
 				$this->api->logEvent($model . '->' . $function,'No Result and Failed!');
 				$this->_respond('ERR', 'API Call failed');
 			}
-//		} else {
-//			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
-//		}
+		} else {
+			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
+		}
 	}
 	
 	private function _getRestMethod($verb,$id = null){
