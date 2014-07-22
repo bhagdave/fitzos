@@ -32,7 +32,6 @@ class Api_model extends Base_module_model {
     	}
     }
 	function logEvent($event, $message){
-		$message = substr($message,0,144);
 		$insert = array('event'=>$event,'message'=>$message, 'time'=>date("Y-m-d H:i:s"));
 		$this->db->insert('api_log',$insert);
 	}
