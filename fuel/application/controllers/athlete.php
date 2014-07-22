@@ -193,7 +193,7 @@ class Athlete extends CI_Controller{
 			$data = apache_request_headers();
 			$this->x->logEvent('saveProfileImage->allHeaders',print_r($data,true));
 			$this->x->logEvent('saveProfileImage','No file received');
-			$data = file_get_contents('php//input');
+			$data = file_get_contents('php://input');
 			$this->x->logEvent('saveProfileImage->phpinput',print_r($data,true));
 		}
 	}
