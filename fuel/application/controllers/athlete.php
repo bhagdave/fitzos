@@ -172,8 +172,6 @@ class Athlete extends CI_Controller{
 		
 	}
 	function saveProfileImage($id){
-		$stuff = file_get_contents('php://input');
-		var_dump($stuff);
 		if (isset($_FILES['file']['name']) && !empty($_FILES['file']['name'])){
 			if ($_FILES["file"]["error"] > 0){
 				$this->session->set_flashdata('message', 'Unable to save image');
