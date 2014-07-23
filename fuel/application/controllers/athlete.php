@@ -174,28 +174,31 @@ class Athlete extends CI_Controller{
 	function saveProfileImage($id){
 		$request = $_REQUEST;
 		$this->load->model('api_model','x');
+		$this->load->helper('inflector');
 		if (isset($_FILES['file']['name']) && !empty($_FILES['file']['name'])){
 			if ($_FILES["file"]["error"] > 0){
-				$this->session->set_flashdata('message', 'Unable to save image');
+				$this->x->logEvent('saveProfileImage','Error Receiving file');
 			} else {
-				$_FILES["file"]["name"] = underscore($_FILES["file"]["name"]);
-				$path = 'assets/images/members/' . $_FILES["file"]["name"];
+				$path = 'assets/images/members/' . underscore($_FILES["file"]["name"]);
 				if (file_exists($path)){
 					// update member image to point here...
 				} else {
+					$this->x->logEvent('saveProfileImage->saveFile',$path);
 					// save file...
 					move_uploaded_file($_FILES["file"]["tmp_name"],$path);
 				}
 				// update the member
-				$this->members->saveMemberBySalt(array('id'=>$id,'image'=>$path));
+				$request['image'] = $path;
+				$this->members->saveMemberBySalt($request);
 			}
 		} else {
-			$data = apache_request_headers();
-			$this->x->logEvent('saveProfileImage->allHeaders',print_r($data,true));
 			$this->x->logEvent('saveProfileImage','No file received');
-			$data = file_get_contents('php://input');
-			$this->x->logEvent('saveProfileImage->phpinput',print_r($data,true));
-			$this->x->logEvent('saveProfileImage->request',print_r($request,true));
+			// no file see if we have a request
+			if (!empty($request)){
+				$this->members->saveMemberBySalt($request);
+			} else {
+				$this->x->logEvent('saveProfileImage','Empty request - Nothing done');
+			}
 		}
 	}
 	function profile(){
