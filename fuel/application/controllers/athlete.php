@@ -188,7 +188,7 @@ class Athlete extends CI_Controller{
 					// save file...
 					$worked = move_uploaded_file($_FILES["file"]["tmp_name"],$path);
 					if (!$worked){
-						$this->x->logEvent('saveProfileImage','move_upload_file Failed');
+						$this->x->logEvent('saveProfileImage','move_upload_file Failed ' . $_FILES["file"]["tmp_name"] . ' to ' . $path);
 					} else {
 						$this->x->logEvent('saveProfileImage-FILESAVED',$path);
 					}
