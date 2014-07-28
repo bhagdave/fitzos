@@ -172,6 +172,7 @@ class Athlete extends CI_Controller{
 		
 	}
 	function saveProfileImage($id){
+		$this->x->logEvent('saveProfileImage','ENTRY');
 		$request = $_REQUEST;
 		$this->load->model('api_model','x');
 		$this->load->helper('inflector');
@@ -185,7 +186,12 @@ class Athlete extends CI_Controller{
 				} else {
 					$this->x->logEvent('saveProfileImage->saveFile',$path);
 					// save file...
-					move_uploaded_file($_FILES["file"]["tmp_name"],$path);
+					$worked = move_uploaded_file($_FILES["file"]["tmp_name"],$path);
+					if (!$worked){
+						$this->x->logEvent('saveProfileImage','move_upload_file Failed');
+					} else {
+						$this->x->logEvent('saveProfileImage-FILESAVED',$path);
+					}
 				}
 				// update the member
 				$request['image'] = $path;
