@@ -173,6 +173,7 @@ class Athlete extends CI_Controller{
 	}
 	function saveProfileImage($id){
 		$request = $_REQUEST;
+		$request['id'] = $id;
 		$this->load->model('api_model','x');
 		$this->load->helper('inflector');
 		if (isset($_FILES['file']['name']) && !empty($_FILES['file']['name'])){
@@ -194,13 +195,13 @@ class Athlete extends CI_Controller{
 				}
 				// update the member
 				$request['image'] = $path;
-				$this->members->saveMemberBySalt($request);
+				$this->athletes->saveAthleteBySalt($request);
 			}
 		} else {
 			$this->x->logEvent('saveProfileImage','No file received');
 			// no file see if we have a request
 			if (!empty($request)){
-				$this->members->saveMemberBySalt($request);
+				$this->athletes->saveAthleteBySalt($request);
 			} else {
 				$this->x->logEvent('saveProfileImage','Empty request - Nothing done');
 			}
