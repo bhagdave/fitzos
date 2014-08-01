@@ -200,14 +200,17 @@ class Members_model extends Fitzos_model {
 		}
 	}
 	function saveMemberBySalt($data){
+		$this->logEvent('saveMemberBySalt','saveMemberBySaltEntered');
 		// check if they exist..
 		$this->db->where('salt',$data['id']);
 		$count = $this->db->count_all_results('member');
 		if ($count > 0){
 			// if they do update
+			$this->logEvent('saveMemberBySalt->found',$data['id']);
 			$this->db->where('salt',$data['id']);
 			$this->db->update('member',$data);
 		} else {
+			$this->logEvent('saveMemberBySalt->Notfound',$data['id']);
 			// if not then create
 			$this->createMember($data);
 		}
@@ -252,6 +255,10 @@ class Members_model extends Fitzos_model {
 			$pass[] = $alphabet[$n];
 		}
 		return implode($pass);
+	}
+	private function logEvent($event, $message){
+		$insert = array('event'=>$event,'message'=>$message, 'time'=>date("Y-m-d H:i:s"));
+		$this->db->insert('api_log',$insert);
 	}
 }
  
