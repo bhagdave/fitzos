@@ -294,7 +294,7 @@ class Athlete extends CI_Controller{
 			$positions = $this->sports->getPositionsForSport($sport);
 			// get possible stats for the sport and the sport of course
 			$stats = $this->sports->getStatsForSport($sport);
-			$sportData = $this->sports->find_by_key($sport,'array');
+			$sportData = $this->sports->find_by_key($sport,$sport);
 			// get athlete stats for the sport.
 			$athleteStats = $this->athletes->getStatsForAthleteSport($id,$sport);
 			if (isset($athlete)){
