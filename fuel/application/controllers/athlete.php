@@ -302,7 +302,7 @@ class Athlete extends CI_Controller{
 				$vars['positions'] = $positions;
 				$vars['stats'] = $stats;
 				$vars['athlete_stats'] = $athleteStats;
-				$vars['sport'] = $sportData;
+				$vars['sport'] = $sportData[0];
 				$this->fuel->pages->render('athlete/stats',$vars);	
 			} else {
 				redirect('signin/login');
