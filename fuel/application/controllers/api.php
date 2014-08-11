@@ -60,13 +60,8 @@ class Api extends CI_Controller{
 	}
 	
 	function index($model,$function){
-<<<<<<< HEAD
-		$this->api->logEvent($model . '->' . $function,print_r($_REQUEST,true));
-// 		if ($this->_checkSessionKey($function)){
-=======
 //		$this->api->logEvent($model . '->' . $function,print_r($_REQUEST,true));
 //		if ($this->_checkSessionKey($function)){
->>>>>>> beta
 			$data = $_REQUEST;
 			$modelName = $model . '_model';
 			$err = $this->load->model($modelName,$model);
@@ -81,12 +76,8 @@ class Api extends CI_Controller{
 						// convert salt to memberid
 						$data['member_id'] = $this->_convertMemberSaltToId($data['member_id']);
 					}
-<<<<<<< HEAD
-					$this->api->logEvent($model . '->' . $function . ' PRECALL',print_r($data,true));
-=======
 //					$this->api->logEvent($model . '->' . $function . ' PRECALL',print_r($data,true));
 //					$result = $this->doTheMethodCall($model, $function, $data);
->>>>>>> beta
  					$result = $this->$model->$function($data['id']);
 				} else {
 					$result = $this->$model->$function($data);
