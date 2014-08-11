@@ -6,21 +6,21 @@
 //var_dump($athlete_stats);
 if (isset($athlete_stats) && count($athlete_stats) > 0){
 	// show them stats baby....
-	echo("<h2>Current statistics for " .$sport['name'] .".</h2>");
+	echo("<h2>Current statistics for " .$sport->name .".</h2>");
 	foreach($athlete_stats as $stat){
 	?>
 		<h4><?=$stat->statistic_name ?> <?=$stat->statistic_value ?> <?=$stat->comment ?> <?=date('m/d/Y',strtotime($stat->date)) ?></h4>
 	<?php 
 	}
 } else {
-	echo("<h2>You do not currently have any statistics recorded for " .$sport['name'] .".</h2>");
+	echo("<h2>You do not currently have any statistics recorded for " .$sport->name .".</h2>");
 }
 ?>
 <h3>Add a new statistic!</h3>
 <form action="/athlete/addStats" method="post" />
 <input type="hidden" name="source_table" value="member" />
 <input type="hidden" name="source_id" value="<?=$athlete->member_id ?>" />
-<input type="hidden" name="sport_id" value="<?=$sport['id'] ?>" />
+<input type="hidden" name="sport_id" value="<?=$sport->id ?>" />
 <?php 
 if (isset($positions) && count($positions) > 0){
 	echo('<select class="js-positionSelect" name="position_id">');

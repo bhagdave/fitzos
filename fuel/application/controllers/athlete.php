@@ -294,7 +294,7 @@ class Athlete extends CI_Controller{
 			$positions = $this->sports->getPositionsForSport($sport);
 			// get possible stats for the sport and the sport of course
 			$stats = $this->sports->getStatsForSport($sport);
-			$sportData = $this->sports->find_by_key($sport,$sport);
+			$sportData = $this->sports->find_by_key($sport,'array');
 			// get athlete stats for the sport.
 			$athleteStats = $this->athletes->getStatsForAthleteSport($id,$sport);
 			if (isset($athlete)){
@@ -302,7 +302,7 @@ class Athlete extends CI_Controller{
 				$vars['positions'] = $positions;
 				$vars['stats'] = $stats;
 				$vars['athlete_stats'] = $athleteStats;
-				$vars['sport'] = $sportData;
+				$vars['sport'] = $sportData[0];
 				$this->fuel->pages->render('athlete/stats',$vars);	
 			} else {
 				redirect('signin/login');
