@@ -28,6 +28,8 @@ class Search_model extends Base_module_model {
 		);
 	}
 	function getSearchResults($criteria,$id){
+		$insert = array('event'=>'getSearchResults','message'=>print_r($criteria,true), 'time'=>date("Y-m-d H:i:s"));
+		$this->db->insert('api_log',$insert);
 		$names = $sports = $locations = $combined = null;
 		if (!empty($criteria['location'])){
 			$locations = $this->getMembersWithLocation($criteria['location'], $id);
@@ -99,6 +101,8 @@ class Search_model extends Base_module_model {
 		return $result->result();
 	}
 	function getMembersWithName($name,$id){
+		$insert = array('event'=>'getMembersWithName','message'=>"Name is $name", 'time'=>date("Y-m-d H:i:s"));
+		$this->db->insert('api_log',$insert);
 		$this->db->select('member.*');
 		$this->db->distinct();
 		$this->db->like('first_name',$name);
