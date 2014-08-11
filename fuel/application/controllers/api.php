@@ -30,6 +30,7 @@ class Api extends CI_Controller{
 				}
 			}
 		}
+		$this->api->logEvent($class . '->' . $method,print_r($pass,true));
 		$result = $r->invokeArgs($this->$class, $pass);
 		return $result;
 	}
