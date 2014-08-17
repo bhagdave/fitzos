@@ -315,6 +315,16 @@ class Events_model extends Fitzos_model {
 		$this->db->join('team','team.id = event.team_id');
 		$this->db->join('sport','sport.id = event.sport_id');
 	}
+    function create($data){
+		if (isset($data['date'])){
+			$data['date'] = $this->fixDate($date['date']);
+		}
+    	if (isset($data['end_date'])){
+			$data['end_date'] = $this->fixDate($date['end_date']);
+		}
+		$this->db->insert($this->table_name,$data);
+    	return $this->db->affected_rows();
+    }
 }
  
 class Event_model extends Base_module_record {
