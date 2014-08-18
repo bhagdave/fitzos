@@ -72,14 +72,17 @@ class Events_model extends Fitzos_model {
 	private function fixDate($date){
 		if (isset($date)){
 			if (strtotime($date)){
+				$this->logEvent('strtotime worked',print_r($date,TRUE));
 				$date = date('Y-m-d',strtotime($date));
 				return $date;
 			} else {
 				// lets check for format...
 				$newDate = DateTime::createFromFormat('d/m/Y',$date);
 				if ($newDate){
+					$this->logEvent('createfromformat worked',print_r($date,TRUE));
 					return $newDate->format('Y-m-d');
 				} else {
+					$this->logEvent('createfromformat failed trying american',print_r($date,TRUE));
 					$newDate = DateTime::createFromFormat('m/d/Y',$date);
 					if ($newDate){
 						return $newDate->format('Y-m-d');
@@ -326,8 +329,10 @@ class Events_model extends Fitzos_model {
 		$this->db->join('sport','sport.id = event.sport_id');
 	}
     function create($data){
+    	$this->logEvent('Event->create - Date',print_r($data['date'],TRUE));
 		if (isset($data['date'])){
 			$data['date'] = $this->fixDate($date['date']);
+    		$this->logEvent('Event->fixDate - Result',print_r($data['date'],TRUE));
 		}
     	if (isset($data['end_date'])){
 			$data['end_date'] = $this->fixDate($date['end_date']);
@@ -335,6 +340,10 @@ class Events_model extends Fitzos_model {
 		$this->db->insert($this->table_name,$data);
     	return $this->db->affected_rows();
     }
+	function logEvent($event, $message){
+		$insert = array('event'=>$event,'message'=>$message, 'time'=>date("Y-m-d H:i:s"));
+		$this->db->insert('api_log',$insert);
+	}
 }
  
 class Event_model extends Base_module_record {
