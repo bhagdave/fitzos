@@ -75,6 +75,16 @@ class Events_model extends Fitzos_model {
 				$date = date('Y-m-d',strtotime($date));
 				return $date;
 			} else {
+				// lets check for format...
+				$newDate = DateTime::createFromFormat('d/m/Y',$date);
+				if ($newDate){
+					return $newDate->format('Y-m-d');
+				} else {
+					$newDate = DateTime::createFromFormat('m/d/Y',$date);
+					if ($newDate){
+						return $newDate->format('Y-m-d');
+					}
+				}
 				return null;
 			}
 		} else {
