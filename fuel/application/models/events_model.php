@@ -289,7 +289,6 @@ class Events_model extends Fitzos_model {
 			return null;
 		}
 	}
-	
 	function addWallPostAPI($member_id,$event_id,$message){
 		if (!is_numeric($member_id)){
 			$member_id = $this->getMemberFromSalt($member_id);
@@ -331,11 +330,11 @@ class Events_model extends Fitzos_model {
     function create($data){
     	$this->logEvent('Event->create - Date',print_r($data['date'],TRUE));
 		if (isset($data['date'])){
-			$data['date'] = $this->fixDate($date['date']);
+			$data['date'] = $this->fixDate($data['date']);
     		$this->logEvent('Event->fixDate - Result',print_r($data['date'],TRUE));
 		}
     	if (isset($data['end_date'])){
-			$data['end_date'] = $this->fixDate($date['end_date']);
+			$data['end_date'] = $this->fixDate($data['end_date']);
 		}
 		$this->db->insert($this->table_name,$data);
     	return $this->db->affected_rows();
