@@ -155,6 +155,8 @@ class Api extends CI_Controller{
 		} else {
 			$result =  null;
 		}
+		$this->api->logEvent($model . '->' . $method . ' INPUT',print_r($data,true));
+		$this->api->logEvent($model . '->' . $method . ' RETURNED',print_r($result,true));
 		if (isset($result)){
 			$this->_respond('OK', 'API Call worked',$result);
 		} else {
