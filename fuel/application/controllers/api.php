@@ -61,7 +61,11 @@ class Api extends CI_Controller{
 		} else {
 			$result = null;
 		}
-		$this->_respond('OK', 'API Call worked',$result);
+		if (isset($result) && !empty($result)){
+			$this->_respond('OK', 'API Call worked',$result);
+		} else {
+			$this->_respond('ERR', 'API Call worked but empty');
+		}
 	}
 	
 	function index($model,$function){
