@@ -11,6 +11,33 @@ class Api extends CI_Controller{
 		return $memberId;	
 	}
 	
+	private function fixId($class,$method,$data){
+		if (isset($data['member_id']) && !is_numeric($data['member_id'])){
+			// convert salt to memberid
+			$data['member_id'] = $this->_convertMemberSaltToId($data['member_id']);
+		}
+		if (isset($data['id']) && !is_numeric($data['id'])){
+			// convert salt to memberid
+			$data['id'] = $this->_convertMemberSaltToId($data['id']);
+		}
+		if (isset($data['from']) && !is_numeric($data['from'])){
+			// convert salt to memberid
+			$data['from'] = $this->_convertMemberSaltToId($data['from']);
+		}
+		if (isset($data['owner']) && !is_numeric($data['owner'])){
+			// convert salt to memberid
+			$data['owner'] = $this->_convertMemberSaltToId($data['owner']);
+		}
+		if (($class == 'teams') && ($method == 'isOwner') && isset($data['user']) && !is_numeric($data['user'])){
+			// convert salt to memberid
+			$data['user'] = $this->_convertMemberSaltToId($data['user']);
+		}
+		if (($class = 'athletes') && ($method == 'saveStats') && !empty($data['source_id']) ){
+			$data['source_id'] = $this->_convertMemberSaltToId($data['source_id']);
+		}
+		return $data;
+	} 
+	
 	private function doTheMethodCall($class,$method,$data){
 		if (isset($data['signature'])){
 			unset($data['signature']);	
@@ -41,22 +68,7 @@ class Api extends CI_Controller{
 		$this->api->logEvent($model . '->' . $function,print_r($data,true));
 		$err = $this->load->model($modelName,$model);
 		if (isset($err)){
-			if (isset($data['member_id']) && !is_numeric($data['member_id'])){
-				// convert salt to memberid
-				$data['member_id'] = $this->_convertMemberSaltToId($data['member_id']);
-			}
-			if (isset($data['id']) && !is_numeric($data['id'])){
-				// convert salt to memberid
-				$data['id'] = $this->_convertMemberSaltToId($data['id']);
-			}
-			if (isset($data['from']) && !is_numeric($data['from'])){
-				// convert salt to memberid
-				$data['from'] = $this->_convertMemberSaltToId($data['from']);
-			}
-			if (($model == 'teams') && ($function == 'isOwner') && isset($data['user']) && !is_numeric($data['user'])){
-				// convert salt to memberid
-				$data['user'] = $this->_convertMemberSaltToId($data['user']);
-			}
+			$data = $this->fixId($model,$function,$data);
 			$result = $this->doTheMethodCall($model, $function, $data);		
 		} else {
 			$result = null;
@@ -76,18 +88,8 @@ class Api extends CI_Controller{
 			$err = $this->load->model($modelName,$model);
 			if (isset($err)){
 				if (isset($data['id'])){
-					// if the id is not a number then treat it as a salt.
-					if (!is_numeric($data['id'])){
-						// convert salt to memberid
-						$data['id'] = $this->_convertMemberSaltToId($data['id']);
-					}
-					if (isset($data['member_id']) && !is_numeric($data['member_id'])){
-						// convert salt to memberid
-						$data['member_id'] = $this->_convertMemberSaltToId($data['member_id']);
-					}
-//					$this->api->logEvent($model . '->' . $function . ' PRECALL',print_r($data,true));
-//					$result = $this->doTheMethodCall($model, $function, $data);
- 					$result = $this->$model->$function($data['id']);
+					$data = $this->fixId($model, $function, $data);
+					$result = $this->$model->$function($data['id']);
 				} else {
 					$result = $this->$model->$function($data);
 				}
@@ -134,23 +136,11 @@ class Api extends CI_Controller{
 		} else {
 			$data = $_REQUEST;
 		}
-		// frig the ids if they are salted
-		if (isset($data['id']) && !is_numeric($data['id'])){
-			// convert salt to memberid
-			$data['id'] = $this->_convertMemberSaltToId($data['id']);
-		}
-		if (isset($data['member_id']) && !is_numeric($data['member_id'])){
-			// convert salt to memberid
-			$data['member_id'] = $this->_convertMemberSaltToId($data['member_id']);
-		}
-		if (isset($data['owner']) && !is_numeric($data['owner'])){
-			// convert salt to memberid
-			$data['owner'] = $this->_convertMemberSaltToId($data['owner']);
-		}
 		$modelName = $model . '_model';
 		$err = $this->load->model($modelName,$model);
 		if (isset($err)){
 			$method = $this->_getRestMethod($verb,$id);
+			$data = $this->fixId($model,$method,$data);
 			if (isset($id)){
 				$result = $this->$model->$method($id);
 			} else {
