@@ -339,10 +339,6 @@ class Events_model extends Fitzos_model {
 		$this->db->insert($this->table_name,$data);
     	return $this->db->affected_rows();
     }
-	function logEvent($event, $message){
-		$insert = array('event'=>$event,'message'=>$message, 'time'=>date("Y-m-d H:i:s"));
-		$this->db->insert('api_log',$insert);
-	}
 }
  
 class Event_model extends Base_module_record {
