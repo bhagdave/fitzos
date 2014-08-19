@@ -59,7 +59,7 @@ class Fitzos_model extends Base_module_model {
     	$this->db->insert($this->table_name,$data);
     	return $this->db->affected_rows();
     }
-	private function fixDate($date){
+	protected function fixDate($date){
 		if (isset($date)){
 			if (strtotime($date)){
 				$this->logEvent('strtotime worked',print_r($date,TRUE));
@@ -84,7 +84,7 @@ class Fitzos_model extends Base_module_model {
 			return null;
 		}
 	}
-	function logEvent($event, $message){
+	protected function logEvent($event, $message){
 		$insert = array('event'=>$event,'message'=>$message, 'time'=>date("Y-m-d H:i:s"));
 		$this->db->insert('api_log',$insert);
 	}
