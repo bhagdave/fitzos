@@ -69,31 +69,6 @@ class Events_model extends Fitzos_model {
 		$result = $this->db->get('event_attendance');
 		return $result->result();	    	
     }
-	private function fixDate($date){
-		if (isset($date)){
-			if (strtotime($date)){
-				$this->logEvent('strtotime worked',print_r($date,TRUE));
-				$date = date('Y-m-d',strtotime($date));
-				return $date;
-			} else {
-				// lets check for format...
-				$newDate = DateTime::createFromFormat('d/m/Y',$date);
-				if ($newDate){
-					$this->logEvent('createfromformat worked',print_r($date,TRUE));
-					return $newDate->format('Y-m-d');
-				} else {
-					$this->logEvent('createfromformat failed trying american',print_r($date,TRUE));
-					$newDate = DateTime::createFromFormat('m/d/Y',$date);
-					if ($newDate){
-						return $newDate->format('Y-m-d');
-					}
-				}
-				return null;
-			}
-		} else {
-			return null;
-		}
-	}
     function updateEvent($data){
     	if (is_array($data)){
     		if (!isset($data['date'])){
@@ -271,7 +246,7 @@ class Events_model extends Fitzos_model {
 	function addWallPost($data){
 		if (is_array($data)){
 			if (!isset($data['date'])){
-				$data['date'] = date('Y-m-d');
+				$data['date'] = $this->fixDate($data['date']);
 			}
 			$this->db->insert('event_wall',$data);
 			return $this->db->insert_id();
@@ -339,10 +314,6 @@ class Events_model extends Fitzos_model {
 		$this->db->insert($this->table_name,$data);
     	return $this->db->affected_rows();
     }
-	function logEvent($event, $message){
-		$insert = array('event'=>$event,'message'=>$message, 'time'=>date("Y-m-d H:i:s"));
-		$this->db->insert('api_log',$insert);
-	}
 }
  
 class Event_model extends Base_module_record {

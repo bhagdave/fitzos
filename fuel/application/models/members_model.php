@@ -161,15 +161,11 @@ class Members_model extends Fitzos_model {
 		$this->db->where('sport_id',$data['sport_id']);
 		if ($this->db->count_all_results('member_sports')== 0){
 			// lets frig those dates baby..
-			if (strtotime($data['from_date'])){
-				$data['from_date'] = date('Y-m-d',strtotime($data['from_date']));
-			} else {
-				unset($data['from_date']);
+			if (!empty($data['from_date'])){
+				$data['from_date'] = $this->fixDate($data['from_date']);
 			}
-			if (isset($data['to_date']) && !empty($data['to_date']) && strtotime($data['to_date'])){
-				$data['to_date'] = date('Y-m-d',strtotime($data['to_date']));
-			} else {
-				unset($data['to_date']);
+			if (!empty($data['to_date'])){
+				$data['to_date'] = $this->fixDate($data['to_date']);
 			}
 			$this->db->insert('member_sports',$data);
 			return $this->db->insert_id();
@@ -255,10 +251,6 @@ class Members_model extends Fitzos_model {
 			$pass[] = $alphabet[$n];
 		}
 		return implode($pass);
-	}
-	private function logEvent($event, $message){
-		$insert = array('event'=>$event,'message'=>$message, 'time'=>date("Y-m-d H:i:s"));
-		$this->db->insert('api_log',$insert);
 	}
 }
  
