@@ -55,4 +55,33 @@ class Fitzos_model extends Base_module_model {
     	$this->db->insert($this->table_name,$data);
     	return $this->db->affected_rows();
     }
+	protected function fixDate($date){
+		if (isset($date)){
+			if (strtotime($date)){
+				$this->logEvent('strtotime worked',print_r($date,TRUE));
+				$date = date('Y-m-d',strtotime($date));
+				return $date;
+			} else {
+				// lets check for format...
+				$newDate = DateTime::createFromFormat('d/m/Y',$date);
+				if ($newDate){
+					$this->logEvent('createfromformat worked',print_r($date,TRUE));
+					return $newDate->format('Y-m-d');
+				} else {
+					$this->logEvent('createfromformat failed trying american',print_r($date,TRUE));
+					$newDate = DateTime::createFromFormat('m/d/Y',$date);
+					if ($newDate){
+						return $newDate->format('Y-m-d');
+					}
+				}
+				return null;
+			}
+		} else {
+			return null;
+		}
+	}
+	protected function logEvent($event, $message){
+		$insert = array('event'=>$event,'message'=>$message, 'time'=>date("Y-m-d H:i:s"));
+		$this->db->insert('api_log',$insert);
+	}
 }
