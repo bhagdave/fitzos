@@ -281,18 +281,6 @@ class Teams_model extends Fitzos_model {
 		$this->db->set('deleted','yes');
 		$this->db->update('team_wall');
 	}
-	private function fixDate($date){
-		if (isset($date)){
-			if (strtotime($date)){
-				$date = date('Y-m-d',strtotime($date));
-				return $date;
-			} else {
-				return null;
-			}
-		} else {
-			return null;
-		}
-	}
 	function addTeamEvent($data){
 		if (is_array($data)){
 			if (!isset($data['date'])){
