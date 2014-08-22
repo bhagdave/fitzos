@@ -48,12 +48,12 @@ class Events_model extends Fitzos_model {
     	$wall = $this->getWall($id);
     	$owner = $this->isOwner($id, $member_id);
     	$isAttendee = $this->isAttendee($id, $member_id);
+    	$event['isOwner'] = $owner;
+    	$event['isAttendee'] = $isAttendee;
     	return array(
     		'event'=>$event,
     		'attending'=>$attending,
-    		'wall'=>$wall,
-    		'owner'=>$owner,
-    		'isAttending'=>$isAttendee
+    		'wall'=>$wall
     	);
     }
     function getPublicEvents(){
