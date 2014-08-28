@@ -42,6 +42,20 @@ class Events_model extends Fitzos_model {
     		return null;
     	}
     }
+    function getAllEventData($id,$member_id){
+    	$event = $this->getEvent($id);
+    	$attending = $this->getMembersAttending($id);
+    	$wall = $this->getWall($id);
+    	$owner = $this->isOwner($id, $member_id);
+    	$isAttendee = $this->isAttendee($id, $member_id);
+    	$event->isOwner = $owner ? 'Yes': 'No';
+    	$event->isAttendee = $isAttendee ? 'Yes':'No' ;
+    	return array(
+    		'event'=>$event,
+    		'attending'=>$attending,
+    		'wall'=>$wall
+    	);
+    }
     function getPublicEvents(){
     	$this->db->select('event.id,event.name,sport.name as sport');
     	$this->db->where('event.public','PUBLIC');
@@ -69,18 +83,6 @@ class Events_model extends Fitzos_model {
 		$result = $this->db->get('event_attendance');
 		return $result->result();	    	
     }
-	private function fixDate($date){
-		if (isset($date)){
-			if (strtotime($date)){
-				$date = date('Y-m-d',strtotime($date));
-				return $date;
-			} else {
-				return null;
-			}
-		} else {
-			return null;
-		}
-	}
     function updateEvent($data){
     	if (is_array($data)){
     		if (!isset($data['date'])){
@@ -258,7 +260,7 @@ class Events_model extends Fitzos_model {
 	function addWallPost($data){
 		if (is_array($data)){
 			if (!isset($data['date'])){
-				$data['date'] = date('Y-m-d');
+				$data['date'] = $this->fixDate($data['date']);
 			}
 			$this->db->insert('event_wall',$data);
 			return $this->db->insert_id();
@@ -276,7 +278,6 @@ class Events_model extends Fitzos_model {
 			return null;
 		}
 	}
-	
 	function addWallPostAPI($member_id,$event_id,$message){
 		if (!is_numeric($member_id)){
 			$member_id = $this->getMemberFromSalt($member_id);
@@ -315,6 +316,18 @@ class Events_model extends Fitzos_model {
 		$this->db->join('team','team.id = event.team_id');
 		$this->db->join('sport','sport.id = event.sport_id');
 	}
+    function create($data){
+    	$this->logEvent('Event->create - Date',print_r($data['date'],TRUE));
+		if (isset($data['date'])){
+			$data['date'] = $this->fixDate($data['date']);
+    		$this->logEvent('Event->fixDate - Result',print_r($data['date'],TRUE));
+		}
+    	if (isset($data['end_date'])){
+			$data['end_date'] = $this->fixDate($data['end_date']);
+		}
+		$this->db->insert($this->table_name,$data);
+    	return $this->db->affected_rows();
+    }
 }
  
 class Event_model extends Base_module_record {

@@ -281,18 +281,6 @@ class Teams_model extends Fitzos_model {
 		$this->db->set('deleted','yes');
 		$this->db->update('team_wall');
 	}
-	private function fixDate($date){
-		if (isset($date)){
-			if (strtotime($date)){
-				$date = date('Y-m-d',strtotime($date));
-				return $date;
-			} else {
-				return null;
-			}
-		} else {
-			return null;
-		}
-	}
 	function addTeamEvent($data){
 		if (is_array($data)){
 			if (!isset($data['date'])){
@@ -353,6 +341,23 @@ class Teams_model extends Fitzos_model {
 				'invite_sent'=>date('Y-m-d')
 		);
 		$this->db->insert('team_invites',$invite);
+	}
+	function getAllTeamData($team,$member_id){
+		$team_data = $this->getTeam($team);
+		if (isset($team_data) && !empty($team_data)){
+			$team_wall = $this->getTeamWall($team);
+			$team_members = $this->getTeamMembers($team);
+			$team_events = $this->getTeamEvents($team);
+			$team_data->isOwner = $this->isOwner($team,$member_id);
+			return array(
+					'team'=>$team_data,
+					'wall'=>$team_wall,
+					'members'=>$team_members,
+					'events'=>$team_events
+			);
+		} else {
+			return null;
+		}
 	}
 }
  

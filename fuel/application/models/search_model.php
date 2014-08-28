@@ -28,6 +28,8 @@ class Search_model extends Base_module_model {
 		);
 	}
 	function getSearchResults($criteria,$id){
+		$insert = array('event'=>'getSearchResults','message'=>print_r($criteria,true), 'time'=>date("Y-m-d H:i:s"));
+		$this->db->insert('api_log',$insert);
 		$names = $sports = $locations = $combined = null;
 		if (!empty($criteria['location'])){
 			$locations = $this->getMembersWithLocation($criteria['location'], $id);
@@ -57,7 +59,7 @@ class Search_model extends Base_module_model {
 		);
 	}
 	function getCombinedSearchResults($criteria,$id){
-		$this->db->select('member.*');
+		$this->db->select('member.id,member.active,member.first_name,member.last_name,member.image,member.email');
 		$this->db->distinct();
 		$this->db->join('member','member.id = athlete.member_id');
 		$this->db->join('member_sports','member_sports.member_id = member.id','left');
@@ -77,7 +79,7 @@ class Search_model extends Base_module_model {
 		return $result->result();
 	}
 	function getMembersWithLocation($location,$id){
-		$this->db->select('member.*');
+		$this->db->select('member.id,member.active,member.first_name,member.last_name,member.image,member.email');
 		$this->db->distinct();
 		$this->db->like('location',$location);
 		$this->db->join('member','athlete.member_id = member.id');
@@ -90,7 +92,7 @@ class Search_model extends Base_module_model {
 		foreach($sports as $sport){
 			$search[] = $sport->id;
 		}
-		$this->db->select('member.*');
+		$this->db->select('member.id,member.active,member.first_name,member.last_name,member.image,member.email');
 		$this->db->distinct();
 		$this->db->join('member_sports','member_sports.member_id = member.id');
 		$this->db->where('member.id !=',$id);
@@ -99,7 +101,9 @@ class Search_model extends Base_module_model {
 		return $result->result();
 	}
 	function getMembersWithName($name,$id){
-		$this->db->select('member.*');
+		$insert = array('event'=>'getMembersWithName','message'=>"Name is $name", 'time'=>date("Y-m-d H:i:s"));
+		$this->db->insert('api_log',$insert);
+		$this->db->select('member.id,member.active,member.first_name,member.last_name,member.image,member.email');
 		$this->db->distinct();
 		$this->db->like('first_name',$name);
 		$this->db->or_like('last_name',$name);
@@ -108,7 +112,7 @@ class Search_model extends Base_module_model {
 		return $result->result();
 	}
 	function getMembersWithSport($sport,$id){
-		$this->db->select('member.*');
+		$this->db->select('member.id,member.active,member.first_name,member.last_name,member.image,member.email');
 		$this->db->distinct();
 		$this->db->join('member_sports','member_sports.member_id = member.id');
 		$this->db->join('sport','member_sports.sport_id = sport.id');
