@@ -342,6 +342,23 @@ class Teams_model extends Fitzos_model {
 		);
 		$this->db->insert('team_invites',$invite);
 	}
+	function getAllTeamData($team,$member_id){
+		$team_data = $this->getTeam($team);
+		if (isset($team_data) && !empty($team_data)){
+			$team_wall = $this->getTeamWall($team);
+			$team_members = $this->getTeamMembers($team);
+			$team_events = $this->getTeamEvents($team);
+			$team_data->isOwner = $this->isOwner($team,$member_id);
+			return array(
+					'team'=>$team_data,
+					'wall'=>$team_wall,
+					'members'=>$team_members,
+					'events'=>$team_events
+			);
+		} else {
+			return null;
+		}
+	}
 }
  
 class Team_model extends Base_module_record {
