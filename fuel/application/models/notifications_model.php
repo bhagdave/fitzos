@@ -100,7 +100,7 @@ class Notifications_model extends Fitzos_model {
 		$this->db->where("read",0);
 		$this->db->order_by('date_added','desc');
 		$result = $this->db->get("vw_notifications");
-		$notifcations = $result->result();
+		$notifications = $result->result();
 		return $notifications;
 	}
 	function getNotifications($type,$id){
