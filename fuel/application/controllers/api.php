@@ -39,13 +39,6 @@ class Api extends CI_Controller{
 	} 
 	
 	private function doTheMethodCall($class,$method,$data){
-		if (isset($data['signature'])){
-			unset($data['signature']);	
-		}
-		if (isset($data['key'])){
-			unset($data['key']);	
-		}
-		$data['data'] = $data;
 		$r = new ReflectionMethod($class.'_model', $method);
 		$pass = array();
 		foreach($r->getParameters() as $param){
@@ -57,7 +50,6 @@ class Api extends CI_Controller{
 				}
 			}
 		}
-		$this->api->logEvent($class . '->' . $method,print_r($pass,true));
 		$result = $r->invokeArgs($this->$class, $pass);
 		return $result;
 	}
@@ -65,7 +57,6 @@ class Api extends CI_Controller{
 	function r($model,$function){
 		$data = $_REQUEST;
 		$modelName = $model . '_model';
-		$this->api->logEvent($model . '->' . $function,print_r($data,true));
 		$err = $this->load->model($modelName,$model);
 		if (isset($err)){
 			$data = $this->fixId($model,$function,$data);
@@ -153,8 +144,6 @@ class Api extends CI_Controller{
 		} else {
 			$result =  null;
 		}
-		$this->api->logEvent($model . '->' . $method . ' INPUT',print_r($data,true));
-		$this->api->logEvent($model . '->' . $method . ' RETURNED',print_r($result,true));
 		if (isset($result)){
 			$this->_respond('OK', 'API Call worked',$result);
 		} else {
@@ -210,5 +199,58 @@ class Api extends CI_Controller{
 		} else {
 			return false;
 		}
+	}
+	function createMember(){
+		if ($this->_checkSessionKey()){
+			$mesg = $this->Futility->checkSignin($this->input->get_post());
+			if (count($mesg)> 0){
+				// show error
+				$this->respond("ERR","Sign up failed", $mesg);
+			} else {
+				// Put the stuff into the database
+				$this->load->model("members_model","members");
+				if ($this->members->checkIfMemberExists($data)){
+					$mesg[] = 'That username is already taken.';
+					$this->respond("ERR","Sign up failed", $mesg);
+				} else {
+					$id = $this->members->createMember($this->input->get_post());
+					$member = $this->members->getMember($id);
+					// Send email to user to activate account...
+					$this->load->library('Fitzos_email',null,'Femail');
+					$this->Femail->sendMemberActivation($member);
+					$this->respond("OK","Sign up worked", $id);
+				}
+			}
+		} else {
+			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
+		}
+	}
+	function getMemberDetails($id){
+		if ($this->_checkSessionKey()){
+		} else {
+			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
+		}		
+	}
+	function getAthleteDetails(){
+		if ($this->_checkSessionKey()){
+			$this->load->model('athletes_model','athletes');
+			$id = $_POST['id'];
+			$athlete = $this->athletes->loadProfile($id);
+			$this->_respond("OK","Athlete Found",$athlete);
+		} else {
+			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
+		}		
+	}
+	function saveAthleteDetails(){
+		if ($this->_checkSessionKey()){
+		} else {
+			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
+		}		
+	}
+	function saveMemberDetails(){
+		if ($this->_checkSessionKey()){
+		} else {
+			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
+		}		
 	}
 }

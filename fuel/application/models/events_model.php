@@ -278,6 +278,7 @@ class Events_model extends Fitzos_model {
 			return null;
 		}
 	}
+	
 	function addWallPostAPI($member_id,$event_id,$message){
 		if (!is_numeric($member_id)){
 			$member_id = $this->getMemberFromSalt($member_id);
