@@ -143,6 +143,21 @@ class Teams_model extends Fitzos_model {
 		$result = $this->db->get('team_invites');
 		return $result->result();
 	}
+	function getFriendsToInvite($team,$member_id){
+		$query = "select member.id,member.first_name from
+		(select
+				if (member_id_requested = ?,member_id_requestee,member_id_requested) as friend
+				from
+				friend
+				where
+				status = 'accepted' and
+				(member_id_requested = ? or member_id_requestee = ?) ) friends
+		join member on member.id = friend
+		where friends.friend not in (select member_id from team_membership where team_id = ? and status ='yes')
+		and friends.friend not in (select member_id from team_invites where team_id = ?)";
+		$result = $this->db->query($query,array($member_id,$member_id,$member_id,$team,$team));
+		return $result->result();
+	}
 	function getFriendsForTeamOwner($team_id){
 		$friendList = $this->getOwnersFriends($team_id);
 		$members = $this->getTeamMembers($team_id);
@@ -317,7 +332,7 @@ class Teams_model extends Fitzos_model {
 	function sendInvite($memberId,$user,$teamId){
 		$this->load->model('notifications_model');
 		$team = $this->getTeam($teamId);
-		$mesg = "You have been invited to the team <a href='/teams/view/".$teamId."'>$team->name</a>";
+		$mesg = "You have been invited to the team $team->name";
 		$data = array(
 				"from_table"=>"member",
 				"from_key"=>$user,
@@ -349,11 +364,13 @@ class Teams_model extends Fitzos_model {
 			$team_members = $this->getTeamMembers($team);
 			$team_events = $this->getTeamEvents($team);
 			$team_data->isOwner = $this->isOwner($team,$member_id);
+			$invite_data = $this->getFriendsToInvite($team, $member_id);
 			return array(
 					'team'=>$team_data,
 					'wall'=>$team_wall,
 					'members'=>$team_members,
-					'events'=>$team_events
+					'events'=>$team_events,
+					'invites'=>$invite_data
 			);
 		} else {
 			return null;
