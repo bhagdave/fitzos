@@ -331,6 +331,7 @@ class Teams_model extends Fitzos_model {
 	}
 	function sendInvites($members,$user,$team){
 		$members = json_decode($members);
+		var_dump($members);
 		foreach($members as $member){
 			$this->sendInvite($member,$user,$team);
 		}
