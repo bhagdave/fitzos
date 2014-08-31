@@ -329,6 +329,12 @@ class Teams_model extends Fitzos_model {
 		$done = $this->db->affected_rows();
 		return $done;
 	}
+	function sendInvites($members,$user,$team){
+		$members = json_decode($members);
+		foreach($members as $member){
+			$this->sendInvite($member,$user,$team);
+		}
+	}
 	function sendInvite($memberId,$user,$teamId){
 		$this->load->model('notifications_model');
 		$team = $this->getTeam($teamId);
