@@ -32,6 +32,10 @@ class Api extends CI_Controller{
 			// convert salt to memberid
 			$data['user'] = $this->_convertMemberSaltToId($data['user']);
 		}
+		if (($class == 'teams') && ($method == 'sendInvites') && isset($data['user']) && !is_numeric($data['user'])){
+			// convert salt to memberid
+			$data['user'] = $this->_convertMemberSaltToId($data['user']);
+		}
 		if (($class = 'athletes') && ($method == 'saveStats') && !empty($data['source_id']) ){
 			$data['source_id'] = $this->_convertMemberSaltToId($data['source_id']);
 		}
