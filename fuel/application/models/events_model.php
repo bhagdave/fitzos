@@ -203,7 +203,7 @@ class Events_model extends Fitzos_model {
 		// do notification...
 		$this->load->model('notifications_model');
 		$event = $this->getEvent($eventId);
-		$mesg = "You have been invited to the event <a href='/event/view/".$event->id."'>$event->name</a>";
+		$mesg = "You have been invited to the event $event->name";
 		$data = array(
 			"from_table"=>"member",
 			"from_key"=>$user,
