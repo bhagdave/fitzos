@@ -426,6 +426,9 @@ class Athlete extends CI_Controller{
 		$vars = array('id'=>$this->session->userdata('id'),'message'=>$message,'athlete'=>$athlete,'member'=>$member,'sports'=>$sports);
 		$this->fuel->pages->render('athlete/view',$vars);
 	}
+	function getFriendRequests(){
+		
+	}
 }
 
 
