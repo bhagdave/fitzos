@@ -203,7 +203,7 @@ class Events_model extends Fitzos_model {
 		// do notification...
 		$this->load->model('notifications_model');
 		$event = $this->getEvent($eventId);
-		$mesg = "You have been invited to the event <a href='/event/view/".$event->id."'>$event->name</a>";
+		$mesg = "You have been invited to the event $event->name";
 		$data = array(
 			"from_table"=>"member",
 			"from_key"=>$user,
@@ -328,6 +328,12 @@ class Events_model extends Fitzos_model {
 		$this->db->insert($this->table_name,$data);
     	return $this->db->affected_rows();
     }
+	function getMemberInvites($member_id){
+		$this->db->where('member_id',$member_id);
+		$this->db->join('event','event.id = event_id');
+		$result = $this->db->get('event_invites');
+		return $result->result();	
+	}
 }
  
 class Event_model extends Base_module_record {
