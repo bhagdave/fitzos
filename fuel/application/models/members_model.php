@@ -252,6 +252,15 @@ class Members_model extends Fitzos_model {
 		}
 		return implode($pass);
 	}
+	function getFriendRequests($member_id){
+		$this->db->select('friend_id,member.first_name,member.last_name,member.image');
+		$this->db->where('member_id_requested',$member_id);
+		$this->db->where('friend.status','requested');
+		$this->db->join('member','member_id_requestee = member.id');
+		$this->db->order_by('requested');
+		$result = $this->db->get('friend');
+		return $result->result();
+	}
 }
  
 class Member_model extends Base_module_record {
