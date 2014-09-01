@@ -383,6 +383,13 @@ class Teams_model extends Fitzos_model {
 			return null;
 		}
 	}
+	function getInvites($member_id){
+		$this->db->where('member_id',$member_id);
+		$this->db->join('team','team.id=team_id');	
+		$this->db->where('status','invited');
+		$result = $this->db->get('team_invites');
+		return $result->result();
+	}
 }
  
 class Team_model extends Base_module_record {
