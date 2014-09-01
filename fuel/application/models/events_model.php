@@ -328,6 +328,12 @@ class Events_model extends Fitzos_model {
 		$this->db->insert($this->table_name,$data);
     	return $this->db->affected_rows();
     }
+	function getMemberInvites($member_id){
+		$this->db->where('member_id',$member_id);
+		$this->db->join('event','event.id = event_id');
+		$result = $this->db->get('event_invites');
+		return $result->result();	
+	}
 }
  
 class Event_model extends Base_module_record {
