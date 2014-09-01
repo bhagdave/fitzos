@@ -335,6 +335,31 @@ class Events_model extends Fitzos_model {
 		$result = $this->db->get('event_invites');
 		return $result->result();	
 	}
+	private function setInviteStatus($event,$member,$status){
+		$this->db->set('status',$status);
+		$this->db->where('event_id',$event);
+		$this->db->where('member_id',$member);
+		$this->db->update('event_invites');
+		return $this->db->affected_rows();
+	}
+	function acceptInvite($member_id,$event){
+		$status = $this->setInviteStatus($event, $member_id, 'accepted');
+		if ($status > 0){
+			$insert = array(
+				'event_id'=>$event,
+				'member_id'=>$member_id,
+				'paid'=>'NO',
+				'cancelled'=>'NO'
+			);			
+			$this->db->insert('event_attendance',$insert);
+			return $this->db->affected_rows() > 0;
+		} else {
+			return null;
+		}
+	}
+	function declineInvite($member_id,$event){
+		return $this->setInviteStatus($event,$member_id,'declined') > 0;
+	}
 }
  
 class Event_model extends Base_module_record {
