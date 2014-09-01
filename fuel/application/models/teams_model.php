@@ -244,7 +244,7 @@ class Teams_model extends Fitzos_model {
 		$insert = array('member_id'=>$member,'team_id'=>$team, 'status'=>'yes', 'requested_date'=>date('Y-m-d'),'approved_date'=>date('Y-m-d'));
 		$this->db->insert('team_membership',$insert);
 		$id = $this->db->insert_id();		
-		$this->setTeamInviteStatus($team, $member_id, 'accepted');
+		$this->setTeamInviteStatus($team, $member, 'accepted');
 		return $id;
 	}
 	function acceptMember($team,$member){
