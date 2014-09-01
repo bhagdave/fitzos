@@ -244,10 +244,8 @@ class Teams_model extends Fitzos_model {
 		$insert = array('member_id'=>$member,'team_id'=>$team, 'status'=>'yes', 'requested_date'=>date('Y-m-d'),'approved_date'=>date('Y-m-d'));
 		$this->db->insert('team_membership',$insert);
 		$id = $this->db->insert_id();		
-		$this->db->where('team_id',$team);
-		$this->db->where('member_id',$member);
-		$this->db->set('status','accepted');
-		$this->db->update('team_invites');
+		$this->setTeamInviteStatus($team, $member_id, 'accepted');
+		return $id;
 	}
 	function acceptMember($team,$member){
 		$this->db->where("member_id",$member);
@@ -389,6 +387,20 @@ class Teams_model extends Fitzos_model {
 		$this->db->where('status','invited');
 		$result = $this->db->get('team_invites');
 		return $result->result();
+	}
+	function acceptTeamInvite($team,$member_id){
+		return createMemberFromInvite($team,$member_id);
+	}
+	function declineTeamInvite($team,$member_id){
+		// update invite table
+		return $this->setTeamInviteStatus($team, $member_id, 'declined') > 0;
+	}
+	private function setTeamInviteStatus($team,$member_id,$status){
+		$this->db->where('team_id',$team);
+		$this->db->where('member_id',$member_id);
+		$this->db->set('status',$status);
+		$this->db->update('team_invites');
+		return $this->db->affected_rows();
 	}
 }
  
