@@ -389,7 +389,7 @@ class Teams_model extends Fitzos_model {
 		return $result->result();
 	}
 	function acceptTeamInvite($team,$member_id){
-		return createMemberFromInvite($team,$member_id);
+		return $this->createMemberFromInvite($team,$member_id);
 	}
 	function declineTeamInvite($team,$member_id){
 		// update invite table
