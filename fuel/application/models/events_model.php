@@ -330,6 +330,7 @@ class Events_model extends Fitzos_model {
     }
 	function getMemberInvites($member_id){
 		$this->db->where('event_invites.member_id',$member_id);
+		$this->db->where('event_invites.status','invited');
 		$this->db->join('event','event.id = event_id');
 		$result = $this->db->get('event_invites');
 		return $result->result();	
