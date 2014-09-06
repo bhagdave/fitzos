@@ -202,10 +202,8 @@ class Api extends CI_Controller{
 		if ($this->_checkSessionKey()){
 			$mesg = $this->Futility->checkSignin($this->input->get_post());
 			if (count($mesg)> 0){
-				// show error
 				$this->respond("ERR","Sign up failed", $mesg);
 			} else {
-				// Put the stuff into the database
 				$this->load->model("members_model","members");
 				if ($this->members->checkIfMemberExists($data)){
 					$mesg[] = 'That username is already taken.';
@@ -213,7 +211,6 @@ class Api extends CI_Controller{
 				} else {
 					$id = $this->members->createMember($this->input->get_post());
 					$member = $this->members->getMember($id);
-					// Send email to user to activate account...
 					$this->load->library('Fitzos_email',null,'Femail');
 					$this->Femail->sendMemberActivation($member);
 					$this->respond("OK","Sign up worked", $id);
