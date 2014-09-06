@@ -13,27 +13,21 @@ class Api extends CI_Controller{
 	
 	private function fixId($class,$method,$data){
 		if (isset($data['member_id']) && !is_numeric($data['member_id'])){
-			// convert salt to memberid
 			$data['member_id'] = $this->_convertMemberSaltToId($data['member_id']);
 		}
 		if (isset($data['id']) && !is_numeric($data['id'])){
-			// convert salt to memberid
 			$data['id'] = $this->_convertMemberSaltToId($data['id']);
 		}
 		if (isset($data['from']) && !is_numeric($data['from'])){
-			// convert salt to memberid
 			$data['from'] = $this->_convertMemberSaltToId($data['from']);
 		}
 		if (isset($data['owner']) && !is_numeric($data['owner'])){
-			// convert salt to memberid
 			$data['owner'] = $this->_convertMemberSaltToId($data['owner']);
 		}
 		if (($class == 'teams') && ($method == 'isOwner') && isset($data['user']) && !is_numeric($data['user'])){
-			// convert salt to memberid
 			$data['user'] = $this->_convertMemberSaltToId($data['user']);
 		}
 		if (($class == 'teams') && ($method == 'sendInvites') && isset($data['user']) && !is_numeric($data['user'])){
-			// convert salt to memberid
 			$data['user'] = $this->_convertMemberSaltToId($data['user']);
 		}
 		if (($class = 'athletes') && ($method == 'saveStats') && !empty($data['source_id']) ){
