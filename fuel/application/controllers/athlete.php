@@ -201,6 +201,7 @@ class Athlete extends CI_Controller{
 			$this->x->logEvent('saveProfileImage','No file received');
 			// no file see if we have a request
 			if (!empty($request)){
+				$this->x->logEvent('saveProfileImage','Request:' . print_r($request,true));
 				$this->athletes->saveAthleteBySalt($request);
 			} else {
 				$this->x->logEvent('saveProfileImage','Empty request - Nothing done');
