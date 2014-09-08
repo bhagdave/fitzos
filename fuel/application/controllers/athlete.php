@@ -173,9 +173,9 @@ class Athlete extends CI_Controller{
 	}
 	function saveProfileImage($id){
 		$request = $_REQUEST;
-		$this->x->logEvent('saveProfileImage','Request:' . print_r($request,true));
 		$request['id'] = $id;
 		$this->load->model('api_model','x');
+		$this->x->logEvent('saveProfileImage','Request:' . print_r($request,true));
 		$this->load->helper('inflector');
 		if (isset($_FILES['file']['name']) && !empty($_FILES['file']['name'])){
 			if ($_FILES["file"]["error"] > 0){
