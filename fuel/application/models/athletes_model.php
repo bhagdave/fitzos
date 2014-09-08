@@ -36,7 +36,7 @@ class Athletes_model extends Fitzos_model {
 		$this->logEvent('saveAthleteBySalt','Member:'.print_r($member[0],true));
 		if (isset($member[0]->id)){
 			$data['id'] = $member[0]->id;
-			$this->db->where('id',$data['id']);
+			$this->db->where('member_id',$data['id']);
 			$this->db->update('athlete',$data);
 			return $this->db->affected_rows();
 		}
