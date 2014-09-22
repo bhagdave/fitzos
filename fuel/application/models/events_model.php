@@ -66,7 +66,7 @@ class Events_model extends Fitzos_model {
     	$this->db->order_by('event.date');
     	$this->db->limit(10);
     	$result = $this->db->get('event');
-//    	echo($this->db->last_query());
+    	echo($this->db->last_query());
     	return $result->result();
     }
     function getPublicEventsForMonthBySport(){
@@ -360,6 +360,18 @@ class Events_model extends Fitzos_model {
 	}
 	function declineInvite($member_id,$event){
 		return $this->setInviteStatus($event,$member_id,'declined') > 0;
+	}
+	function getUpcomingEvents(){
+		$this->db->select("event.id, event.name, sport.name as sport, event.location,concat(date(event.date),' @ ',event.time) as time",false);
+		$this->db->join('sport','event.sport_id = sport.id');
+		$this->db->where('event.public','PUBLIC');
+		$this->db->where('published','yes');
+		$this->db->where("date > date_sub(now(), interval 1 day)");
+		$this->db->order_by('event.date');
+		$this->db->limit(10);
+		$result = $this->db->get('event');
+//		echo($this->db->last_query());		
+		return $result->result();
 	}
 }
  
