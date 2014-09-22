@@ -32,11 +32,7 @@ class Fitzos_model extends Base_module_model {
 		}
 	}	
     function find_one($id){
-    	if (is_array($id)){
-    		$this->db->where($id);
-    	} else {
-    		$this->db->where($this->key_field(),$id);
-    	}
+    	$this->db->where($this->key_field(),$id);
     	$result = $this->db->get($this->table_name);
     	return $result->result();
     }

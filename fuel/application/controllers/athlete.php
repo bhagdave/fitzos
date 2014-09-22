@@ -210,7 +210,6 @@ class Athlete extends CI_Controller{
 	}
 	function profile(){
 		if ($this->input->post('age')){	
-			$this->load->helper('inflector');
 			// post to the database baby...
 			$data = $this->input->post();
 			$data['id'] = $this->session->userdata('id');
@@ -221,7 +220,6 @@ class Athlete extends CI_Controller{
 				if ($_FILES["file"]["error"] > 0){	
 					$this->session->set_flashdata('message', 'Unable to save image');
 				} else {
-					$_FILES["file"]["name"] = underscore($_FILES["file"]["name"]);
 					$path = 'assets/images/members/' . $_FILES["file"]["name"];
 					if (file_exists($path)){
 						// update member image to point here...
@@ -303,7 +301,7 @@ class Athlete extends CI_Controller{
 				$vars['positions'] = $positions;
 				$vars['stats'] = $stats;
 				$vars['athlete_stats'] = $athleteStats;
-				$vars['sport'] = $sportData[0];
+				$vars['sport'] = $sportData;
 				$this->fuel->pages->render('athlete/stats',$vars);	
 			} else {
 				redirect('signin/login');
