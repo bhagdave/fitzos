@@ -171,6 +171,43 @@ class Athlete extends CI_Controller{
 		$this->fuel->pages->render('athlete/calendar',$vars);
 		
 	}
+	function saveProfileImage($id){
+		$request = $_REQUEST;
+		$request['id'] = $id;
+		$this->load->model('api_model','x');
+		$this->x->logEvent('saveProfileImage','Request:' . print_r($request,true));
+		$this->load->helper('inflector');
+		if (isset($_FILES['file']['name']) && !empty($_FILES['file']['name'])){
+			if ($_FILES["file"]["error"] > 0){
+				$this->x->logEvent('saveProfileImage','Error Receiving file');
+			} else {
+				$path = 'assets/images/members/' . underscore($_FILES["file"]["name"]);
+				if (file_exists($path)){
+					// update member image to point here...
+				} else {
+					$this->x->logEvent('saveProfileImage->saveFile',$path);
+					// save file...
+					$worked = move_uploaded_file($_FILES["file"]["tmp_name"],$path);
+					if (!$worked){
+						$this->x->logEvent('saveProfileImage','move_upload_file Failed ' . $_FILES["file"]["tmp_name"] . ' to ' . $path);
+					} else {
+						$this->x->logEvent('saveProfileImage-FILESAVED',$path);
+					}
+				}
+				// update the member
+				$request['image'] = $path;
+				$this->athletes->saveAthleteBySalt($request);
+			}
+		} else {
+			$this->x->logEvent('saveProfileImage','No file received');
+			// no file see if we have a request
+			if (!empty($request)){
+				$this->athletes->saveAthleteBySalt($request);
+			} else {
+				$this->x->logEvent('saveProfileImage','Empty request - Nothing done');
+			}
+		}
+	}
 	function profile(){
 		if ($this->input->post('age')){	
 			// post to the database baby...

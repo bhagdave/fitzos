@@ -29,6 +29,22 @@ class Athletes_model extends Fitzos_model {
 		$this->db->where('member_id', $data['id']);
 		$this->db->update('athlete',$update);
 	}
+	function saveAthleteBySalt($data){
+		$this->db->where('salt',$data['id']);
+		$result = $this->db->get('member');
+		$member = $result->result();
+		$this->logEvent('saveAthleteBySalt','Member:'.print_r($member[0],true));
+		if (isset($member[0]->id)){
+			unset($data['id']);
+			$this->db->where('member_id',$member[0]->id);
+			$this->db->update('athlete',$data);
+			return $this->db->affected_rows();
+		}
+	}
+	function logEvent($event, $message){
+		$insert = array('event'=>$event,'message'=>$message, 'time'=>date("Y-m-d H:i:s"));
+		$this->db->insert('api_log',$insert);
+	}
 	function loadProfile($memberId){
 			return $this->getAthlete($memberId);
 	}
