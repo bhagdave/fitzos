@@ -143,6 +143,21 @@ class Teams_model extends Fitzos_model {
 		$result = $this->db->get('team_invites');
 		return $result->result();
 	}
+	function getFriendsToInvite($team,$member_id){
+		$query = "select member.id,member.first_name from
+		(select
+				if (member_id_requested = ?,member_id_requestee,member_id_requested) as friend
+				from
+				friend
+				where
+				status = 'accepted' and
+				(member_id_requested = ? or member_id_requestee = ?) ) friends
+		join member on member.id = friend
+		where friends.friend not in (select member_id from team_membership where team_id = ? and status ='yes')
+		and friends.friend not in (select member_id from team_invites where team_id = ?)";
+		$result = $this->db->query($query,array($member_id,$member_id,$member_id,$team,$team));
+		return $result->result();
+	}
 	function getFriendsForTeamOwner($team_id){
 		$friendList = $this->getOwnersFriends($team_id);
 		$members = $this->getTeamMembers($team_id);
@@ -229,10 +244,8 @@ class Teams_model extends Fitzos_model {
 		$insert = array('member_id'=>$member,'team_id'=>$team, 'status'=>'yes', 'requested_date'=>date('Y-m-d'),'approved_date'=>date('Y-m-d'));
 		$this->db->insert('team_membership',$insert);
 		$id = $this->db->insert_id();		
-		$this->db->where('team_id',$team);
-		$this->db->where('member_id',$member);
-		$this->db->set('status','accepted');
-		$this->db->update('team_invites');
+		$this->setTeamInviteStatus($team, $member, 'accepted');
+		return $id;
 	}
 	function acceptMember($team,$member){
 		$this->db->where("member_id",$member);
@@ -281,18 +294,6 @@ class Teams_model extends Fitzos_model {
 		$this->db->set('deleted','yes');
 		$this->db->update('team_wall');
 	}
-	private function fixDate($date){
-		if (isset($date)){
-			if (strtotime($date)){
-				$date = date('Y-m-d',strtotime($date));
-				return $date;
-			} else {
-				return null;
-			}
-		} else {
-			return null;
-		}
-	}
 	function addTeamEvent($data){
 		if (is_array($data)){
 			if (!isset($data['date'])){
@@ -326,10 +327,17 @@ class Teams_model extends Fitzos_model {
 		$done = $this->db->affected_rows();
 		return $done;
 	}
+	function sendInvites($members,$user,$team){
+		$members = json_decode($members);
+		foreach($members as $member){
+			$this->sendInvite($member,$user,$team);
+		}
+		return true;
+	}
 	function sendInvite($memberId,$user,$teamId){
 		$this->load->model('notifications_model');
 		$team = $this->getTeam($teamId);
-		$mesg = "You have been invited to the team <a href='/teams/view/".$teamId."'>$team->name</a>";
+		$mesg = "You have been invited to the team $team->name";
 		$data = array(
 				"from_table"=>"member",
 				"from_key"=>$user,
@@ -353,6 +361,46 @@ class Teams_model extends Fitzos_model {
 				'invite_sent'=>date('Y-m-d')
 		);
 		$this->db->insert('team_invites',$invite);
+	}
+	function getAllTeamData($team,$member_id){
+		$team_data = $this->getTeam($team);
+		if (isset($team_data) && !empty($team_data)){
+			$team_wall = $this->getTeamWall($team);
+			$team_members = $this->getTeamMembers($team);
+			$team_events = $this->getTeamEvents($team);
+			$team_data->isOwner = $this->isOwner($team,$member_id);
+			$invite_data = $this->getFriendsToInvite($team, $member_id);
+			return array(
+					'team'=>$team_data,
+					'wall'=>$team_wall,
+					'members'=>$team_members,
+					'events'=>$team_events,
+					'invites'=>$invite_data
+			);
+		} else {
+			return null;
+		}
+	}
+	function getInvites($member_id){
+		$this->db->where('member_id',$member_id);
+		$this->db->join('team','team.id=team_id');	
+		$this->db->where('status','invited');
+		$result = $this->db->get('team_invites');
+		return $result->result();
+	}
+	function acceptTeamInvite($team,$member_id){
+		return $this->createMemberFromInvite($team,$member_id);
+	}
+	function declineTeamInvite($team,$member_id){
+		// update invite table
+		return $this->setTeamInviteStatus($team, $member_id, 'declined') > 0;
+	}
+	private function setTeamInviteStatus($team,$member_id,$status){
+		$this->db->where('team_id',$team);
+		$this->db->where('member_id',$member_id);
+		$this->db->set('status',$status);
+		$this->db->update('team_invites');
+		return $this->db->affected_rows();
 	}
 }
  

@@ -42,6 +42,20 @@ class Events_model extends Fitzos_model {
     		return null;
     	}
     }
+    function getAllEventData($id,$member_id){
+    	$event = $this->getEvent($id);
+    	$attending = $this->getMembersAttending($id);
+    	$wall = $this->getWall($id);
+    	$owner = $this->isOwner($id, $member_id);
+    	$isAttendee = $this->isAttendee($id, $member_id);
+    	$event->isOwner = $owner ? 'Yes': 'No';
+    	$event->isAttendee = $isAttendee ? 'Yes':'No' ;
+    	return array(
+    		'event'=>$event,
+    		'attending'=>$attending,
+    		'wall'=>$wall
+    	);
+    }
     function getPublicEvents(){
     	$this->db->select('event.id,event.name,sport.name as sport');
     	$this->db->where('event.public','PUBLIC');
@@ -52,7 +66,7 @@ class Events_model extends Fitzos_model {
     	$this->db->order_by('event.date');
     	$this->db->limit(10);
     	$result = $this->db->get('event');
-//    	echo($this->db->last_query());
+    	echo($this->db->last_query());
     	return $result->result();
     }
     function getPublicEventsForMonthBySport(){
@@ -69,18 +83,6 @@ class Events_model extends Fitzos_model {
 		$result = $this->db->get('event_attendance');
 		return $result->result();	    	
     }
-	private function fixDate($date){
-		if (isset($date)){
-			if (strtotime($date)){
-				$date = date('Y-m-d',strtotime($date));
-				return $date;
-			} else {
-				return null;
-			}
-		} else {
-			return null;
-		}
-	}
     function updateEvent($data){
     	if (is_array($data)){
     		if (!isset($data['date'])){
@@ -201,7 +203,7 @@ class Events_model extends Fitzos_model {
 		// do notification...
 		$this->load->model('notifications_model');
 		$event = $this->getEvent($eventId);
-		$mesg = "You have been invited to the event <a href='/event/view/".$event->id."'>$event->name</a>";
+		$mesg = "You have been invited to the event $event->name";
 		$data = array(
 			"from_table"=>"member",
 			"from_key"=>$user,
@@ -258,7 +260,7 @@ class Events_model extends Fitzos_model {
 	function addWallPost($data){
 		if (is_array($data)){
 			if (!isset($data['date'])){
-				$data['date'] = date('Y-m-d');
+				$data['date'] = $this->fixDate($data['date']);
 			}
 			$this->db->insert('event_wall',$data);
 			return $this->db->insert_id();
@@ -314,6 +316,62 @@ class Events_model extends Fitzos_model {
 		$this->db->where('team.public','yes');
 		$this->db->join('team','team.id = event.team_id');
 		$this->db->join('sport','sport.id = event.sport_id');
+	}
+    function create($data){
+    	$this->logEvent('Event->create - Date',print_r($data['date'],TRUE));
+		if (isset($data['date'])){
+			$data['date'] = $this->fixDate($data['date']);
+    		$this->logEvent('Event->fixDate - Result',print_r($data['date'],TRUE));
+		}
+    	if (isset($data['end_date'])){
+			$data['end_date'] = $this->fixDate($data['end_date']);
+		}
+		$this->db->insert($this->table_name,$data);
+    	return $this->db->affected_rows();
+    }
+	function getMemberInvites($member_id){
+		$this->db->where('event_invites.member_id',$member_id);
+		$this->db->where('event_invites.status','invited');
+		$this->db->join('event','event.id = event_id');
+		$result = $this->db->get('event_invites');
+		return $result->result();	
+	}
+	private function setInviteStatus($event,$member,$status){
+		$this->db->set('status',$status);
+		$this->db->where('event_id',$event);
+		$this->db->where('member_id',$member);
+		$this->db->update('event_invites');
+		return $this->db->affected_rows();
+	}
+	function acceptInvite($member_id,$event){
+		$status = $this->setInviteStatus($event, $member_id, 'accepted');
+		if ($status > 0){
+			$insert = array(
+				'event_id'=>$event,
+				'member_id'=>$member_id,
+				'paid'=>'NO',
+				'cancelled'=>'NO'
+			);			
+			$this->db->insert('event_attendance',$insert);
+			return $this->db->affected_rows() > 0;
+		} else {
+			return null;
+		}
+	}
+	function declineInvite($member_id,$event){
+		return $this->setInviteStatus($event,$member_id,'declined') > 0;
+	}
+	function getUpcomingEvents(){
+		$this->db->select("event.id, event.name, sport.name as sport, event.location,concat(date(event.date),' @ ',event.time) as time",false);
+		$this->db->join('sport','event.sport_id = sport.id');
+		$this->db->where('event.public','PUBLIC');
+		$this->db->where('published','yes');
+		$this->db->where("date > date_sub(now(), interval 1 day)");
+		$this->db->order_by('event.date');
+		$this->db->limit(10);
+		$result = $this->db->get('event');
+//		echo($this->db->last_query());		
+		return $result->result();
 	}
 }
  

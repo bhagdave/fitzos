@@ -175,6 +175,7 @@ class Athlete extends CI_Controller{
 		$request = $_REQUEST;
 		$request['id'] = $id;
 		$this->load->model('api_model','x');
+		$this->x->logEvent('saveProfileImage','Request:' . print_r($request,true));
 		$this->load->helper('inflector');
 		if (isset($_FILES['file']['name']) && !empty($_FILES['file']['name'])){
 			if ($_FILES["file"]["error"] > 0){
@@ -209,7 +210,6 @@ class Athlete extends CI_Controller{
 	}
 	function profile(){
 		if ($this->input->post('age')){	
-			$this->load->helper('inflector');
 			// post to the database baby...
 			$data = $this->input->post();
 			$data['id'] = $this->session->userdata('id');
@@ -220,7 +220,6 @@ class Athlete extends CI_Controller{
 				if ($_FILES["file"]["error"] > 0){	
 					$this->session->set_flashdata('message', 'Unable to save image');
 				} else {
-					$_FILES["file"]["name"] = underscore($_FILES["file"]["name"]);
 					$path = 'assets/images/members/' . $_FILES["file"]["name"];
 					if (file_exists($path)){
 						// update member image to point here...
@@ -302,7 +301,7 @@ class Athlete extends CI_Controller{
 				$vars['positions'] = $positions;
 				$vars['stats'] = $stats;
 				$vars['athlete_stats'] = $athleteStats;
-				$vars['sport'] = $sportData[0];
+				$vars['sport'] = $sportData;
 				$this->fuel->pages->render('athlete/stats',$vars);	
 			} else {
 				redirect('signin/login');
@@ -425,6 +424,9 @@ class Athlete extends CI_Controller{
 		}
 		$vars = array('id'=>$this->session->userdata('id'),'message'=>$message,'athlete'=>$athlete,'member'=>$member,'sports'=>$sports);
 		$this->fuel->pages->render('athlete/view',$vars);
+	}
+	function getFriendRequests(){
+		
 	}
 }
 

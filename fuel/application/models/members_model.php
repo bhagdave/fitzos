@@ -161,15 +161,11 @@ class Members_model extends Fitzos_model {
 		$this->db->where('sport_id',$data['sport_id']);
 		if ($this->db->count_all_results('member_sports')== 0){
 			// lets frig those dates baby..
-			if (strtotime($data['from_date'])){
-				$data['from_date'] = date('Y-m-d',strtotime($data['from_date']));
-			} else {
-				unset($data['from_date']);
+			if (!empty($data['from_date'])){
+				$data['from_date'] = $this->fixDate($data['from_date']);
 			}
-			if (isset($data['to_date']) && !empty($data['to_date']) && strtotime($data['to_date'])){
-				$data['to_date'] = date('Y-m-d',strtotime($data['to_date']));
-			} else {
-				unset($data['to_date']);
+			if (!empty($data['to_date'])){
+				$data['to_date'] = $this->fixDate($data['to_date']);
 			}
 			$this->db->insert('member_sports',$data);
 			return $this->db->insert_id();
@@ -197,22 +193,6 @@ class Members_model extends Fitzos_model {
 			return $data;
 		} else {
 			return null;
-		}
-	}
-	function saveMemberBySalt($data){
-		$this->logEvent('saveMemberBySalt','saveMemberBySaltEntered');
-		// check if they exist..
-		$this->db->where('salt',$data['id']);
-		$count = $this->db->count_all_results('member');
-		if ($count > 0){
-			// if they do update
-			$this->logEvent('saveMemberBySalt->found',$data['id']);
-			$this->db->where('salt',$data['id']);
-			$this->db->update('member',$data);
-		} else {
-			$this->logEvent('saveMemberBySalt->Notfound',$data['id']);
-			// if not then create
-			$this->createMember($data);
 		}
 	}
 	function saveMember($data){
@@ -256,9 +236,14 @@ class Members_model extends Fitzos_model {
 		}
 		return implode($pass);
 	}
-	private function logEvent($event, $message){
-		$insert = array('event'=>$event,'message'=>$message, 'time'=>date("Y-m-d H:i:s"));
-		$this->db->insert('api_log',$insert);
+	function getFriendRequests($member_id){
+		$this->db->select('friend_id,member.first_name,member.last_name,member.image');
+		$this->db->where('member_id_requested',$member_id);
+		$this->db->where('friend.status','requested');
+		$this->db->join('member','member_id_requestee = member.id');
+		$this->db->order_by('requested');
+		$result = $this->db->get('friend');
+		return $result->result();
 	}
 }
  

@@ -11,14 +11,32 @@ class Api extends CI_Controller{
 		return $memberId;	
 	}
 	
+	private function fixId($class,$method,$data){
+		if (isset($data['member_id']) && !is_numeric($data['member_id'])){
+			$data['member_id'] = $this->_convertMemberSaltToId($data['member_id']);
+		}
+		if (isset($data['id']) && !is_numeric($data['id'])){
+			$data['id'] = $this->_convertMemberSaltToId($data['id']);
+		}
+		if (isset($data['from']) && !is_numeric($data['from'])){
+			$data['from'] = $this->_convertMemberSaltToId($data['from']);
+		}
+		if (isset($data['owner']) && !is_numeric($data['owner'])){
+			$data['owner'] = $this->_convertMemberSaltToId($data['owner']);
+		}
+		if (($class == 'teams') && ($method == 'isOwner') && isset($data['user']) && !is_numeric($data['user'])){
+			$data['user'] = $this->_convertMemberSaltToId($data['user']);
+		}
+		if (($class == 'teams') && ($method == 'sendInvites') && isset($data['user']) && !is_numeric($data['user'])){
+			$data['user'] = $this->_convertMemberSaltToId($data['user']);
+		}
+		if (($class = 'athletes') && ($method == 'saveStats') && !empty($data['source_id']) ){
+			$data['source_id'] = $this->_convertMemberSaltToId($data['source_id']);
+		}
+		return $data;
+	} 
+	
 	private function doTheMethodCall($class,$method,$data){
-		if (isset($data['signature'])){
-			unset($data['signature']);	
-		}
-		if (isset($data['key'])){
-			unset($data['key']);	
-		}
-		$data['data'] = $data;
 		$r = new ReflectionMethod($class.'_model', $method);
 		$pass = array();
 		foreach($r->getParameters() as $param){
@@ -39,44 +57,28 @@ class Api extends CI_Controller{
 		$modelName = $model . '_model';
 		$err = $this->load->model($modelName,$model);
 		if (isset($err)){
-			if (isset($data['member_id']) && !is_numeric($data['member_id'])){
-				// convert salt to memberid
-				$data['member_id'] = $this->_convertMemberSaltToId($data['member_id']);
-			}
-			if (isset($data['id']) && !is_numeric($data['id'])){
-				// convert salt to memberid
-				$data['id'] = $this->_convertMemberSaltToId($data['id']);
-			}
-			if (isset($data['from']) && !is_numeric($data['from'])){
-				// convert salt to memberid
-				$data['from'] = $this->_convertMemberSaltToId($data['from']);
-			}
+			$data = $this->fixId($model,$function,$data);
 			$result = $this->doTheMethodCall($model, $function, $data);		
 		} else {
 			$result = null;
 		}
-		$this->_respond('OK', 'API Call worked',$result);
+		if (isset($result) && !empty($result)){
+			$this->_respond('OK', 'API Call worked',$result);
+		} else {
+			$this->_respond('ERR', 'API Call worked but empty');
+		}
 	}
 	
 	function index($model,$function){
 		$this->api->logEvent($model . '->' . $function,print_r($_REQUEST,true));
-// 		if ($this->_checkSessionKey($function)){
+//		if ($this->_checkSessionKey($function)){
 			$data = $_REQUEST;
 			$modelName = $model . '_model';
 			$err = $this->load->model($modelName,$model);
 			if (isset($err)){
 				if (isset($data['id'])){
-					// if the id is not a number then treat it as a salt.
-					if (!is_numeric($data['id'])){
-						// convert salt to memberid
-						$data['id'] = $this->_convertMemberSaltToId($data['id']);
-					}
-					if (isset($data['member_id']) && !is_numeric($data['member_id'])){
-						// convert salt to memberid
-						$data['member_id'] = $this->_convertMemberSaltToId($data['member_id']);
-					}
-					$this->api->logEvent($model . '->' . $function . ' PRECALL',print_r($data,true));
- 					$result = $this->$model->$function($data['id']);
+					$data = $this->fixId($model, $function, $data);
+					$result = $this->$model->$function($data['id']);
 				} else {
 					$result = $this->$model->$function($data);
 				}
@@ -123,23 +125,11 @@ class Api extends CI_Controller{
 		} else {
 			$data = $_REQUEST;
 		}
-		// frig the ids if they are salted
-		if (isset($data['id']) && !is_numeric($data['id'])){
-			// convert salt to memberid
-			$data['id'] = $this->_convertMemberSaltToId($data['id']);
-		}
-		if (isset($data['member_id']) && !is_numeric($data['member_id'])){
-			// convert salt to memberid
-			$data['member_id'] = $this->_convertMemberSaltToId($data['member_id']);
-		}
-		if (isset($data['owner']) && !is_numeric($data['owner'])){
-			// convert salt to memberid
-			$data['owner'] = $this->_convertMemberSaltToId($data['owner']);
-		}
 		$modelName = $model . '_model';
 		$err = $this->load->model($modelName,$model);
 		if (isset($err)){
 			$method = $this->_getRestMethod($verb,$id);
+			$data = $this->fixId($model,$method,$data);
 			if (isset($id)){
 				$result = $this->$model->$method($id);
 			} else {
@@ -207,5 +197,55 @@ class Api extends CI_Controller{
 		} else {
 			return false;
 		}
+	}
+	function createMember(){
+		if ($this->_checkSessionKey()){
+			$mesg = $this->Futility->checkSignin($this->input->get_post());
+			if (count($mesg)> 0){
+				$this->respond("ERR","Sign up failed", $mesg);
+			} else {
+				$this->load->model("members_model","members");
+				if ($this->members->checkIfMemberExists($data)){
+					$mesg[] = 'That username is already taken.';
+					$this->respond("ERR","Sign up failed", $mesg);
+				} else {
+					$id = $this->members->createMember($this->input->get_post());
+					$member = $this->members->getMember($id);
+					$this->load->library('Fitzos_email',null,'Femail');
+					$this->Femail->sendMemberActivation($member);
+					$this->respond("OK","Sign up worked", $id);
+				}
+			}
+		} else {
+			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
+		}
+	}
+	function getMemberDetails($id){
+		if ($this->_checkSessionKey()){
+		} else {
+			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
+		}		
+	}
+	function getAthleteDetails(){
+		if ($this->_checkSessionKey()){
+			$this->load->model('athletes_model','athletes');
+			$id = $_POST['id'];
+			$athlete = $this->athletes->loadProfile($id);
+			$this->_respond("OK","Athlete Found",$athlete);
+		} else {
+			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
+		}		
+	}
+	function saveAthleteDetails(){
+		if ($this->_checkSessionKey()){
+		} else {
+			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
+		}		
+	}
+	function saveMemberDetails(){
+		if ($this->_checkSessionKey()){
+		} else {
+			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
+		}		
 	}
 }
