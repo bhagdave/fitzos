@@ -27,7 +27,7 @@
 				<img src="/assets/images/logo.png" alt="www.reach-your-peak.com" name="www.reach-your-peak.com" width="129" height="89" id="FitZos" class="logo"/>
 			</a>
 			<div class="row">
-				<div class="col-md-6">
+				<div class="col-md-4">
 				<?php
 					if (isset($this->session)){
 						$mesg = $this->session->flashdata('message');
@@ -38,6 +38,6 @@
 				?>
 				</div>
 			</div>
-			</header>
+		</header>
 
 
