@@ -8,7 +8,7 @@ $existingSports = array();
 </div>
 <div class="col-md-12">
 	<div class="row">
-		<div class="col-md-4 col-md-offset-1">
+		<div class="col-md-4">
 			<h2>Your Existing Sports</h2>
 		<?php
 			if (isset($members_sports)){

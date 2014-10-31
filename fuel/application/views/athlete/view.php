@@ -6,7 +6,7 @@
 	}
 ?>
 <div class="row">
-	<div class="col-md-4 athlete-profile__img">
+	<div class="col-md-3 athlete-profile__img">
 		<?php 
 			if (isset($member) && isset($member->image)){
 				echo("<img src='/$member->image'>");
@@ -20,7 +20,7 @@
 	?>
 	</div>
 	
-	<div class="col-md-4">
+	<div class="col-md-5">
 		<h4>Sports</h4>
 		<?php
 			if (isset($sports)){
@@ -40,11 +40,11 @@
 
 </div>
 <div class="row">
-	<div class="col-md-5">
+	<div class="col-md-6">
 		<h4>Events</h4>
 		<?php $this->load->view('athlete/events'); ?>
 	</div>
-	<div class="col-md-5">
+	<div class="col-md-6">
 		<?php  $this->load->view('calendar/bySport'); ?>
 	</div>
 </div>
