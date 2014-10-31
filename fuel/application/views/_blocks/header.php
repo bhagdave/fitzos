@@ -4,16 +4,14 @@
 <title>ReachYourPeak</title>
 <meta name="fitness socialized" content="www.reach-your-peak.com">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
-<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
 <link rel="stylesheet" href="http://<?=$_SERVER['SERVER_NAME'] ?>/assets/css/style.css">
 <link rel="stylesheet" href="http://<?=$_SERVER['SERVER_NAME'] ?>/assets/css/jquery.timepicker.css">
 <link href='http://fonts.googleapis.com/css?family=Lato:300,400,900' rel='stylesheet' type='text/css'>
 <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-
-<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/knockout/2.3.0/knockout-min.js"></script> 
 <script src="http://<?=$_SERVER['SERVER_NAME'] ?>/assets/js/jquery.timepicker.min.js"></script>
 <script src="http://<?=$_SERVER['SERVER_NAME'] ?>/assets/js/jquery.form.min.js"></script>
