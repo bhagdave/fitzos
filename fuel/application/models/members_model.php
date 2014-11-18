@@ -66,8 +66,6 @@ class Members_model extends Fitzos_model {
     	$this->db->join('athlete','athlete.member_id = member.id','left');
     	$this->db->join('trainer','trainer.member_id = member.id','left');
     	$result = $this->db->get();
-//     	echo($this->db->last_query());
-//     	die();
     	$data   = $result->result();
     	if (isset($data[0])){
     		if (isset($data[0]->athlete)){
@@ -178,7 +176,6 @@ class Members_model extends Fitzos_model {
 		$this->db->where('status','accepted');
 		$this->db->where("$id in (member_id_requested,member_id_requestee)",null,false);
 		$result = $this->db->get('friend');
-//		echo($this->db->last_query());
 		$friends = $result->result_array();
 		$friendList = array();
 		foreach($friends as $friend){

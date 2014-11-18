@@ -73,7 +73,6 @@ class Search_model extends Base_module_model {
 		}
 		$this->db->where('member.id !=',$id);
 		$result = $this->db->get('athlete');
-		//echo($this->db->last_query());
 		return $result->result();
 	}
 	function getMembersWithLocation($location,$id){
