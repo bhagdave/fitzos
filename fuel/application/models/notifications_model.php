@@ -57,7 +57,7 @@ class Notifications_model extends Fitzos_model {
 				$data['from_key'] = $member;
 				$data['to_table'] = 'member';
 				$data['to_key'] = $owner->owner;
-				$data['notification'] = "The member $memberData->first_name $memberData->last_name requested team memebrship of <a href='/teams/view/".$teamData->id."'>$teamData->name</a>";
+				$data['notification'] = "The member $memberData->first_name $memberData->last_name requested team memebrship of $teamData->name";
 				$data['published'] = 'yes';
 				$data['type'] = 'MESSAGE';
 				$notification = $this->createNotification($data);
