@@ -98,8 +98,8 @@ class Members_model extends Fitzos_model {
 		$this->db->insert(strtolower($data['choice']),$insert);
 		return $member;
 	}
-	function checkIfMemberExists($data){
-		$this->db->where('email', $data['email']);
+	function checkIfMemberExists($email){
+		$this->db->where('email', $email);
 		$count = $this->db->count_all_results('member');
 		return ($count > 0);
 	}
