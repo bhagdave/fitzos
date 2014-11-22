@@ -96,6 +96,7 @@ class Members_model extends Fitzos_model {
 			'member_id'=>$member
 		);
 		$this->db->insert(strtolower($data['choice']),$insert);
+		$member = $this->getMember($member);
 		$this->load->library('Fitzos_email',null,'Femail');
 		$this->Femail->sendMemberActivation($member);
 		return $member;
