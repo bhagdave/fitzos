@@ -186,6 +186,8 @@ class Teams_model extends Fitzos_model {
 		}
 	}
 	function addWallPost($data){
+		unset($data['key']);
+		unset($data['signature']);
 		if (is_array($data)){
 			if (!isset($data['date'])){
 				$data['date'] = date('Y-m-d');
