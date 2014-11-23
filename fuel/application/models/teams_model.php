@@ -366,6 +366,8 @@ class Teams_model extends Fitzos_model {
 	}
 	function getAllTeamData($team,$member_id){
 		$team_data = $this->getTeam($team);
+		// check if they are a member
+		$team_data->isMember = $this->isMember($team,$member_id);
 		if (isset($team_data) && !empty($team_data)){
 			$team_wall = $this->getTeamWall($team);
 			$team_members = $this->getTeamMembers($team);
