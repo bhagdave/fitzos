@@ -40,21 +40,11 @@ class Api_model extends Base_module_model {
 		$this->logEvent('isValidSessionKey',"Method=$method Key=$key Signature=$signature");
     	$this->db->where('session.session_key',strtolower($key));
 //    	$this->db->where('session.timestamp >','now() + interval - 1 hour');
-    	$this->db->join('api_access','api_access.name = session.session_name');
     	$result = $this->db->get('session');
-    	$this->logEvent('isValidSessionKey',$this->db->last_query());
     	$data = $result->result();
     	if (isset($data[0])){
-//     		$test = md5($data[0]->session_name . $data[0]->key. $method);
-//     		$this->logEvent('isValidSessionKey',"Session found test=$test");    		
-//     		if (strtolower($test) == strtolower($signature)){
-    			return true;
-//     		} else {
-//     			$this->logEvent('isValidSessionKey',"test!=signature");    		
-//     			return false;
-//     		}
+    		return true;
     	} else {
-    		$this->logEvent('isValidSessionKey',"No session found!");    		
     		return false;
     	}
 	}

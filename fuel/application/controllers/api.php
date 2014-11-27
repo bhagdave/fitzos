@@ -54,25 +54,29 @@ class Api extends CI_Controller{
 	}
 	
 	function r($model,$function){
-		$data = $_REQUEST;
-		$modelName = $model . '_model';
-		$err = $this->load->model($modelName,$model);
-		if (isset($err)){
-			$data = $this->fixId($model,$function,$data);
-			$result = $this->doTheMethodCall($model, $function, $data);		
+		if ($this->_checkSessionKey()){
+			$data = $_REQUEST;
+			$modelName = $model . '_model';
+			$err = $this->load->model($modelName,$model);
+			if (isset($err)){
+				$data = $this->fixId($model,$function,$data);
+				$result = $this->doTheMethodCall($model, $function, $data);		
+			} else {
+				$result = null;
+			}
+			if (isset($result) && !empty($result)){
+				$this->_respond('OK', 'API Call worked',$result);
+			} else {
+				$this->_respond('ERR', 'API Call worked but empty');
+			}
 		} else {
-			$result = null;
-		}
-		if (isset($result) && !empty($result)){
-			$this->_respond('OK', 'API Call worked',$result);
-		} else {
-			$this->_respond('ERR', 'API Call worked but empty');
-		}
+			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
+		}		
 	}
 	
 	function index($model,$function){
 		$this->api->logEvent($model . '->' . $function,print_r($_REQUEST,true));
-//		if ($this->_checkSessionKey($function)){
+		if ($this->_checkSessionKey($function)){
 			$data = $_REQUEST;
 			$modelName = $model . '_model';
 			$err = $this->load->model($modelName,$model);
@@ -94,9 +98,9 @@ class Api extends CI_Controller{
 				$this->api->logEvent($model . '->' . $function,'No Result and Failed!');
 				$this->_respond('ERR', 'API Call failed');
 			}
-// 		} else {
-// 			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
-// 		}
+		} else {
+			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
+		}
 	}
 	
 	private function _getRestMethod($verb,$id = null){
@@ -119,34 +123,38 @@ class Api extends CI_Controller{
 	}
 
 	function rest($model,$id = null){
-		parse_str(file_get_contents("php://input"),$put);
-		$verb = $_SERVER['REQUEST_METHOD'];
-		if ($verb === 'PUT'){
-			$data = $put;
-		} else {
-			$data = $_REQUEST;
-		}
-		$modelName = $model . '_model';
-		$err = $this->load->model($modelName,$model);
-		if (isset($err)){
-			$method = $this->_getRestMethod($verb,$id);
-			$data = $this->fixId($model,$method,$data);
-			if (isset($id)){
-				$result = $this->$model->$method($id);
+		if ($this->_checkSessionKey()){
+			parse_str(file_get_contents("php://input"),$put);
+			$verb = $_SERVER['REQUEST_METHOD'];
+			if ($verb === 'PUT'){
+				$data = $put;
 			} else {
-				if ($verb === 'POST' || $verb === 'PUT'){
-					$result = $this->$model->$method($data);
-				} else {
+				$data = $_REQUEST;
+			}
+			$modelName = $model . '_model';
+			$err = $this->load->model($modelName,$model);
+			if (isset($err)){
+				$method = $this->_getRestMethod($verb,$id);
+				$data = $this->fixId($model,$method,$data);
+				if (isset($id)){
 					$result = $this->$model->$method($id);
+				} else {
+					if ($verb === 'POST' || $verb === 'PUT'){
+						$result = $this->$model->$method($data);
+					} else {
+						$result = $this->$model->$method($id);
+					}
 				}
+			} else {
+				$result =  null;
+			}
+			if (isset($result)){
+				$this->_respond('OK', 'API Call worked',$result);
+			} else {
+				$this->_respond('ERR', 'API Call failed');
 			}
 		} else {
-			$result =  null;
-		}
-		if (isset($result)){
-			$this->_respond('OK', 'API Call worked',$result);
-		} else {
-			$this->_respond('ERR', 'API Call failed');
+			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
 		}
 	}
 	
@@ -191,7 +199,7 @@ class Api extends CI_Controller{
 				$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
 		}
 	}
-	private function _checkSessionKey($method){
+	private function _checkSessionKey($method = ''){
 		if ($this->input->get_post('key') && $this->input->get_post('signature')){
 			$this->load->model("api_model","api");
 			return $this->api->isValidSessionKey($method,$this->input->get_post('key'),$this->input->get_post('signature'));
