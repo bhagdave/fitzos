@@ -366,24 +366,27 @@ class Teams_model extends Fitzos_model {
 	}
 	function getAllTeamData($team,$member_id){
 		$team_data = $this->getTeam($team);
-		// check if they are a member
-		$team_data->isMember = $this->isMember($team,$member_id);
-		if (isset($team_data) && !empty($team_data)){
-			$team_wall = $this->getTeamWall($team);
-			$team_members = $this->getTeamMembers($team);
-			$team_events = $this->getTeamEvents($team);
-			$team_data->isOwner = $this->isOwner($team,$member_id);
-			$invite_data = $this->getFriendsToInvite($team, $member_id);
-			return array(
-					'team'=>$team_data,
-					'wall'=>$team_wall,
-					'members'=>$team_members,
-					'events'=>$team_events,
-					'invites'=>$invite_data
-			);
-		} else {
-			return null;
+		if (isset($team_data)){
+			// check if they are a member
+			$team_data->isMember = $this->isMember($team,$member_id);
+			if (isset($team_data) && !empty($team_data)){
+				$team_wall = $this->getTeamWall($team);
+				$team_members = $this->getTeamMembers($team);
+				$team_events = $this->getTeamEvents($team);
+				$team_data->isOwner = $this->isOwner($team,$member_id);
+				$invite_data = $this->getFriendsToInvite($team, $member_id);
+				return array(
+						'team'=>$team_data,
+						'wall'=>$team_wall,
+						'members'=>$team_members,
+						'events'=>$team_events,
+						'invites'=>$invite_data
+				);
+			} else {
+				return null;
+			}
 		}
+		return null;
 	}
 	function getInvites($member_id){
 		$this->db->where('member_id',$member_id);
