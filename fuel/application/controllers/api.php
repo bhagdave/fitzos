@@ -56,6 +56,7 @@ class Api extends CI_Controller{
 	function r($model,$function){
 		if ($this->_checkSessionKey()){
 			$data = $_REQUEST;
+			unset($data['key']);
 			$modelName = $model . '_model';
 			$err = $this->load->model($modelName,$model);
 			if (isset($err)){
