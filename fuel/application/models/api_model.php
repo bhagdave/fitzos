@@ -36,8 +36,8 @@ class Api_model extends Base_module_model {
 		$insert = array('event'=>$event,'message'=>$message, 'time'=>date("Y-m-d H:i:s"));
 		$this->db->insert('api_log',$insert);
 	}
-	function isValidSessionKey($method,$key, $signature){
-		$this->logEvent('isValidSessionKey',"Method=$method Key=$key Signature=$signature");
+	function isValidSessionKey($method,$key, $signature=null){
+		$this->logEvent('isValidSessionKey',"Method=$method Key=$key");
     	$this->db->where('session.session_key',strtolower($key));
 //    	$this->db->where('session.timestamp >','now() + interval - 1 hour');
     	$result = $this->db->get('session');

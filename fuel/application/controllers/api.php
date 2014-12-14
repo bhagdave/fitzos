@@ -202,9 +202,8 @@ class Api extends CI_Controller{
 	}
 	private function _checkSessionKey($method = ''){
 		if ($this->input->get_post('key')){
-			echo('Checking session key');
 			$this->load->model("api_model","api");
-			return $this->api->isValidSessionKey($method,$this->input->get_post('key'),$this->input->get_post('signature'));
+			return $this->api->isValidSessionKey($method,$this->input->get_post('key'),null);
 		} else {
 			return false;
 		}
