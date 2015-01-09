@@ -160,7 +160,8 @@ class Api extends CI_Controller{
 	}
 	
 	function login(){
-		if ($this->_checkSessionKey('login')){
+		$this->api->logEvent('login',print_r($_REQUEST,true));
+		if ($this->_checkSessionKey()){
 			$this->load->model("members_model","members");
 			$username = $this->input->get_post('username');
 			$password = md5($this->input->get_post('password'));

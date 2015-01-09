@@ -39,7 +39,7 @@ class Api_model extends Base_module_model {
 	function isValidSessionKey($method,$key, $signature=null){
 		$this->logEvent('isValidSessionKey',"Method=$method Key=$key");
     	$this->db->where('session.session_key',strtolower($key));
-    	$this->db->where('session.timestamp >','now() + interval - 1 hour',false);
+//     	$this->db->where('session.timestamp >','now() + interval - 1 hour',false);
     	$result = $this->db->get('session');
     	$data = $result->result();
     	if (isset($data[0])){
