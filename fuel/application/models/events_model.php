@@ -316,7 +316,7 @@ class Events_model extends Fitzos_model {
 		$this->db->join('sport','sport.id = event.sport_id');
 	}
     function create($data){
-    	$this->logEvent('Event->create - Date',print_r($data['date'],TRUE));
+    	$this->logEvent('Event->create - Data',print_r($data,TRUE));
 		if (isset($data['date'])){
 			$data['date'] = $this->fixDate($data['date']);
     		$this->logEvent('Event->fixDate - Result',print_r($data['date'],TRUE));
@@ -325,7 +325,7 @@ class Events_model extends Fitzos_model {
     		$this->logEvent('Event->fixEndDate - Result',print_r($data['end_date'],TRUE));
     		$data['end_date'] = $this->fixDate($data['end_date']);
 		}
-		$this->logEvent('Event->Create','About to do insert');
+		$this->logEvent('Event->Create - About to insert',print_r($data,TRUE));
 		$this->db->insert($this->table_name,$data);
 		$this->logEvent('Event Creation - Query',$this->db->last_query());
 		$num = $this->db->affected_rows();
