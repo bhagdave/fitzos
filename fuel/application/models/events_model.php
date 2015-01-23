@@ -321,9 +321,11 @@ class Events_model extends Fitzos_model {
 			$data['date'] = $this->fixDate($data['date']);
     		$this->logEvent('Event->fixDate - Result',print_r($data['date'],TRUE));
 		}
-    	if (isset($data['end_date'])){
-			$data['end_date'] = $this->fixDate($data['end_date']);
+    	if (isset($data['end_date']) && !empty($data['end_date'])){
+    		$this->logEvent('Event->fixEndDate - Result',print_r($data['end_date'],TRUE));
+    		$data['end_date'] = $this->fixDate($data['end_date']);
 		}
+		$this->logEvent('Event->Create','About to do insert');
 		$this->db->insert($this->table_name,$data);
 		$this->logEvent('Event Creation - Query',$this->db->last_query());
 		$num = $this->db->affected_rows();
