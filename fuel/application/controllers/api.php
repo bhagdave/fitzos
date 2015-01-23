@@ -61,6 +61,7 @@ class Api extends CI_Controller{
 			$err = $this->load->model($modelName,$model);
 			if (isset($err)){
 				$data = $this->fixId($model,$function,$data);
+				unset($data['key']);
 				$result = $this->doTheMethodCall($model, $function, $data);		
 			} else {
 				$result = null;

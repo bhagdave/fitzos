@@ -316,6 +316,7 @@ class Events_model extends Fitzos_model {
 		$this->db->join('sport','sport.id = event.sport_id');
 	}
     function create($data){
+    	unset($data['key']);
     	$this->logEvent('Event->create - Data',print_r($data,TRUE));
 		if (isset($data['date'])){
 			$data['date'] = $this->fixDate($data['date']);
