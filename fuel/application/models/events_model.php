@@ -325,7 +325,10 @@ class Events_model extends Fitzos_model {
 			$data['end_date'] = $this->fixDate($data['end_date']);
 		}
 		$this->db->insert($this->table_name,$data);
-    	return $this->db->affected_rows();
+		$this->logEvent('Event Creation - Query',$this->db->last_query());
+		$num = $this->db->affected_rows();
+		$this->logEvent('Events created ', $num);
+    	return $num;
     }
 	function getMemberInvites($member_id){
 		$this->db->where('event_invites.member_id',$member_id);
