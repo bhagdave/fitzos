@@ -366,7 +366,7 @@ class Events_model extends Fitzos_model {
 		return $this->setInviteStatus($event,$member_id,'declined') > 0;
 	}
 	function getUpcomingEvents(){
-		$this->logEvent('getUpcomingEvents', $num);
+		$this->logEvent('getUpcomingEvents','Incoming');
 		$this->db->select("event.id, event.name, sport.name as sport, event.location,concat(date(event.date),' @ ',event.time) as time",false);
 		$this->db->join('sport','event.sport_id = sport.id');
 		$this->db->where('event.public','PUBLIC');
