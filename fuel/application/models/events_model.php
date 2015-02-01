@@ -368,10 +368,10 @@ class Events_model extends Fitzos_model {
 	function getUpcomingEvents(){
 		$this->logEvent('getUpcomingEvents','Incoming');
 		$this->db->select("event.id, event.name, sport.name as sport, event.location,concat(date(event.date),' @ ',event.time) as time",false);
-		$this->db->join('sport','event.sport_id = sport.id');
+		$this->db->join('sport','event.sport_id = sport.id','left');
 		$this->db->where('event.public','PUBLIC');
 		$this->db->where('published','yes');
-		$this->db->where("date > date_sub(now(), interval 1 day)");
+		$this->db->where("date > date_sub(now(), interval 2 day)");
 		$this->db->order_by('event.date');
 		$this->db->limit(10);
 		$result = $this->db->get('event');
