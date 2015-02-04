@@ -82,7 +82,8 @@ class Teams_model extends Fitzos_model {
 	}
 	function getTeamEvents($team){
 		$this->db->where('team_id',$team);
-		$this->db->where('event.date >=' ,date('Y-m-d'));
+//		$this->db->where('event.date >=' ,date('Y-m-d'));
+		$this->db->order_by('date','desc');
 		$result = $this->db->get('event');
 		return $result->result();
 	}
