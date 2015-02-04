@@ -135,6 +135,9 @@ class Api extends CI_Controller{
 			} else {
 				$data = $_REQUEST;
 			}
+			if (isset($data['key'])){
+				unset($data['key']); // well we dont want to save it
+			}
 			$modelName = $model . '_model';
 			$err = $this->load->model($modelName,$model);
 			if (isset($err)){
