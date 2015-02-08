@@ -45,7 +45,8 @@ class Events_model extends Fitzos_model {
     	$this->db->select('member.*');
     	$this->db->where('id',$event);
     	$this->db->join('member','event.member_id = member.id');
-    	$this->db->get('event');
+    	$result = $this->db->get('event');
+    	return $result->result();
     }
     function getAllEventData($id,$member_id){
     	$event = $this->getEvent($id);
