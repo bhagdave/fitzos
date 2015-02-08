@@ -41,18 +41,26 @@ class Events_model extends Fitzos_model {
     		return null;
     	}
     }
+    function getEventOwner($event){
+    	$this->db->select('member.*');
+    	$this->db->where('id',$event);
+    	$this->db->join('member','event.member_id = member.id');
+    	$this->db->get('event');
+    }
     function getAllEventData($id,$member_id){
     	$event = $this->getEvent($id);
     	$attending = $this->getMembersAttending($id);
     	$wall = $this->getWall($id);
     	$owner = $this->isOwner($id, $member_id);
     	$isAttendee = $this->isAttendee($id, $member_id);
+    	$ownerDetails = $this->getEventOwner($id);
     	$event->isOwner = $owner ? 'Yes': 'No';
     	$event->isAttendee = $isAttendee ? 'Yes':'No' ;
     	return array(
     		'event'=>$event,
     		'attending'=>$attending,
-    		'wall'=>$wall
+    		'wall'=>$wall,
+    		'owner'=>$ownerDetails
     	);
     }
     function getPublicEvents(){
