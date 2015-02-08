@@ -210,7 +210,7 @@ class Teams_model extends Fitzos_model {
 		if ($num > 0){
 			return array('id'=>0,'message'=>'Membership already requested');
 		} else {
-			$insert = array('member_id'=>$member,'team_id'=>$team, 'status'=>'waiting', 'requested_date'=>date('Y-m-d'));
+			$insert = array('member_id'=>$member,'team_id'=>$team, 'status'=>'yes', 'requested_date'=>date('Y-m-d'), 'approved_date'=>date('Y-m-d'));
 			$this->db->insert('team_membership',$insert);
 			$id = $this->db->insert_id();
 			return array('id'=>$id,'message'=>'Message Requested');
