@@ -12,19 +12,19 @@ class Athletes_model extends Fitzos_model {
 	function saveProfile($data){
 		$update = array(
 			'gender'=>$data['gender'],
-			'nickname'=>$data['nickname'],
-			'height'=>$data['height'],
-			'weight'=>$data['weight'],
-			'body_fat_percentage'=>$data['bodyFat'],
-			'units'=>isset($data['units']) ? $data['units']: '',
+// 			'nickname'=>isset($data['nickname']) ? $data['nickname']: '',
+// 			'height'=>isset($data['height']) ? $data['height']: '',
+// 			'weight'=>isset($data['weight']) ? $data['weight']: '',
+// 			'body_fat_percentage'=>isset($data['bodyfat']) ? $data['bodyfat']: '',
+// 			'units'=>isset($data['units']) ? $data['units']: '',
 			'location'=>$data['location'],
-			'show_status'=>isset($data['show_status']) ? $data['show_status'] :'' ,
-			'show_progress'=>isset($data['show_progress']) ? $data['show_progress'] : '',
-			'show_tables'=>isset($data['show_tables']) ? $data['show_tables'] : '',
-			'search'=>isset($data['search']) ? $data['search'] : '',
-			'message'=>isset($data['message']) ? $data['message'] :'' ,
+// 			'show_status'=>isset($data['show_status']) ? $data['show_status'] :'' ,
+// 			'show_progress'=>isset($data['show_progress']) ? $data['show_progress'] : '',
+// 			'show_tables'=>isset($data['show_tables']) ? $data['show_tables'] : '',
+// 			'search'=>isset($data['search']) ? $data['search'] : '',
+// 			'message'=>isset($data['message']) ? $data['message'] :'' ,
 			'age'=>$data['age'],
-			'find_trainer'=>isset($data['find_trainer']) ? $data['find_trainer']: ''			
+// 			'find_trainer'=>isset($data['find_trainer']) ? $data['find_trainer']: ''			
 		);
 		$this->db->where('member_id', $data['id']);
 		$this->db->update('athlete',$update);
