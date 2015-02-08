@@ -85,7 +85,7 @@ class Events_model extends Fitzos_model {
     }
     function getMembersAttending($id){
 		$this->db->where('event_id',$id);
-		$this->db->where('cancelled','NO');
+//		$this->db->where('cancelled','NO');
 		$this->db->join('athlete','athlete.member_id = event_attendance.member_id');
 		$result = $this->db->get('event_attendance');
 		return $result->result();	    	
