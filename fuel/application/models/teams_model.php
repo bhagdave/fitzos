@@ -210,10 +210,27 @@ class Teams_model extends Fitzos_model {
 		if ($num > 0){
 			return array('id'=>0,'message'=>'Membership already requested');
 		} else {
+			// okay get the team
+			$teamRecord = $this->getTeam($team);
+			// get the team owner
+			$teamOwner = $this->getTeamOwner($team);
+			// get the member requesting membership
+			$memberRecord = $this->getMember($member);
+			$this->load->model('notifications_model','notifications');
+			// Notification data
+			$notification = array(
+					'from_table'=>'member',
+					'from_key'=>$memberRecord->id,
+					'to_table'=>'member',
+					'to_key'=>$teamOwner->id,
+					'notification'=>"The user $memberRecord->first_name $memberRecord->last_name has joined your $teamRecord->name team!",
+					'type'=>'NOTE'
+			);
+			$this->notifications->createNotification($notification);
 			$insert = array('member_id'=>$member,'team_id'=>$team, 'status'=>'yes', 'requested_date'=>date('Y-m-d'), 'approved_date'=>date('Y-m-d'));
 			$this->db->insert('team_membership',$insert);
 			$id = $this->db->insert_id();
-			return array('id'=>$id,'message'=>'Message Requested');
+			return array('id'=>$id,'message'=>'Membership Accepted');
 		}
 	}
 	function leaveTeam($team,$member){
