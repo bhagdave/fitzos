@@ -358,6 +358,26 @@ class Events_model extends Fitzos_model {
 		return $this->db->affected_rows();
 	}
 	function acceptInvite($member_id,$event){
+		// get the event
+		$eventRecord = $this->getEvent($event);
+		// get the member who created the event
+		$data = $this->db->get_where('member',array('id'=>$eventRecord->member_id))->result();
+		$eventOwner = $data[0];
+		// get the member details of the person attending.
+		$data = $this->db->get_where('member',array('id'=>$member_id))->result();
+		$member = $data[0];
+		// send a notification
+		$this->load->model('notification_model','notifications');
+		// Notification data
+		$notification = array(
+			'from_table'=>'member',
+			'from_key'=>$member->id,
+			'to_table'=>'member',
+			'to_key'=>$eventOwner->id,
+			'notification'=>"The user $member->first_name $member->last_name is attending your $eventRecord->name event!",
+			'type'=>'NOTE'
+		);
+		$this->notification->createNotification($notification);
 		$insert = array(
 			'event_id'=>$event,
 			'member_id'=>$member_id,
