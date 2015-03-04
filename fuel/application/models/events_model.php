@@ -367,7 +367,7 @@ class Events_model extends Fitzos_model {
 		$data = $this->db->get_where('member',array('id'=>$member_id))->result();
 		$member = $data[0];
 		// send a notification
-		$this->load->model('notification_model','notifications');
+		$this->load->model('notifications_model','notifications');
 		// Notification data
 		$notification = array(
 			'from_table'=>'member',
@@ -377,7 +377,7 @@ class Events_model extends Fitzos_model {
 			'notification'=>"The user $member->first_name $member->last_name is attending your $eventRecord->name event!",
 			'type'=>'NOTE'
 		);
-		$this->notification->createNotification($notification);
+		$this->notifications->createNotification($notification);
 		$insert = array(
 			'event_id'=>$event,
 			'member_id'=>$member_id,
