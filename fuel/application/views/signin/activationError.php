@@ -1,1 +1,0 @@
-<h1>Activation error</h1>

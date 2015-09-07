@@ -1,1 +1,0 @@
-ALTER TABLE `fitzos`.`team_wall` ADD COLUMN `deleted` ENUM('yes','no') NULL DEFAULT 'no'  AFTER `date` ;

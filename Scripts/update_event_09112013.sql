@@ -1,1 +1,0 @@
-ALTER TABLE `fitzos`.`event` ADD COLUMN `team_id` INT NULL  AFTER `public` ;
