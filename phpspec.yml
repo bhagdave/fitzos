@@ -1,5 +1,5 @@
 suites:
     main:
-        namespace: App
-        psr4_prefix: App
+        namespace: RYP
+        psr4_prefix: RYP
         src_path: app
