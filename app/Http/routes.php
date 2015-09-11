@@ -14,5 +14,5 @@
 Route::get('/', function () {
     return view('welcome');
 });
-
+Route::get('arse','AthleteController@arse');
 Route::resource('athletes','AthleteController');
