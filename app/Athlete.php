@@ -12,5 +12,5 @@ class Athlete extends Model {
      * @var string
      */
     protected $table = 'athlete';
-
+	protected $fillable = ['name'];
 }

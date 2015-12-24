@@ -2,8 +2,8 @@
 
 namespace RYP\Http\Controllers;
 
-use Illuminate\Http\Request;
-
+//use Illuminate\Http\Request;
+use Request;
 use RYP\Http\Requests;
 use RYP\Http\Controllers\Controller;
 use RYP\Athlete;
@@ -16,14 +16,14 @@ class athletecontroller extends Controller
      * @return Response
      */
     public function index(){
-        $athlete = Athlete::find(37);
+        $athlete = Athlete::all();
         $ath = '';
-//		foreach($athletes as $athlete){
+		foreach($athletes as $athlete){
 			$ath .= $athlete->name . '<br>';
 			$ath .= $athlete->nickname . '<br>';
 			$ath .= $athlete->height . '<br>';
 			$ath .= $athlete->weight . '<br>';
-//		}
+		}
 		return $ath;
         //        return View::make('athletes.index',compact('athletes'));
     }
@@ -55,6 +55,10 @@ class athletecontroller extends Controller
     public function store(Request $request)
     {
         //
+        $input = Request::all();
+		Athlete::create($input);
+		return redirect('athletes');
+        return $input;
     }
 
     /**

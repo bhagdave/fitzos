@@ -13,5 +13,9 @@
 				@endforeach
 			</ul>
 		@endif
-
+		{!! Form::open(['url' => 'athletes']) !!}
+		{!! Form::label('name', 'Name:') !!}
+		{!! Form::text('name') !!}
+		{!! Form::submit('Add a name!') !!}
+		{!! Form::close() !!}
 @stop
