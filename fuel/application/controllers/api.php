@@ -53,17 +53,15 @@ class Api extends CI_Controller{
 	}
 	
 	public function request($model,$function){
-		$this->api->logEvent('Api Call',"$function on $model");
 		if ($this->_checkSessionKey()){
-			$data = $_REQUEST;
-			unset($data['key']);
+			$request= $_REQUEST;
+			unset($request['key']);
 			$modelName = $model . '_model';
-			$err = $this->load->model($modelName,$model);
-			if (isset($err)){
-				$data = $this->convertAllSaltsToId($model,$function,$data);
-				unset($data['key']);
-				$this->api->logEvent("$function on $model",print_r($data,true));
-				$result = $this->doTheMethodCall($model, $function, $data);		
+			$error = $this->load->model($modelName,$model);
+			if (isset($error)){
+				$request = $this->convertAllSaltsToId($model,$function,$request);
+				$this->api->logEvent("$function on $model",print_r($request,true));
+				$result = $this->doTheMethodCall($model, $function, $request);		
 			} else {
 				$result = null;
 			}
