@@ -53,7 +53,7 @@ class Api extends CI_Controller{
 	}
 	
 	public function request($model,$function){
-		if ($this->_checkSessionKey()){
+		if ($this->checkSessionKey()){
 			$request= $_REQUEST;
 			unset($request['key']);
 			$modelName = $model . '_model';
@@ -66,18 +66,18 @@ class Api extends CI_Controller{
 				$result = null;
 			}
 			if (isset($result) && !empty($result)){
-				$this->_respond('OK', 'API Call worked',$result);
+				$this->respond('OK', 'API Call worked',$result);
 			} else {
-				$this->_respond('ERR', 'API Call worked but empty');
+				$this->respond('ERR', 'API Call worked but empty');
 			}
 		} else {
-			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
+			$this->respond("ERR","Invalid Session Request", $this->input->get_post());
 		}		
 	}
 	
-	function index($model,$function){
+	public function index($model,$function){
 		$this->api->logEvent($model . '->' . $function,print_r($_REQUEST,true));
-		if ($this->_checkSessionKey($function)){
+		if ($this->checkSessionKey($function)){
 			$data = $_REQUEST;
 			$modelName = $model . '_model';
 			$err = $this->load->model($modelName,$model);
@@ -94,13 +94,13 @@ class Api extends CI_Controller{
 			$this->api->logEvent($model . '->' . $function . ' RESULT',print_r($result,true));
 			if (isset($result) && !empty($result)){
 				$this->api->logEvent($model . '->' . $function,'Result Returned!');
-				$this->_respond('OK', 'API Call worked',$result);
+				$this->respond('OK', 'API Call worked',$result);
 			} else {
 				$this->api->logEvent($model . '->' . $function,'No Result and Failed!');
-				$this->_respond('ERR', 'API Call failed');
+				$this->respond('ERR', 'API Call failed');
 			}
 		} else {
-			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
+			$this->respond("ERR","Invalid Session Request", $this->input->get_post());
 		}
 	}
 	
@@ -123,8 +123,8 @@ class Api extends CI_Controller{
 		}
 	}
 
-	function rest($model,$id = null){
-		if ($this->_checkSessionKey()){
+	public function rest($model,$id = null){
+		if ($this->checkSessionKey()){
 			parse_str(file_get_contents("php://input"),$put);
 			$verb = $_SERVER['REQUEST_METHOD'];
 			if ($verb === 'PUT'){
@@ -153,18 +153,18 @@ class Api extends CI_Controller{
 				$result =  null;
 			}
 			if (isset($result)){
-				$this->_respond('OK', 'API Call worked',$result);
+				$this->respond('OK', 'API Call worked',$result);
 			} else {
-				$this->_respond('ERR', 'API Call failed');
+				$this->respond('ERR', 'API Call failed');
 			}
 		} else {
-			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
+			$this->respond("ERR","Invalid Session Request", $this->input->get_post());
 		}
 	}
 	
-	function login(){
+	public function login(){
 		$this->api->logEvent('login',print_r($_REQUEST,true));
-		if ($this->_checkSessionKey()){
+		if ($this->checkSessionKey()){
 			$this->load->model("members_model","members");
 			$username = $this->input->get_post('username');
 			$password = md5($this->input->get_post('password'));
@@ -173,15 +173,15 @@ class Api extends CI_Controller{
 			if (isset($login)){
 				$type = $this->members->getMemberType($login->id);
 				$data = array('salt'=>$login->salt, 'type'=>$type);
-				$this->_respond('OK','Login Successful',$data);
+				$this->respond('OK','Login Successful',$data);
 			} else {
-				$this->_respond("ERR","Username or Password Invalid", $login);
+				$this->respond("ERR","Username or Password Invalid", $login);
 			}
 		} else {
-			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
+			$this->respond("ERR","Invalid Session Request", $this->input->get_post());
 		}
 	}	
-	private function _respond($status,$message,$result = null){
+	private function respond($status,$message,$result = null){
 		$returnData = array(
 			'Status'=>$status,
 			'Message'=>$message,
@@ -189,22 +189,22 @@ class Api extends CI_Controller{
 		);
 		echo json_encode($returnData);
 	}
-	function openSession(){
+	public function openSession(){
 		$this->load->model("api_model","api");
 		if ($this->input->get_post('name') && $this->input->get_post('key')){
 			$name = $this->input->get_post('name');
 			$key  = $this->input->get_post('key');
 			$session_key = $this->api->openSession($name,$key,$_SERVER['REMOTE_ADDR']);
 			if (isset($session_key)){
-				$this->_respond('OK','Session Successful',$session_key);
+				$this->respond('OK','Session Successful',$session_key);
 			} else {
-				$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
+				$this->respond("ERR","Invalid Session Request", $this->input->get_post());
 			}
 		} else {
-				$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
+				$this->respond("ERR","Invalid Session Request", $this->input->get_post());
 		}
 	}
-	private function _checkSessionKey($method = ''){
+	private function checkSessionKey($method = ''){
 		if ($this->input->get_post('key')){
 			$this->load->model("api_model","api");
 			return $this->api->isValidSessionKey($method,$this->input->get_post('key'),null);
@@ -212,8 +212,8 @@ class Api extends CI_Controller{
 			return false;
 		}
 	}
-	function createMember(){
-		if ($this->_checkSessionKey()){
+	public function createMember(){
+		if ($this->checkSessionKey()){
 			$mesg = $this->Futility->checkSignin($this->input->get_post());
 			if (count($mesg)> 0){
 				$this->respond("ERR","Sign up failed", $mesg);
@@ -231,35 +231,35 @@ class Api extends CI_Controller{
 				}
 			}
 		} else {
-			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
+			$this->respond("ERR","Invalid Session Request", $this->input->get_post());
 		}
 	}
-	function getMemberDetails($id){
-		if ($this->_checkSessionKey()){
+	public function getMemberDetails($id){
+		if ($this->checkSessionKey()){
 		} else {
-			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
+			$this->respond("ERR","Invalid Session Request", $this->input->get_post());
 		}		
 	}
-	function getAthleteDetails(){
-		if ($this->_checkSessionKey()){
+	public function getAthleteDetails(){
+		if ($this->checkSessionKey()){
 			$this->load->model('athletes_model','athletes');
 			$id = $_POST['id'];
 			$athlete = $this->athletes->loadProfile($id);
-			$this->_respond("OK","Athlete Found",$athlete);
+			$this->respond("OK","Athlete Found",$athlete);
 		} else {
-			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
+			$this->respond("ERR","Invalid Session Request", $this->input->get_post());
 		}		
 	}
-	function saveAthleteDetails(){
-		if ($this->_checkSessionKey()){
+	public function saveAthleteDetails(){
+		if ($this->checkSessionKey()){
 		} else {
-			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
+			$this->respond("ERR","Invalid Session Request", $this->input->get_post());
 		}		
 	}
-	function saveMemberDetails(){
-		if ($this->_checkSessionKey()){
+	public function saveMemberDetails(){
+		if ($this->checkSessionKey()){
 		} else {
-			$this->_respond("ERR","Invalid Session Request", $this->input->get_post());
+			$this->respond("ERR","Invalid Session Request", $this->input->get_post());
 		}		
 	}
 }
