@@ -52,7 +52,7 @@ class Api extends CI_Controller{
 		return $result;
 	}
 	
-	function r($model,$function){
+	public function request($model,$function){
 		$this->api->logEvent('Api Call',"$function on $model");
 		if ($this->_checkSessionKey()){
 			$data = $_REQUEST;
