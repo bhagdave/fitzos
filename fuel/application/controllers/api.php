@@ -35,20 +35,20 @@ class Api extends CI_Controller{
 		return $data;
 	} 
 	
-	private function doTheMethodCall($class,$method,$data){
-		$data['data'] = $data;
-		$r = new ReflectionMethod($class.'_model', $method);
-		$pass = array();
-		foreach($r->getParameters() as $param){
-			if (isset($data[$param->getName()])){
-				$pass[] = $data[$param->getName()];
+	private function doTheMethodCall($class,$method,$request){
+		$data['data']     = $request;
+		$reflectedMethod  = new ReflectionMethod($class.'_model', $method);
+		$parametersToPass = array();
+		foreach($reflectedMethod->getParameters() as $methodParameter){
+			if (isset($data[$methodParameter->getName()])){
+				$parametersTopass[] = $data[$methodParameter->getName()];
 			} else {
-				if($param->isOptional()){
-					$pass[] = $param->getDefaultValue();
+				if($methodParameter->isOptional()){
+					$parametersToPass[] = $methodParameter->getDefaultValue();
 				}
 			}
 		}
-		$result = $r->invokeArgs($this->$class, $pass);
+		$result = $refclectedMethod->invokeArgs($this->$class, $parametersToPass);
 		return $result;
 	}
 	
