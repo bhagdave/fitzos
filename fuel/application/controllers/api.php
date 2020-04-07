@@ -1,38 +1,37 @@
 <?php
 class Api extends CI_Controller{
-	function __construct(){
+	public function __construct(){
 		parent::__construct();
 		$this->load->library('Fitzos_utility',null,'Futility');
 		$this->load->model("api_model","api");
 	}
 	
-	private function _convertMemberSaltToId($member){
+	private function convertMemberSaltToId($member){
 		$memberId = $this->api->getMemberFromSalt($member);
 		return $memberId;	
 	}
-	
-	private function fixId($class,$method,$data){
-		if (isset($data['member_id']) && !is_numeric($data['member_id'])){
-			$data['member_id'] = $this->_convertMemberSaltToId($data['member_id']);
+
+	private function convertSaltToId($data, $field){
+		if (isset($data[$field]) && !is_numeric($data[$field])){
+			$data[$field] = $this->convertMemberSaltToId($data[$field]);
 		}
-		if (isset($data['id']) && !is_numeric($data['id'])){
-			$data['id'] = $this->_convertMemberSaltToId($data['id']);
+		return $data;
+	}
+
+	private function convertAllSaltsToId($class,$method,$data){
+		$data = $this->convertSaltToId($data,'member_id');
+		$data = $this->convertSaltToId($data, 'id');
+		$data = $this->convertSaltToId($data, 'from');
+		$data = $this->convertSaltToId($data, 'owner');
+		$data = $this->convertSaltToId($data, 'user');
+		$data = $this->convertSaltToId($data, 'source_id');
+		if ($class == 'teams'){
+			$data['user'] = $this->convertMemberSaltToId($data['user']);
 		}
-		if (isset($data['from']) && !is_numeric($data['from'])){
-			$data['from'] = $this->_convertMemberSaltToId($data['from']);
+		if ($class == 'athletes'){
+			$data['source_id'] = $this->convertMemberSaltToId($data['source_id']);
 		}
-		if (isset($data['owner']) && !is_numeric($data['owner'])){
-			$data['owner'] = $this->_convertMemberSaltToId($data['owner']);
-		}
-		if (($class == 'teams') && ($method == 'isOwner') && isset($data['user']) && !is_numeric($data['user'])){
-			$data['user'] = $this->_convertMemberSaltToId($data['user']);
-		}
-		if (($class == 'teams') && ($method == 'sendInvites') && isset($data['user']) && !is_numeric($data['user'])){
-			$data['user'] = $this->_convertMemberSaltToId($data['user']);
-		}
-		if (($class = 'athletes') && ($method == 'saveStats') && !empty($data['source_id']) ){
-			$data['source_id'] = $this->_convertMemberSaltToId($data['source_id']);
-		}
+
 		return $data;
 	} 
 	
@@ -61,7 +60,7 @@ class Api extends CI_Controller{
 			$modelName = $model . '_model';
 			$err = $this->load->model($modelName,$model);
 			if (isset($err)){
-				$data = $this->fixId($model,$function,$data);
+				$data = $this->convertAllSaltsToId($model,$function,$data);
 				unset($data['key']);
 				$this->api->logEvent("$function on $model",print_r($data,true));
 				$result = $this->doTheMethodCall($model, $function, $data);		
@@ -86,7 +85,7 @@ class Api extends CI_Controller{
 			$err = $this->load->model($modelName,$model);
 			if (isset($err)){
 				if (isset($data['id'])){
-					$data = $this->fixId($model, $function, $data);
+					$data = $this->convertAllSaltsToId($model, $function, $data);
 					$result = $this->$model->$function($data['id']);
 				} else {
 					$result = $this->$model->$function($data);
@@ -142,7 +141,7 @@ class Api extends CI_Controller{
 			$err = $this->load->model($modelName,$model);
 			if (isset($err)){
 				$method = $this->_getRestMethod($verb,$id);
-				$data = $this->fixId($model,$method,$data);
+				$data = $this->convertAllSaltsToId($model,$method,$data);
 				if (isset($id)){
 					$result = $this->$model->$method($id);
 				} else {
